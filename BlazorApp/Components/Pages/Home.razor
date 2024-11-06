@@ -1,10 +1,10 @@
 ﻿@page "/"
 
+@* Injecting actually creates a new instance of a class. *@
+
 @using BlazorApp.Service;
-@using MongoDB.Bson;
-@using MongoDB.Driver
-@* @using MongoDB.Driver; *@
 @* @inject DBService DbService; *@
+@inject EvCar ElectricCar; 
 @inject MongoDBService MongoService;
 
 <PageTitle>Andreas's gaming lounge</PageTitle>
@@ -13,12 +13,78 @@
 
 Welcome to your new app.
 
-<p>@neonConnectionStatus</p>
-<p>@mongoConnectionStatus</p>
+<p>@NeonConnectionStatus</p>
+<p>@MongoConnectionStatus</p>
+
+@* Form for a vehicle *@
+<EditForm Model="@ElectricCar" OnValidSubmit="HandleValidEvCar">
+    
+    @*<div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Price" class="form-control"
+                   Value="@evCar.Price" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>*@
+    
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control" 
+                   Value="@ElectricCar.Brand" ValueChanged="@(e => ElectricCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => ElectricCar.Brand)" />
+    </div>
+
+    @*<div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>
+    <div class="form-group">
+        <label for="Brand">Brand name:</label>
+        <InputText id="Brand" class="form-control"
+                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
+                   ValueExpression="(() => evCar.Brand)" />
+    </div>*@
+    
+</EditForm>
 
 @code{
-    private string? neonConnectionStatus;
-
+    private void HandleValidEvCar()
+    {
+        ElectricCar.PrintBrand();
+    }
+    
+    private string NeonConnectionStatus = "Not using neon.tech.";
     /*protected override async Task OnInitializedAsync()
     {
         try
@@ -26,31 +92,32 @@ Welcome to your new app.
             using var connection = DbService.GetConnection();
             if (connection.State == System.Data.ConnectionState.Open)
             {
-                neonConnectionStatus = "Database connection successful";
+                NeonConnectionStatus = "Database connection successful";
             }
             else
             {
-                neonConnectionStatus = "Failed to connect to database";
+                NeonConnectionStatus = "Failed to connect to database";
             }
         }
         catch (Exception e)
         {
-            neonConnectionStatus = $"Error: {e.Message}";
+            NeonConnectionStatus = $"Error: {e.Message}";
         }
     }*/
 
-    private string? mongoConnectionStatus;
+    private string? MongoConnectionStatus;
 
     protected override async Task OnInitializedAsync()
     {
         if (await MongoService.CheckConnectionAsync())
         {
-            mongoConnectionStatus = "Database connection successful";
+            MongoConnectionStatus = "Database connection successful";
         }
         else
         {
-            mongoConnectionStatus = "Failed to connect to database";
+            MongoConnectionStatus = "Failed to connect to database";
         }
     }
+    
 
 }

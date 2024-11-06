@@ -20,7 +20,7 @@ namespace BlazorApp
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
                 return new DBService(connectionString);
             });*/
-            
+
             // Adds the MongoDB connection.
             builder.Services.AddSingleton(sp =>
             {
@@ -29,6 +29,8 @@ namespace BlazorApp
                 // Console.WriteLine($"Connection string Program.cs: {connectionString}");
                 return new MongoDBService(connectionString);
             });
+            
+            builder.Services.AddSingleton<EvCar>();
 
             var app = builder.Build();
 
