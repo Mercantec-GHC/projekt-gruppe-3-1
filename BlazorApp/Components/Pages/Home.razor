@@ -1,7 +1,56 @@
 ﻿@page "/"
 
+@using BlazorApp.Service;
+@using MongoDB.Bson;
+@using MongoDB.Driver
+@* @using MongoDB.Driver; *@
+@* @inject DBService DbService; *@
+@inject MongoDBService MongoService;
+
 <PageTitle>Andreas's gaming lounge</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<p>@neonConnectionStatus</p>
+<p>@mongoConnectionStatus</p>
+
+@code{
+    private string? neonConnectionStatus;
+
+    /*protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            using var connection = DbService.GetConnection();
+            if (connection.State == System.Data.ConnectionState.Open)
+            {
+                neonConnectionStatus = "Database connection successful";
+            }
+            else
+            {
+                neonConnectionStatus = "Failed to connect to database";
+            }
+        }
+        catch (Exception e)
+        {
+            neonConnectionStatus = $"Error: {e.Message}";
+        }
+    }*/
+
+    private string? mongoConnectionStatus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await MongoService.CheckConnectionAsync())
+        {
+            mongoConnectionStatus = "Database connection successful";
+        }
+        else
+        {
+            mongoConnectionStatus = "Failed to connect to database";
+        }
+    }
+
+}

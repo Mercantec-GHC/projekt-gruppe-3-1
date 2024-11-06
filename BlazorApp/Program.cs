@@ -1,4 +1,5 @@
 using BlazorApp.Components;
+using BlazorApp.Service;
 
 namespace BlazorApp
 {
@@ -11,6 +12,23 @@ namespace BlazorApp
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            // Adds the neon.tech connection.
+            /*builder.Services.AddSingleton(sp =>
+            {
+                // Goes into the configurations file and gets the connection string called "DefaultConnection".
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                return new DBService(connectionString);
+            });*/
+            
+            // Adds the MongoDB connection.
+            builder.Services.AddSingleton(sp =>
+            {
+                // Goes into the configurations file and gets the connection string called "DefaultConnection".
+                var connectionString = builder.Configuration.GetConnectionString("MongoConnection");
+                // Console.WriteLine($"Connection string Program.cs: {connectionString}");
+                return new MongoDBService(connectionString);
+            });
 
             var app = builder.Build();
 
