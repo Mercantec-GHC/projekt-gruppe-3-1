@@ -1,6 +1,6 @@
 ﻿namespace Domain_Models;
 
-public abstract class Vehicle
+public abstract class Vehicleee
 {
     private decimal Price;
     private string Brand;
@@ -59,12 +59,13 @@ public abstract class Vehicle
     }
 }
 
-public class EvCar : Vehicle
+/*
+public class EvCar : Vehicleee
 {
     private double BatteryCapacity;
 }
 
-public class FossilCar : Vehicle
+public class FossilCar : Vehicleee
 {
     private double TankCapacity;
-}
+}*/

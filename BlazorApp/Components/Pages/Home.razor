@@ -3,9 +3,9 @@
 @* Injecting actually creates a new instance of a class. *@
 
 @using BlazorApp.Service;
-@* @inject DBService DbService; *@
-@inject EvCar ElectricCar; 
-@inject MongoDBService MongoService;
+@inject EvCar ElectricCar;
+@inject DBService DbService;
+@* @inject MongoDBService MongoService; *@
 
 <PageTitle>Andreas's gaming lounge</PageTitle>
 
@@ -13,101 +13,103 @@
 
 Welcome to your new app.
 
-<p>@NeonConnectionStatus</p>
+<p>@_neonConnectionStatus</p>
 <p>@MongoConnectionStatus</p>
 
 @* Form for a vehicle *@
 <EditForm Model="@ElectricCar" OnValidSubmit="HandleValidEvCar">
-    
+
     @*<div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Price" class="form-control"
-                   Value="@evCar.Price" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
+        <label for="Price">Price:</label>
+        <InputNumber id="Price" class="form-control"
+                   Value="@ElectricCar.Price" ValueChanged="@(e => ElectricCar.SetPrice((decimal)e))"
+                   ValueExpression="(() => ElectricCar.Price)" />
     </div>*@
-    
+
     <div class="form-group">
         <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control" 
+        <InputText id="Brand" class="form-control"
                    Value="@ElectricCar.Brand" ValueChanged="@(e => ElectricCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => ElectricCar.Brand)" />
+                   ValueExpression="(() => ElectricCar.Brand)"/>
     </div>
 
     @*<div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
-    </div>
-    <div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
-    </div>
-    <div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
-    </div>
-    <div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
-    </div>
-    <div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
-    </div>
-    <div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
-    </div>
-    <div class="form-group">
-        <label for="Brand">Brand name:</label>
-        <InputText id="Brand" class="form-control"
-                   Value="@evCar.Brand" ValueChanged="@(e => evCar.SetBrand(e.ToString()))"
-                   ValueExpression="(() => evCar.Brand)" />
+        <label for="Model">Model name:</label>
+        <InputText id="Model" class="form-control"
+                   Value="@ElectricCar.Model" ValueChanged="@(e => ElectricCar.SetModel(e.ToString()))"
+                   ValueExpression="(() => ElectricCar.Model)"/>
     </div>*@
-    
+    @*
+    <div class="form-group">
+        <label for="Year">Year:</label>
+        <InputNumber id="Year" class="form-control"
+                   Value="@ElectricCar.Year" ValueChanged="@(e => ElectricCar.SetYear((int)e))"
+                   ValueExpression="(() => ElectricCar.Year)" />
+    </div>
+    <div class="form-group">
+        <label for="KmDriven">Km driven:</label>
+        <InputNumber id="KmDriven" class="form-control"
+                   Value="@ElectricCar.KmDriven" ValueChanged="@(e => ElectricCar.SetKmDriven((double)e))"
+                   ValueExpression="(() => ElectricCar.KmDriven)" />
+    </div>
+    <div class="form-group">
+        <label for="Color">Color name:</label>
+        <InputText id="Color" class="form-control"
+                   Value="@ElectricCar.Color" ValueChanged="@(e => ElectricCar.SetColor(e.ToString()))"
+                   ValueExpression="(() => ElectricCar.Color)" />
+    </div>
+    <div class="form-group">
+        <label for="WeightKg">Weight:</label>
+        <InputNumber id="WeightKg" class="form-control"
+                   Value="@ElectricCar.WeightKg" ValueChanged="@(e => ElectricCar.SetWeightKg((int)e))"
+                   ValueExpression="(() => ElectricCar.WeightKg)" />
+    </div>
+    <div class="form-group">
+        <label for="HorsePower">Horse power:</label>
+        <InputNumber id="HorsePower" class="form-control"
+                   Value="@ElectricCar.HorsePower" ValueChanged="@(e => ElectricCar.SetHorsePower((int)e))"
+                   ValueExpression="(() => ElectricCar.HorsePower)" />
+    </div>
+    <div class="form-group">
+        <label for="Doors">Doors:</label>
+        <InputNumber id="Doors" class="form-control"
+                   Value="@ElectricCar.Doors" ValueChanged="@(e => ElectricCar.SetDoors((int)e))"
+                   ValueExpression="(() => ElectricCar.Doors)" />
+    </div>*@
+
 </EditForm>
 
 @code{
+
     private void HandleValidEvCar()
     {
         ElectricCar.PrintBrand();
     }
-    
-    private string NeonConnectionStatus = "Not using neon.tech.";
-    /*protected override async Task OnInitializedAsync()
+
+    private string _neonConnectionStatus = "Not using neon.tech.";
+
+    protected override async Task OnInitializedAsync()
     {
         try
         {
             using var connection = DbService.GetConnection();
             if (connection.State == System.Data.ConnectionState.Open)
             {
-                NeonConnectionStatus = "Database connection successful";
+                _neonConnectionStatus = "Database connection successful";
             }
             else
             {
-                NeonConnectionStatus = "Failed to connect to database";
+                _neonConnectionStatus = "Failed to connect to database";
             }
         }
         catch (Exception e)
         {
-            NeonConnectionStatus = $"Error: {e.Message}";
+            _neonConnectionStatus = $"Error: {e.Message}";
         }
-    }*/
+    }
 
-    private string? MongoConnectionStatus;
-
-    protected override async Task OnInitializedAsync()
+    private string? MongoConnectionStatus = "Not using Mongo";
+    /* protected override async Task OnInitializedAsync()
     {
         if (await MongoService.CheckConnectionAsync())
         {
@@ -117,7 +119,7 @@ Welcome to your new app.
         {
             MongoConnectionStatus = "Failed to connect to database";
         }
-    }
-    
+    }*/
+
 
 }
