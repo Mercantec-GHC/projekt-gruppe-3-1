@@ -1,0 +1,60 @@
+﻿@startuml
+'DB
+
+'config
+hide circle
+
+entity "user" as user{
+    id INT PRIMARY KEY
+    first_name TEXT
+    mobile INT
+    email TEXT
+    --
+    <b><u>listed_vehicles
+    user_id INT
+    price INT
+    doors INT
+    brand TEXT
+    model TEXT
+    km_driven INT
+    range INT
+    pictures PICTURE
+}
+
+
+@enduml
+
+@startuml
+start
+repeat
+  :Test something;
+    if (Something went wrong?) then (no)
+      #palegreen:OK;
+      break
+    endif
+    ->NOK;
+    :Alert "Error with long text";
+repeat while (Something went wrong with long text?) is (yes) not (no)
+->//merged step//;
+:Alert "Success";
+stop
+@enduml
+
+@startuml
+start
+
+repeat
+    :Test me;
+        if (Something went wrong?) then (no)
+            #palegreen:OK;
+            break
+        endif
+        
+    :Alert "Error with long text";
+    
+repeat while (Something went wrong with long text?) is (yes) not (no)
+->//merged step//;
+:Alert "Success";
+
+stop
+@enduml
