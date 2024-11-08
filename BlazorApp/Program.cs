@@ -31,6 +31,7 @@ namespace BlazorApp
             });*/
             
             builder.Services.AddSingleton<EvCar>();
+            builder.Services.AddSingleton<Testy>();
 
             var app = builder.Build();
 

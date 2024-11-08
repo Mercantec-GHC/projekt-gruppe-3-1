@@ -4,6 +4,7 @@
 
 @using BlazorApp.Service;
 @inject EvCar ElectricCar;
+@inject Testy Test;
 @inject DBService DbService;
 @* @inject MongoDBService MongoService; *@
 
@@ -18,6 +19,10 @@ Welcome to your new app.
 
 @* Form for a vehicle *@
 <EditForm Model="@ElectricCar" OnValidSubmit="HandleValidEvCar">
+    <DataAnnotationsValidator />
+    @* <ValidationSummary /> *@
+    
+    <input @bind="_testPrivateInt"/>
 
     @*<div class="form-group">
         <label for="Price">Price:</label>
@@ -31,21 +36,25 @@ Welcome to your new app.
         <InputText id="Brand" class="form-control"
                    Value="@ElectricCar.Brand" ValueChanged="@(e => ElectricCar.SetBrand(e.ToString()))"
                    ValueExpression="(() => ElectricCar.Brand)"/>
+        <ValidationMessage For="() => ElectricCar.Brand"/>
     </div>
 
-    @*<div class="form-group">
+    <div class="form-group">
         <label for="Model">Model name:</label>
         <InputText id="Model" class="form-control"
                    Value="@ElectricCar.Model" ValueChanged="@(e => ElectricCar.SetModel(e.ToString()))"
                    ValueExpression="(() => ElectricCar.Model)"/>
-    </div>*@
-    @*
-    <div class="form-group">
+        <ValidationMessage For="() => ElectricCar.Model"/>
+    </div>
+
+    @*<div class="form-group">
         <label for="Year">Year:</label>
         <InputNumber id="Year" class="form-control"
-                   Value="@ElectricCar.Year" ValueChanged="@(e => ElectricCar.SetYear((int)e))"
-                   ValueExpression="(() => ElectricCar.Year)" />
-    </div>
+                     Value="@ElectricCar.Year" ValueChanged="@(e => ElectricCar.SetYear(e))"
+                     ValueExpression="(() => ElectricCar.Year)" />
+    </div>*@
+
+    @*
     <div class="form-group">
         <label for="KmDriven">Km driven:</label>
         <InputNumber id="KmDriven" class="form-control"
@@ -76,6 +85,7 @@ Welcome to your new app.
                    Value="@ElectricCar.Doors" ValueChanged="@(e => ElectricCar.SetDoors((int)e))"
                    ValueExpression="(() => ElectricCar.Doors)" />
     </div>*@
+    <button type="submit" class="btn btn-primary">Submit</button>
 
 </EditForm>
 
@@ -83,8 +93,23 @@ Welcome to your new app.
 
     private void HandleValidEvCar()
     {
+        Test.SetPrivateInt(_testPrivateInt);
+        
         ElectricCar.PrintBrand();
+        ElectricCar.PrintModel();
+        Test.PrintPrivateInt();
+        
+        ClearCarForm();
     }
+
+    private void ClearCarForm()
+    {
+        // What we store in the forms are actually part of a class.
+        // So, by changing ElectricCar to a new instance of a car, we clear the forms.
+        ElectricCar = new EvCar();
+    }
+
+    private int _testPrivateInt;
 
     private string _neonConnectionStatus = "Not using neon.tech.";
 
