@@ -1,0 +1,51 @@
+﻿@namespace MiniCarsMarketplace.Components.Cars
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    @foreach (var car in Cars)
+    {
+        <div class="car-card">
+            <div class="car-image">
+                <img src="@car.ImagePath" alt="@car.Name" class="w-full h-auto" />
+                <div class="car-price">$@(car.Price.ToString("N0"))</div>
+            </div>
+            <div class="car-details">
+                <h3 class="font-semibold mb-2">@(car.Name)</h3>
+                <p class="text-sm text-gray-600">@(car.Mileage.ToString("N0")) km</p>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<CarModel> Cars { get; set; } = new();
+
+    private readonly List<string> ImagePaths = new()
+    {
+        "CarsPictures/Mini1.png",
+        "CarsPictures/Mini2.png",
+        "CarsPictures/Mini3.png",
+        "CarsPictures/Mini4.png",
+        "CarsPictures/Mini5.png",
+    };
+
+    protected override void OnInitialized()
+    {
+        // laver biler med random img paths
+
+        Cars = Enumerable.Range(1, 8).Select(i => new CarModel
+            {
+                Name = $"Mini Cooper {2020 + i}",
+                Price = Random.Shared.Next(10000, 60000),
+                Mileage = Random.Shared.Next(0, 50000),
+                ImagePath = ImagePaths[Random.Shared.Next(ImagePaths.Count)] // Assign random image path
+            }).ToList();
+    }
+
+    private class CarModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public int Mileage { get; set; }
+        public string ImagePath { get; set; } = string.Empty;
+    }
+}
