@@ -1,4 +1,5 @@
 using BlazorApp.Components;
+using BlazorApp.Service;
 
 namespace BlazorApp
 {
@@ -11,6 +12,13 @@ namespace BlazorApp
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            // The singleton
+            builder.Services.AddSingleton(sp =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                return new DBService(connectionString);
+            });
 
             var app = builder.Build();
 

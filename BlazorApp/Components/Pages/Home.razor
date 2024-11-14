@@ -1,7 +1,36 @@
 ﻿@page "/"
+@using BlazorApp.Service;
+@inject DBService DbService;
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+
+<p>@connectionStatus</p>
+
+@code{
+    private string connectionStatus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            using var connection = DbService.GetConnection();
+            if (connection.State == System.Data.ConnectionState.Open)
+            {
+                connectionStatus = "Database connection successful";
+            }
+            else
+            {
+                connectionStatus = "Failed to connect to databse";
+            }
+        }
+        catch (Exception e)
+        {
+            connectionStatus = $"Error: {e.Message}";
+        }
+    }
+}
