@@ -96,3 +96,94 @@ fossil_coopers --> users
 account -> users
 
 @enduml
+
+@startuml
+'https://plantuml.com/sequence-diagram
+class mini_cooper {
+    model_name TEXT
+    generation INT
+    model_type TEXT
+    color TEXT
+    price INT
+    km_driven INT
+    max_range INT
+    weight INT
+    fuel_type TEXT
+    geartype TEXT
+    yearly_tax INT
+    images_id INT[]
+}
+
+class account {
+    name TEXT
+    password TEXT
+    phone INT
+    email TEXT
+    city TEXT
+    address TEXT
+}
+
+class ev_mini_cooper{
+    base_cooper mini_cooper
+    charge_capacity INT
+    km_pr_kwh FLOAT
+}
+
+class fossil_mini_cooper {
+    base_cooper mini_cooper
+    tank_capacity INT
+    km_pr_liter FLOAT
+    gears INT
+}
+
+class hybrid_mini_cooper {
+    base_cooper mini_cooper
+    fuel_type1 TEXT
+    fuel_type2 TEXT
+    tank_capacity INT
+    charge_capacity INT
+    km_pr_liter FLOAT
+    km_pr_kwh FLOAT
+    gears INT
+}
+
+object images {
+    id SERIAL PRIMARY KEY    
+    image_url TEXT
+}
+
+object users{
+    id SERIAL PRIMARY KEY
+    a_user account
+}
+
+class Car {
+    fossil_mini_cooper?
+    ev_mini_cooper?
+    hybrid_mini_cooper?
+}
+
+object Cars {
+    id SERIAL PRIMARY KEY
+    car Car
+    account_id INT
+    CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES users (id)
+}
+
+Car -|> fossil_mini_cooper
+Car -|> ev_mini_cooper
+Car -|> hybrid_mini_cooper
+
+users -> Cars::id
+
+Car --> Cars
+
+mini_cooper --> images
+
+fossil_mini_cooper -|> mini_cooper
+ev_mini_cooper -|> mini_cooper
+hybrid_mini_cooper -|> mini_cooper
+
+account -> users::a_user
+
+@enduml
