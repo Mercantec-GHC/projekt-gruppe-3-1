@@ -2,7 +2,7 @@
 
 public class MiniCooper
 {
-    public abstract class BaseMiniCooper
+    public class BaseMiniCooper
     {
         public string ModelName { get; set; } = string.Empty;
         public int Generation { get; set; }
@@ -19,17 +19,17 @@ public class MiniCooper
         
         public void PrintBaseMiniCooper()
         {
-            Console.WriteLine($"__Fossil Mini-Cooper__" +
-                              $"Model name: {ModelName}" +
-                              $"Generation: {Generation}" +
-                              $"Model type: {ModelType}" +
-                              $"Color: {Color}" +
-                              $"Price: {Price}" +
-                              $"Mileage: {Mileage}" +
-                              $"Max range: {MaxRange}" +
-                              $"Weight: {Weight}" +
-                              $"Fuel type: {FuelType}" +
-                              $"Geartype: {Geartype}" +
+            Console.WriteLine($"__Fossil Mini-Cooper__\n" +
+                              $"Model name: {ModelName}\n" +
+                              $"Generation: {Generation}\n" +
+                              $"Model type: {ModelType}\n" +
+                              $"Color: {Color}\n" +
+                              $"Price: {Price}\n" +
+                              $"Mileage: {Mileage}\n" +
+                              $"Max range: {MaxRange}\n" +
+                              $"Weight: {Weight}\n" +
+                              $"Fuel type: {FuelType}\n" +
+                              $"Geartype: {Geartype}\n" +
                               $"Yearly tax: {YearlyTax}");
             if (Images.Count > 0)
             {
@@ -59,6 +59,22 @@ public class MiniCooper
         {
             Images.Add(imageId);
         }
+
+        public void SetBaseMiniCooperModel(BaseMiniCooper model)
+        {
+            ModelName = model.ModelName;
+            Generation = model.Generation;
+            ModelType = model.ModelType;
+            Color = model.Color;
+            Price = model.Price;
+            Mileage = model.Mileage;
+            MaxRange = model.MaxRange;
+            Weight = model.Weight;
+            FuelType = model.FuelType;
+            Geartype = model.Geartype;
+            YearlyTax = model.YearlyTax;
+            Images = model.Images;
+        }
     }
 
     public class EvMiniCooper : BaseMiniCooper
@@ -69,7 +85,7 @@ public class MiniCooper
         public void Print()
         {
             PrintBaseMiniCooper();
-            Console.WriteLine($"Charge capacity: {ChargeCapacity}" +
+            Console.WriteLine($"Charge capacity: {ChargeCapacity}\n" +
                               $"Km. pr. kilowatt hour: {KmPrKwh}");
         }
     }
@@ -83,8 +99,8 @@ public class MiniCooper
         public void Print()
         {
             PrintBaseMiniCooper();
-            Console.WriteLine($"Tank capacity: {TankCapacity}" +
-                              $"Km. pr. liter: {KmPrLiter}" +
+            Console.WriteLine($"Tank capacity: {TankCapacity}\n" +
+                              $"Km. pr. liter: {KmPrLiter}\n" +
                               $"Gears: {Gears}");
         }
     }
@@ -102,12 +118,12 @@ public class MiniCooper
         public void Print()
         {
             PrintBaseMiniCooper();
-            Console.WriteLine($"Fuel type 1: {FuelType1}" +
-                              $"Fuel type 2: {FuelType2}" +
-                              $"Tank capacity: {TankCapacity}" +
-                              $"Charge capacity: {ChargeCapacity}" +
-                              $"Km. pr. liter: {KmPrLiter}" +
-                              $"Km. pr. kilowatt hour: {KmPrKwh}" +
+            Console.WriteLine($"Fuel type 1: {FuelType1}\n" +
+                              $"Fuel type 2: {FuelType2}\n" +
+                              $"Tank capacity: {TankCapacity}\n" +
+                              $"Charge capacity: {ChargeCapacity}\n" +
+                              $"Km. pr. liter: {KmPrLiter}\n" +
+                              $"Km. pr. kilowatt hour: {KmPrKwh}\n" +
                               $"Gears: {Gears}");
         }
     }
@@ -117,6 +133,30 @@ public class MiniCooper
         private EvMiniCooper? EvCooper { get; set; }
         private FossilMiniCooper? FossilCooper { get; set; }
         private HybridMiniCooper? HybridCooper { get; set; }
+
+        public void PrintEv()
+        {
+            if (EvCooper == null)
+                Console.WriteLine("Electric Cooper is null!");
+            else
+                EvCooper?.Print();
+        }
+        
+        public void PrintFossil()
+        {
+            if (FossilCooper == null)
+                Console.WriteLine("Fossil Cooper is null!");
+            else
+                FossilCooper?.Print();
+        }
+        
+        public void PrintHybrid()
+        {
+            if (HybridCooper == null)
+                Console.WriteLine("Hybrid Cooper is null!");
+            else
+                HybridCooper?.Print();
+        }
 
         public bool ThereCanOnlyBeOne()
         {
@@ -168,7 +208,7 @@ public class MiniCooper
         public async Task AddToDatabase(DBService dbService)
         {
             if (HasMultipleCars())
-                Console.WriteLine("The object SOMEHOW, has multiple cars");
+                Console.WriteLine("The object SOMEHOW, has multiple cars (or is empty)");
             else
                 await dbService.AddCooperToDbAsync(this);
         }
