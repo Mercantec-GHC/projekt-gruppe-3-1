@@ -1,0 +1,88 @@
+@page "/new-car"
+@using BlazorApp.Service
+@using BlazorApp.Components.Pages.Forms
+@inject MiniCooper.BaseMiniCooper BaseCooper
+@inject MiniCooper.EvMiniCooper Ev
+@inject MiniCooper.FossilMiniCooper Fossil
+@inject MiniCooper.HybridMiniCooper Hybrid
+@inject MiniCooper.FullMiniCooper FullCooper
+@* Remember to add scoped versions of these in the Program.cs *@
+
+<div class="dropdown">
+    <a class="btn btn-secondary custom-layout dropdown-toggle btn-lg" href="#" role="button" data-bs-toggle="dropdown"
+       aria-expanded="false">
+        Vehicle Options
+    </a>
+
+    <ul class="dropdown-menu">
+        <li>
+            <button class="dropdown-item" type="submit" onclick="@(() => HandleOptionChange("ev"))">Electric</button>
+        </li>
+        <li>
+            <button class="dropdown-item" type="submit" onclick="@(() => HandleOptionChange("fossil"))">Fossil</button>
+        </li>
+        <li>
+            <button class="dropdown-item" type="submit" onclick="@(() => HandleOptionChange("hybrid"))">Hybrid</button>
+        </li>
+    </ul>
+</div>
+
+<EditForm Model="@BaseCooper" OnValidSubmit="HandleValidSubmit">
+    @switch (form)
+    {
+        case "ev":
+            <EvForm EvFormData="@Ev"/>
+            break;
+        case "fossil":
+            <FossilForm FossilFormData="@Fossil"/>
+            break;
+        case "hybrid":
+            <HybridForm HybridFormData="@Hybrid"/>
+            break;
+        default:
+            <p>Select Vehicle Type</p>
+            break;
+    }
+
+    <button type="submit">Submit Car</button>
+</EditForm>
+
+
+@code {
+    string form = "";
+
+    public void HandleValidSubmit()
+    {
+        Console.WriteLine("Handling valid submit...");
+        if (form == "ev")
+        {
+            Ev.SetBaseMiniCooperModel(BaseCooper);
+            FullCooper.SetMiniCooper(Ev);
+            FullCooper.PrintEv();
+        }
+        else if (form == "fossil")
+        {
+            Fossil.SetBaseMiniCooperModel(BaseCooper);
+            FullCooper.SetMiniCooper(Fossil);
+            FullCooper.PrintFossil();
+        }
+        else if (form == "hybrid")
+        {
+            Hybrid.SetBaseMiniCooperModel(BaseCooper);
+            FullCooper.SetMiniCooper(Hybrid);
+            FullCooper.PrintHybrid();
+        }
+        else
+        {
+            Console.WriteLine("Invalid form type");
+        }
+    }
+
+    private void HandleOptionChange(string option)
+    {
+        Console.WriteLine("Handling option...");
+        form = option;
+        StateHasChanged();
+    }
+
+}
