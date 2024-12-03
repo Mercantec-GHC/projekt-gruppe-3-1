@@ -1,6 +1,7 @@
 @page "/new-car"
 @using BlazorApp.Service
 @using BlazorApp.Components.Pages.Forms
+@inject DBService DbService
 @inject MiniCooper.BaseMiniCooper BaseCooper
 @inject MiniCooper.EvMiniCooper Ev
 @inject MiniCooper.FossilMiniCooper Fossil
@@ -27,7 +28,40 @@
     </ul>
 </div>
 
-<EditForm Model="@BaseCooper" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@BaseCooper" OnValidSubmit="@HandleValidSubmit">
+    <label class="form-label">Model Name:</label>
+    <InputText @bind-Value="BaseCooper.ModelName"/>
+
+    <label class="form-label">Generation:</label>
+    <InputNumber @bind-Value="BaseCooper.Generation"/>
+
+    <label class="form-label">Model Type:</label>
+    <InputText @bind-Value="BaseCooper.ModelType"/>
+
+    <label class="form-label">Color:</label>
+    <InputText @bind-Value="BaseCooper.Color"/>
+
+    <label class="form-label">Price:</label>
+    <InputNumber @bind-Value="BaseCooper.Price"/>
+
+    <label class="form-label">Mileage:</label>
+    <InputNumber @bind-Value="BaseCooper.Mileage"/>
+
+    <label class="form-label">Max range:</label>
+    <InputNumber @bind-Value="BaseCooper.MaxRange"/>
+
+    <label class="form-label">Weight:</label>
+    <InputNumber @bind-Value="BaseCooper.Weight"/>
+
+    <label class="form-label">Fuel type:</label>
+    <InputText @bind-Value="BaseCooper.FuelType"/>
+
+    <label class="form-label">Gear type:</label>
+    <InputText @bind-Value="BaseCooper.GearType"/>
+
+    <label class="form-label">Yearly tax:</label>
+    <InputNumber @bind-Value="BaseCooper.YearlyTax"/>
+    
     @switch (form)
     {
         case "ev":
@@ -48,34 +82,90 @@
 </EditForm>
 
 
+
+<InputFile OnChange="HandleImages" multiple/>
+
+@foreach (var file in loadedFiles)
+{
+    <li>
+        <ul>
+            <li>Name: @file.Name</li>
+            <li>Last modified: @file.LastModified.ToString()</li>
+            <li>Size (bytes): @file.Size</li>
+            <li>Content type: @file.ContentType</li>
+        </ul>
+    </li>
+}
+
+@foreach (var image in BaseCooper.Base64Images)
+{
+    <img src="data:image/png;base64,@image" alt="Ops..." />
+}
+
 @code {
     string form = "";
 
-    public void HandleValidSubmit()
+    public async Task HandleValidSubmit()
     {
+        if (form == "")
+        {
+            Console.WriteLine("No car base selected");
+            // Message saying that the user needs to pick an option.
+            return;
+        }
+        
+        if (loadedFiles.Count == 0)
+        {
+            Console.WriteLine("No images are loaded");
+            // Message saying that the user needs at least 1 picture.
+            return;
+        }
+        
         Console.WriteLine("Handling valid submit...");
         if (form == "ev")
         {
-            Ev.SetBaseMiniCooperModel(BaseCooper);
+            await Ev.SetBaseMiniCooperModel(BaseCooper);
             FullCooper.SetMiniCooper(Ev);
             FullCooper.PrintEv();
+
+            if (FullCooper.GetEvCooper() == null)
+                return;
+            
+            await DbService.AddEvToDbAsync(FullCooper.GetEvCooper(), 99);
+            
+            FullCooper.Clear();
         }
         else if (form == "fossil")
         {
-            Fossil.SetBaseMiniCooperModel(BaseCooper);
+            await Fossil.SetBaseMiniCooperModel(BaseCooper);
             FullCooper.SetMiniCooper(Fossil);
             FullCooper.PrintFossil();
+            
+            if (FullCooper.GetFossilCooper() == null)
+                return;
+            
+            await DbService.AddFossilToDbAsync(FullCooper.GetFossilCooper(), 99);
+            
+            FullCooper.Clear();
         }
         else if (form == "hybrid")
         {
-            Hybrid.SetBaseMiniCooperModel(BaseCooper);
+            await Hybrid.SetBaseMiniCooperModel(BaseCooper);
             FullCooper.SetMiniCooper(Hybrid);
             FullCooper.PrintHybrid();
+            
+            if (FullCooper.GetHybridCooper() == null)
+                return;
+            
+            await DbService.AddHybridToDbAsync(FullCooper.GetHybridCooper(), 99);
+
+            FullCooper.Clear();
         }
         else
         {
             Console.WriteLine("Invalid form type");
         }
+
     }
 
     private void HandleOptionChange(string option)
@@ -83,6 +173,32 @@
         Console.WriteLine("Handling option...");
         form = option;
         StateHasChanged();
+    }
+
+    private List<IBrowserFile> loadedFiles = new();
+
+    private async Task HandleImages(InputFileChangeEventArgs imageFiles)
+    {
+        foreach (var image in imageFiles.GetMultipleFiles())
+        {
+            if (!image.ContentType.Contains("image"))
+            {
+                Console.WriteLine($"\"{image.ContentType}\" is not allowed");
+                return;
+            }
+
+            try
+            {
+                await BaseCooper.AddImage(image);
+                loadedFiles.Add(image);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error getting file: " + ex.Message);
+                // Perhaps, display error message.
+                return;
+            }
+        }
     }
 
 }

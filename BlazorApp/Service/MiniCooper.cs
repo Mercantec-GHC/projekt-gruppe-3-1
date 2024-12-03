@@ -1,4 +1,6 @@
-﻿namespace BlazorApp.Service;
+﻿using Microsoft.AspNetCore.Components.Forms;
+
+namespace BlazorApp.Service;
 
 public class MiniCooper
 {
@@ -13,13 +15,13 @@ public class MiniCooper
         public int MaxRange { get; set; }
         public int Weight { get; set; }
         public string FuelType { get; set; } = string.Empty; // Fossil/Diesel/Electricity/Hybrid.
-        public string Geartype { get; set; } = string.Empty;
+        public string GearType { get; set; } = string.Empty;
         public decimal YearlyTax { get; set; }
-        public List<int> Images { get; set; } = new();
+        public List<string> Base64Images { get; set; } = new();
         
         public void PrintBaseMiniCooper()
         {
-            Console.WriteLine($"__Fossil Mini-Cooper__\n" +
+            Console.WriteLine($"__Mini-Cooper__\n" +
                               $"Model name: {ModelName}\n" +
                               $"Generation: {Generation}\n" +
                               $"Model type: {ModelType}\n" +
@@ -29,38 +31,15 @@ public class MiniCooper
                               $"Max range: {MaxRange}\n" +
                               $"Weight: {Weight}\n" +
                               $"Fuel type: {FuelType}\n" +
-                              $"Geartype: {Geartype}\n" +
+                              $"Geartype: {GearType}\n" +
                               $"Yearly tax: {YearlyTax}");
-            if (Images.Count > 0)
-            {
-                Console.Write("Images: ");
-                foreach (var id in Images)
-                {
-                    Console.Write(id + ", ");
-                }
-                Console.WriteLine();
-            }
+            if (Base64Images.Count > 0)
+                Console.WriteLine($"Images: {Base64Images.Count}");
             else
-            {
                 Console.WriteLine("No image ID's added");
-            }
         }
 
-        public void InsertImages(List<int> imageIds)
-        {
-            foreach (var id in imageIds)
-            {
-                Images.Add(id);
-            }
-        }
-        
-        
-        public void InsertImages(int imageId)
-        {
-            Images.Add(imageId);
-        }
-
-        public void SetBaseMiniCooperModel(BaseMiniCooper model)
+        public async Task SetBaseMiniCooperModel(BaseMiniCooper model)
         {
             ModelName = model.ModelName;
             Generation = model.Generation;
@@ -71,9 +50,18 @@ public class MiniCooper
             MaxRange = model.MaxRange;
             Weight = model.Weight;
             FuelType = model.FuelType;
-            Geartype = model.Geartype;
+            GearType = model.GearType;
             YearlyTax = model.YearlyTax;
-            Images = model.Images;
+            Base64Images = model.Base64Images;
+        }
+
+        public async Task AddImage(IBrowserFile image)
+        {
+            using var memoryStream = new MemoryStream();
+            await image.OpenReadStream().CopyToAsync(memoryStream);
+            var imageBytes = memoryStream.ToArray();
+            var base64Image = Convert.ToBase64String(imageBytes);
+            Base64Images.Add(base64Image);
         }
     }
 
@@ -133,6 +121,29 @@ public class MiniCooper
         private EvMiniCooper? EvCooper { get; set; }
         private FossilMiniCooper? FossilCooper { get; set; }
         private HybridMiniCooper? HybridCooper { get; set; }
+
+        public EvMiniCooper? GetEvCooper()
+        {
+            return EvCooper;
+        }
+        
+        public FossilMiniCooper? GetFossilCooper()
+        {
+            return FossilCooper;
+        }
+        
+        public HybridMiniCooper? GetHybridCooper()
+        {
+            return HybridCooper;
+        }
+
+        public void Clear()
+        {
+            Console.WriteLine("Clearing cars...");
+            EvCooper = null;
+            FossilCooper = null;
+            HybridCooper = null;
+        }
 
         public void PrintEv()
         {
@@ -205,29 +216,15 @@ public class MiniCooper
                 Console.WriteLine("A car has already been assigned to this object.");
         }
 
-        public async Task AddToDatabase(DBService dbService)
-        {
-            if (HasMultipleCars())
-                Console.WriteLine("The object SOMEHOW, has multiple cars (or is empty)");
-            else
-                await dbService.AddCooperToDbAsync(this);
-        }
-
         private bool HasMultipleCars()
         {
             int carCount = 0;
             if (EvCooper != null)
-            {
                 carCount++;
-            }
             if (FossilCooper != null)
-            {
                 carCount++;
-            }
             if (HybridCooper != null)
-            {
                 carCount++;
-            }
 
             return carCount != 1;
         }

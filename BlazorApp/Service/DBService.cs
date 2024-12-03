@@ -1,14 +1,18 @@
 namespace BlazorApp.Service;
+
 using Npgsql;
 
 public class DBService
 {
+    public static DBService Instance;
+
     // Essentically our DefaultConnection in our appsettings.json.
     private readonly string _connectionString;
 
     public DBService(string connectionString)
     {
         _connectionString = connectionString;
+        Instance = this;
     }
 
     // We then made a NpgsqlConnection, open it and then returns it.
@@ -19,15 +23,72 @@ public class DBService
         return connection;
     }
 
-    public async Task AddCooperToDbAsync(MiniCooper.FullMiniCooper miniCooper)
+    public async Task FunctionName()
+    {
+        string query = "";
+        using (var connection = GetConnection())
+        using (var command = new NpgsqlCommand(query, connection))
+        using (var reader = await command.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                reader.GetInt32(0);
+            }
+        }
+    }
+
+    public async Task AddEvToDbAsync(MiniCooper.EvMiniCooper miniCooper, int userId)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
+        
+        /*var tempCooper = 
 
-        string query = $"INSERT INTO cars {miniCooper}";
+        string query = "INSERT INTO cars (a_car, account_id) " +
+                       "VALUES (ROW(" +
+                       "NULL," +
+                       "ROW (" +
+                            $"ROW({miniCooper.}))," +
+                       "NULL)::car, {userId})";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);
+        await RunAsyncQuery(cmd);*/
+    }
+    
+    public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper miniCooper, int userId)
+    {
+        await using var conn = new NpgsqlConnection(_connectionString);
+        conn.Open();
+        
+        /*var tempCooper = 
+
+            string query = "INSERT INTO cars (a_car, account_id) " +
+                           "VALUES (ROW(" +
+                           "NULL," +
+                           "ROW (" +
+                           $"ROW({miniCooper.}))," +
+                           "NULL)::car, {userId})";
+        await using var cmd = new NpgsqlCommand(query, conn);
+
+        await RunAsyncQuery(cmd);*/
+    }
+    
+    public async Task AddHybridToDbAsync(MiniCooper.HybridMiniCooper miniCooper, int userId)
+    {
+        await using var conn = new NpgsqlConnection(_connectionString);
+        conn.Open();
+        
+        /*var tempCooper = 
+
+            string query = "INSERT INTO cars (a_car, account_id) " +
+                           "VALUES (ROW(" +
+                           "NULL," +
+                           "ROW (" +
+                           $"ROW({miniCooper.}))," +
+                           "NULL)::car, {userId})";
+        await using var cmd = new NpgsqlCommand(query, conn);
+
+        await RunAsyncQuery(cmd);*/
     }
 
     /// <summary>
@@ -108,7 +169,7 @@ public class DBService
 
         await RunAsyncQuery(cmd);
     }
-    
+
     /// <summary>
     /// Udfører en given async-SQL kommando og retunerer antal af rækker påvirket.
     /// </summary>
