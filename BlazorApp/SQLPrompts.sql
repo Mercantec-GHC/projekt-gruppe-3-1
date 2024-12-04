@@ -232,3 +232,7 @@ FROM cars WHERE id = 1;
 
 SELECT images
 FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHERE id = 2;
+
+SELECT (a_car).electric_car.base_cooper.model_name, (a_car).electric_car.base_cooper.generation, (a_car).electric_car.base_cooper.color, (a_car).electric_car.base_cooper.price, (a_car).electric_car.base_cooper.km_driven, (a_car).electric_car.base_cooper.max_range, (a_car).electric_car.base_cooper.weight, (a_car).electric_car.base_cooper.fuel_type, (a_car).electric_car.base_cooper.geartype, (a_car).electric_car.base_cooper.yearly_tax, (a_car).electric_car.charge_capacity, (a_car).electric_car.km_pr_kwh FROM cars WHERE id = 2;
+
+SELECT (a_car).electric_car.base_cooper.model_name, (a_car).electric_car.base_cooper.generation, (a_car).electric_car.base_cooper.color, (a_car).electric_car.base_cooper.price, (a_car).electric_car.base_cooper.km_driven, (a_car).electric_car.base_cooper.max_range, (a_car).electric_car.base_cooper.weight, (a_car).electric_car.base_cooper.fuel_type, (a_car).electric_car.base_cooper.geartype, (a_car).electric_car.base_cooper.yearly_tax, (a_car).electric_car.charge_capacity, (a_car).electric_car.km_pr_kwh FROM cars WHERE id = 2;
