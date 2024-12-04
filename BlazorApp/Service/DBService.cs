@@ -300,7 +300,7 @@ public class DBService
 
 
         string query =
-            $"SELECT {modelName}, {generation}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
+            $"SELECT {modelName}, {generation}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, (a_car).electric_car.base_cooper.base64_images, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
         await using var cmd = new NpgsqlCommand(query, conn);
 
         var reader = await cmd.ExecuteReaderAsync();
@@ -315,7 +315,8 @@ public class DBService
         evCooper.FuelType = reader.GetString(7);
         evCooper.GearType = reader.GetString(8);
         evCooper.YearlyTax = reader.GetDecimal(9);
-        evCooper.ChargeCapacity = reader.GetInt32(10);
+        // evCooper.Base64Images = reader.GetString(10);
+        evCooper.ChargeCapacity = reader.GetInt32(11);
 
         MiniCooper.FullMiniCooper fullCooper = new();
         fullCooper.SetMiniCooper(evCooper);
