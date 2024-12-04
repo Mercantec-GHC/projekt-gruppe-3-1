@@ -58,7 +58,7 @@ public class DBService
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);
+        await RunAsyncQueryForInsertion(cmd);
     }
 
     public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper miniCooper, int userId)
@@ -79,7 +79,7 @@ public class DBService
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);
+        await RunAsyncQueryForInsertion(cmd);
     }
 
     public async Task AddHybridToDbAsync(MiniCooper.HybridMiniCooper miniCooper, int userId)
@@ -94,28 +94,28 @@ public class DBService
             "NULL," +
             "NULL," +
             "ROW (" +
-            "ROW ("+
-            $"'{miniCooper.ModelName}',"+
-            $"'{miniCooper.Generation}',"+
-            $"'{miniCooper.ModelType}',"+
-            $"'{miniCooper.Color}',"+
-            $"{miniCooper.Price},"+
-            $"{miniCooper.Mileage},"+
-            $"{miniCooper.MaxRange},"+
-            $"{miniCooper.Weight},"+
-            $"'{miniCooper.FuelType}',"+
-            $"'{miniCooper.GearType}', "+
-            $"{miniCooper.YearlyTax},"+
+            "ROW (" +
+            $"'{miniCooper.ModelName}'," +
+            $"'{miniCooper.Generation}'," +
+            $"'{miniCooper.ModelType}'," +
+            $"'{miniCooper.Color}'," +
+            $"{miniCooper.Price}," +
+            $"{miniCooper.Mileage}," +
+            $"{miniCooper.MaxRange}," +
+            $"{miniCooper.Weight}," +
+            $"'{miniCooper.FuelType}'," +
+            $"'{miniCooper.GearType}', " +
+            $"{miniCooper.YearlyTax}," +
             "ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
-            $"{miniCooper.FuelType1},"+
-            $"{miniCooper.FuelType2},"+
-            $"{miniCooper.TankCapacity},"+
-            $"{miniCooper.ChargeCapacity},"+")::hybrid_mini_cooper " +
+            $"{miniCooper.FuelType1}," +
+            $"{miniCooper.FuelType2}," +
+            $"{miniCooper.TankCapacity}," +
+            $"{miniCooper.ChargeCapacity}," + ")::hybrid_mini_cooper " +
             ")::car," +
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);
+        await RunAsyncQueryForInsertion(cmd);
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public class DBService
         string query = $"DELETE FROM cars WHERE car_id = {carId}";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);
+        await RunAsyncQueryForInsertion(cmd);
 
         await ResetTableIdsAsync("cars");
     }
@@ -194,7 +194,7 @@ public class DBService
                        $"DROP TABLE temp_{tableName};";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);
+        await RunAsyncQueryForInsertion(cmd);
     }
 
     /// <summary>
@@ -219,7 +219,7 @@ public class DBService
     /// Console.WriteLine($"Total records affected: {affectedRecords}");
     /// </code>
     /// </example>
-    private async Task<int> RunAsyncQuery(NpgsqlCommand query)
+    private async Task<int> RunAsyncQueryForInsertion(NpgsqlCommand query)
     {
         int result = await query.ExecuteNonQueryAsync();
         if (result <= 0)
@@ -229,33 +229,97 @@ public class DBService
 
         return result;
     }
-    
+
     public async Task<List<MiniCooper.FullMiniCooper>> GetMiniCoopersAsync()
     {
         List<MiniCooper.FullMiniCooper> miniCoopers = new();
-        
+
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
-        string query = "SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;";
+        string query =
+            "SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;";
         await using var cmd = new NpgsqlCommand(query, conn);
 
         await using (var reader = await cmd.ExecuteReaderAsync())
         {
             while (await reader.ReadAsync())
             {
-                if (reader.IsDBNull(0))
+                var currentId = reader.GetInt32(0);
+
+                if (!reader.IsDBNull(0))
                 {
-                    
+                    Console.WriteLine("Ev added!");
+                    var read = reader.GetFieldType(0);
+                    Console.WriteLine(read);
+
+                    miniCoopers.Add(await GetEvByIdAsync(currentId));
+                }
+                else if (!reader.IsDBNull(1))
+                {
+                    Console.WriteLine("Fossil added!");
+                }
+                else if (!reader.IsDBNull(2))
+                {
+                    Console.WriteLine("Hybrid added!");
+                }
+                else
+                {
+                    Console.WriteLine("No car has been assigned to this object.");
                 }
             }
         }
-        
+
         return miniCoopers;
     }
 
-    private async Task ResolveCooperType(PostgresType postgresType)
+    public async Task<MiniCooper.FullMiniCooper> GetEvByIdAsync(int id)
     {
-        Console.WriteLine(postgresType);
+        MiniCooper.EvMiniCooper evCooper = new();
+
+        await using var conn = new NpgsqlConnection(_connectionString);
+        conn.Open();
+
+        var carEv = "(a_car).electric_car";
+        var carEvBase = "(a_car).electric_car.base_cooper";
+
+
+        var modelName = "(a_car).electric_car.base_cooper.model_name";
+        var generation = "(a_car).electric_car.base_cooper.generation";
+        var color = "(a_car).electric_car.base_cooper.color";
+        var price = "(a_car).electric_car.base_cooper.price";
+        var kmDriven = "(a_car).electric_car.base_cooper.km_driven";
+        var maxRange = "(a_car).electric_car.base_cooper.max_range";
+        var weight = "(a_car).electric_car.base_cooper.weight";                                 
+        var fuelType = "(a_car).electric_car.base_cooper.fuel_type";
+        var gearType = "(a_car).electric_car.base_cooper.geartype";
+        var yearlyTax = "(a_car).electric_car.base_cooper.yearly_tax";
+        var picsdude = "";
+        var chargeCapacity = "(a_car).electric_car.charge_capacity";
+        var kmPrKwh = "(a_car).electric_car.km_pr_kwh";
+
+
+        string query =
+            $"SELECT {modelName}, {generation}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
+        await using var cmd = new NpgsqlCommand(query, conn);
+
+        var reader = await cmd.ExecuteReaderAsync();
+
+        evCooper.ModelName = reader.GetString(0);
+        evCooper.Generation = reader.GetInt32(1);
+        evCooper.Color = reader.GetString(2);
+        evCooper.Price = reader.GetInt32(3);
+        evCooper.Mileage = reader.GetInt32(4);
+        evCooper.MaxRange = reader.GetInt32(5);
+        evCooper.Weight = reader.GetInt32(6);
+        evCooper.FuelType = reader.GetString(7);
+        evCooper.GearType = reader.GetString(8);
+        evCooper.YearlyTax = reader.GetDecimal(9);
+        evCooper.ChargeCapacity = reader.GetInt32(10);
+
+        MiniCooper.FullMiniCooper fullCooper = new();
+        fullCooper.SetMiniCooper(evCooper);
+        
+        return fullCooper;
     }
 }
