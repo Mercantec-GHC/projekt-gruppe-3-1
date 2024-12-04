@@ -61,6 +61,7 @@ CREATE TYPE mini_cooper AS
 );
 
 
+
 CREATE TYPE ev_mini_cooper AS
 (
     base_cooper     mini_cooper,
@@ -182,7 +183,8 @@ FROM cars;
 SELECT a_car, account_id
 FROM cars;
 
-SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;
+SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id
+FROM cars;
 
 SELECT a_car, account_id
 FROM cars
@@ -210,17 +212,23 @@ FROM cars
 WHERE (a_car).electric_car IS NOT NULL;
 
 -- carEvBase carEv
-SELECT (a_car).electric_car.base_cooper.color, (a_car).electric_car.charge_capacity FROM cars;
-
-SELECT
-    (a_car).electric_car.base_cooper.model_name,
-    (a_car).electric_car.base_cooper.generation,
-    (a_car).electric_car.base_cooper.color,
-    (a_car).fossile_car.base_cooper.model_name,
-    (a_car).fossile_car.base_cooper.generation,
-    (a_car).fossile_car.base_cooper.color,
-    (a_car).hybrid_car.base_cooper.model_name,
-    (a_car).hybrid_car.base_cooper.generation,
-    (a_car).hybrid_car.base_cooper.color,
-    account_id
+SELECT (a_car).electric_car.base_cooper.color, (a_car).electric_car.charge_capacity
 FROM cars;
+
+SELECT (a_car).electric_car.base_cooper.model_name,
+       (a_car).electric_car.base_cooper.generation,
+       (a_car).electric_car.base_cooper.color,
+       (a_car).fossile_car.base_cooper.model_name,
+       (a_car).fossile_car.base_cooper.generation,
+       (a_car).fossile_car.base_cooper.color,
+       (a_car).hybrid_car.base_cooper.model_name,
+       (a_car).hybrid_car.base_cooper.generation,
+       (a_car).hybrid_car.base_cooper.color,
+       account_id
+FROM cars;
+
+SELECT *
+FROM cars WHERE id = 1;
+
+SELECT images
+FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHERE id = 2;
