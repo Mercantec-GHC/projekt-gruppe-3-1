@@ -209,19 +209,18 @@ SELECT (a_car).fossile_car
 FROM cars
 WHERE (a_car).electric_car IS NOT NULL;
 
--- ---------------------------------------------------------------------
+-- carEvBase carEv
+SELECT (a_car).electric_car.base_cooper.color, (a_car).electric_car.charge_capacity FROM cars;
 
-CREATE TYPE persona AS
-(
-    id   INT,
-    name TEXT
-);
-
-CREATE TABLE andreas (id SERIAL PRIMARY KEY, person persona);
-
-INSERT INTO andreas (person) VALUES (ROW(1, 'test')::persona);
-INSERT INTO andreas (person) VALUES (ROW(2, 't')::persona);
-
-SELECT * FROM andreas;
-
-SELECT person FROM andreas;
+SELECT
+    (a_car).electric_car.base_cooper.model_name,
+    (a_car).electric_car.base_cooper.generation,
+    (a_car).electric_car.base_cooper.color,
+    (a_car).fossile_car.base_cooper.model_name,
+    (a_car).fossile_car.base_cooper.generation,
+    (a_car).fossile_car.base_cooper.color,
+    (a_car).hybrid_car.base_cooper.model_name,
+    (a_car).hybrid_car.base_cooper.generation,
+    (a_car).hybrid_car.base_cooper.color,
+    account_id
+FROM cars;
