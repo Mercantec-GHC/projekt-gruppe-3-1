@@ -250,7 +250,7 @@ public class DBService
                 if (!reader.IsDBNull(0))
                 {
                     Console.WriteLine("Ev added!");
-                    var read = reader.GetFieldType(0);
+                    var read = reader.GetInt32(0);
                     Console.WriteLine(read);
 
                     miniCoopers.Add(await GetEvByIdAsync(currentId));
@@ -280,9 +280,8 @@ public class DBService
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
-        var carEv = "(a_car).electric_car";
-        var carEvBase = "(a_car).electric_car.base_cooper";
-
+        /*var carEv = "(a_car).electric_car";
+        var carEvBase = "(a_car).electric_car.base_cooper";*/
 
         var modelName = "(a_car).electric_car.base_cooper.model_name";
         var generation = "(a_car).electric_car.base_cooper.generation";
@@ -290,37 +289,81 @@ public class DBService
         var price = "(a_car).electric_car.base_cooper.price";
         var kmDriven = "(a_car).electric_car.base_cooper.km_driven";
         var maxRange = "(a_car).electric_car.base_cooper.max_range";
-        var weight = "(a_car).electric_car.base_cooper.weight";                                 
+        var weight = "(a_car).electric_car.base_cooper.weight";
         var fuelType = "(a_car).electric_car.base_cooper.fuel_type";
         var gearType = "(a_car).electric_car.base_cooper.geartype";
         var yearlyTax = "(a_car).electric_car.base_cooper.yearly_tax";
-        var picsdude = "";
         var chargeCapacity = "(a_car).electric_car.charge_capacity";
         var kmPrKwh = "(a_car).electric_car.km_pr_kwh";
 
 
-        string query =
-            $"SELECT {modelName}, {generation}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, (a_car).electric_car.base_cooper.base64_images, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
-        await using var cmd = new NpgsqlCommand(query, conn);
+        try
+        {
+            string query =
+                $"SELECT {modelName}, {generation}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
+            // Console.WriteLine("Query: " + query);
+            await using var cmd = new NpgsqlCommand(query, conn);
 
-        var reader = await cmd.ExecuteReaderAsync();
+            var reader = await cmd.ExecuteReaderAsync();
 
-        evCooper.ModelName = reader.GetString(0);
-        evCooper.Generation = reader.GetInt32(1);
-        evCooper.Color = reader.GetString(2);
-        evCooper.Price = reader.GetInt32(3);
-        evCooper.Mileage = reader.GetInt32(4);
-        evCooper.MaxRange = reader.GetInt32(5);
-        evCooper.Weight = reader.GetInt32(6);
-        evCooper.FuelType = reader.GetString(7);
-        evCooper.GearType = reader.GetString(8);
-        evCooper.YearlyTax = reader.GetDecimal(9);
-        // evCooper.Base64Images = reader.GetString(10);
-        evCooper.ChargeCapacity = reader.GetInt32(11);
+            if (await reader.ReadAsync())
+            {
+                evCooper.ModelName = reader.GetString(0);
+                evCooper.Generation = reader.GetInt32(1);
+                evCooper.Color = reader.GetString(2);
+                evCooper.Price = reader.GetInt32(3);
+                evCooper.Mileage = reader.GetInt32(4);
+                evCooper.MaxRange = reader.GetInt32(5);
+                evCooper.Weight = reader.GetInt32(6);
+                evCooper.FuelType = reader.GetString(7);
+                evCooper.GearType = reader.GetString(8);
+                evCooper.YearlyTax = reader.GetDecimal(9);
+                evCooper.ChargeCapacity = reader.GetInt32(10);
+                evCooper.Base64Images = await GetImagesByIdAsync(id);
+            }
+            else
+            {
+                Console.WriteLine("No rows returned.");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting ev by id: " + e.Message);
+        }
 
         MiniCooper.FullMiniCooper fullCooper = new();
         fullCooper.SetMiniCooper(evCooper);
-        
         return fullCooper;
+    }
+
+    private async Task<List<string>> GetImagesByIdAsync(int id)
+    {
+        Console.WriteLine("Getting images by id...");
+        List<string> base64Images = new();
+
+        try
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+
+            string query =
+                $"SELECT images FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHERE id = {id}";
+
+            await using var cmd = new NpgsqlCommand(query, conn);
+
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    base64Images.Add(reader.GetString(0));
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting images by id: " + e.Message);
+        }
+
+        return base64Images;
     }
 }
