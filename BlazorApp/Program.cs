@@ -1,5 +1,6 @@
 using BlazorApp.Components;
 using BlazorApp.Service;
+using Npgsql;
 
 namespace BlazorApp
 {
@@ -19,8 +20,9 @@ namespace BlazorApp
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
                 return new DBService(connectionString);
             });
+
+            NpgsqlConnection.GlobalTypeMapper.MapComposite<MiniCooper.FullMiniCooper>("my_composite_type");
             
-            // Added by Andreas-sama uWu~
             builder.Services.AddScoped<MiniCooper.BaseMiniCooper>();
             builder.Services.AddScoped<MiniCooper.EvMiniCooper>();
             builder.Services.AddScoped<MiniCooper.FossilMiniCooper>();

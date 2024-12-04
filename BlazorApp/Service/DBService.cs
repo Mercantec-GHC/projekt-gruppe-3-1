@@ -1,3 +1,6 @@
+using System.Data;
+using Npgsql.PostgresTypes;
+
 namespace BlazorApp.Service;
 
 using Npgsql;
@@ -44,46 +47,75 @@ public class DBService
 
         string query =
             "INSERT INTO cars (a_car, account_id)" +
-            $"VALUES (ROW (ROW (ROW ('{miniCooper.ModelName}', '{miniCooper.Generation}', '{miniCooper.ModelType}', '{miniCooper.Color}', {miniCooper.Price}, {miniCooper.Mileage}, {miniCooper.MaxRange}, {miniCooper.Weight}, '{miniCooper.FuelType}', '{miniCooper.GearType}', {miniCooper.YearlyTax}, ARRAY ['base64string1', 'base64string2'])::mini_cooper, 40, 7.2)::ev_mini_cooper, NULL, NULL)::car,1);";
+            "VALUES (" +
+            "ROW (" +
+            "ROW (" +
+            $"ROW ('{miniCooper.ModelName}', '{miniCooper.Generation}', '{miniCooper.ModelType}', '{miniCooper.Color}', {miniCooper.Price}, {miniCooper.Mileage}, {miniCooper.MaxRange}, {miniCooper.Weight}, '{miniCooper.FuelType}', '{miniCooper.GearType}', {miniCooper.YearlyTax}, ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
+            "40, 7.2)::ev_mini_cooper, " +
+            "NULL," +
+            "NULL" +
+            ")::car," +
+            $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
         await RunAsyncQuery(cmd);
     }
-    
+
     public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper miniCooper, int userId)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
-        
-        /*var tempCooper = 
 
-            string query = "INSERT INTO cars (a_car, account_id) " +
-                           "VALUES (ROW(" +
-                           "NULL," +
-                           "ROW (" +
-                           $"ROW({miniCooper.}))," +
-                           "NULL)::car, {userId})";
+        string query =
+            "INSERT INTO cars (a_car, account_id)" +
+            "VALUES (" +
+            "ROW (" +
+            "NULL," +
+            "ROW (" +
+            $"ROW ('{miniCooper.ModelName}', '{miniCooper.Generation}', '{miniCooper.ModelType}', '{miniCooper.Color}', {miniCooper.Price}, {miniCooper.Mileage}, {miniCooper.MaxRange}, {miniCooper.Weight}, '{miniCooper.FuelType}', '{miniCooper.GearType}', {miniCooper.YearlyTax}, ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
+            "40, 7.2)::fossil_mini_cooper, " +
+            "NULL" +
+            ")::car," +
+            $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);*/
+        await RunAsyncQuery(cmd);
     }
-    
+
     public async Task AddHybridToDbAsync(MiniCooper.HybridMiniCooper miniCooper, int userId)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
-        
-        /*var tempCooper = 
 
-            string query = "INSERT INTO cars (a_car, account_id) " +
-                           "VALUES (ROW(" +
-                           "NULL," +
-                           "ROW (" +
-                           $"ROW({miniCooper.}))," +
-                           "NULL)::car, {userId})";
+        string query =
+            "INSERT INTO cars (a_car, account_id)" +
+            "VALUES (" +
+            "ROW (" +
+            "NULL," +
+            "NULL," +
+            "ROW (" +
+            "ROW ("+
+            $"'{miniCooper.ModelName}',"+
+            $"'{miniCooper.Generation}',"+
+            $"'{miniCooper.ModelType}',"+
+            $"'{miniCooper.Color}',"+
+            $"{miniCooper.Price},"+
+            $"{miniCooper.Mileage},"+
+            $"{miniCooper.MaxRange},"+
+            $"{miniCooper.Weight},"+
+            $"'{miniCooper.FuelType}',"+
+            $"'{miniCooper.GearType}', "+
+            $"{miniCooper.YearlyTax},"+
+            "ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
+            $"{miniCooper.FuelType1},"+
+            $"{miniCooper.FuelType2},"+
+            $"{miniCooper.TankCapacity},"+
+            $"{miniCooper.ChargeCapacity},"+")::hybrid_mini_cooper " +
+            ")::car," +
+            $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);*/
+        await RunAsyncQuery(cmd);
     }
 
     /// <summary>
@@ -196,5 +228,34 @@ public class DBService
             Console.WriteLine("Records affected: " + result);
 
         return result;
+    }
+    
+    public async Task<List<MiniCooper.FullMiniCooper>> GetMiniCoopersAsync()
+    {
+        List<MiniCooper.FullMiniCooper> miniCoopers = new();
+        
+        await using var conn = new NpgsqlConnection(_connectionString);
+        conn.Open();
+
+        string query = "SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;";
+        await using var cmd = new NpgsqlCommand(query, conn);
+
+        await using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                if (reader.IsDBNull(0))
+                {
+                    
+                }
+            }
+        }
+        
+        return miniCoopers;
+    }
+
+    private async Task ResolveCooperType(PostgresType postgresType)
+    {
+        Console.WriteLine(postgresType);
     }
 }

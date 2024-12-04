@@ -187,3 +187,32 @@ hybrid_mini_cooper -|> mini_cooper
 account -> users::a_user
 
 @enduml
+
+@startuml
+object Users{
+    id SERIAL PRIMARY KEY
+    username TEXT
+    password TEXT
+    address TEXT
+    city TEXT
+    email TEXT
+    mobile INT
+}
+
+object Cars{
+    id SERIAL PRIMARY KEY
+    model_name TEXT
+    generation INT
+    fuel_type1 TEXT
+    fuel_type2 TEXT
+    account_id INT
+    gear_type TEXT
+    gears INT
+    charge_capacity FLOAT
+    tank_capacity FLOAT
+    CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES users (id)
+}
+
+Users::id -> Cars::account_id
+
+@enduml

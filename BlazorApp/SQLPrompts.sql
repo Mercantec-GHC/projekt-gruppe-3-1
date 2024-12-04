@@ -141,8 +141,87 @@ INSERT INTO users (a_user)
 VALUES (ROW ('Jonny Doe', 'password789', 11221122, 'johnny.doe@example.com', 'New York', '124 Main St')::account);
 
 INSERT INTO cars (a_car, account_id)
-VALUES (ROW (ROW (ROW ('Mini Cooper Electric', 2023, 'Crossover', 'Silver', 32000, 2000, 270, 1400, 'Electric', 'Automatic', 180, ARRAY ['base64string1', 'base64string2'])::mini_cooper, 40, 7.2)::ev_mini_cooper, NULL, NULL)::car,1);
+VALUES (ROW (ROW (ROW ('Mini Cooper Electric', 2023, 'Crossover', 'Silver', 32000, 2000, 270, 1400, 'Electric', 'Automatic', 180, ARRAY ['base64string1', 'base64string2'])::mini_cooper, 40, 7.2)::ev_mini_cooper, NULL, NULL)::car,
+        1);
+
+INSERT INTO cars (a_car, account_id)
+VALUES (ROW (
+            NULL, -- Electric Car
+            NULL, -- Fossile Car
+            ROW ( -- Hybrid Car
+                ROW ('Mini Cooper Hybrid', 2023, 'Coupe', 'Yellow', 36000, 5000, 220, 1500, 'Hybrid', 'Automatic', 240, ARRAY ['base64string5'])::mini_cooper,
+                'Petrol', -- Fuel Type 1
+                'Electric', -- Fuel Type 2
+                50, -- Tank Capacity
+                35, -- Charge Capacity
+                19.0, -- Km per Liter
+                5.2, -- Km per kWh
+                6 -- Gears
+                )::hybrid_mini_cooper
+            )::car,
+        1 -- Assuming this user ID exists in the `users` table
+       );
+
+INSERT INTO cars (a_car, account_id)
+VALUES (ROW (
+            NULL, -- Electric Car
+            ROW ( -- Fossile Car
+                ROW ('Mini Cooper Classic', 2020, 'Sedan', 'Black', 22000, 15000, 0, 1300, 'Diesel', 'Manual', 180, ARRAY ['base64string3', 'base64string4'])::mini_cooper,
+                60, -- Tank Capacity
+                16.0, -- Km per Liter
+                5 -- Gears
+                )::fossil_mini_cooper,
+            NULL -- Hybrid Car
+            )::car,
+        1 -- Assuming this user ID exists in the `users` table
+       );
 
 DELETE
 FROM cars;
 
+SELECT a_car, account_id
+FROM cars;
+
+SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;
+
+SELECT a_car, account_id
+FROM cars
+WHERE (a_car).electric_car IS NOT NULL;
+
+SELECT CASE
+           WHEN (a_car).electric_car IS NOT NULL THEN (a_car).electric_car
+           WHEN (a_car).fossile_car IS NOT NULL THEN (a_car).fossile_car
+           WHEN (a_car).hybrid_car IS NOT NULL THEN (a_car).hybrid_car END AS tester
+FROM cars;
+
+SELECT CASE
+           WHEN (a_car).electric_car IS NOT NULL THEN (a_car).electric_car
+           WHEN (a_car).fossile_car IS NOT NULL THEN (a_car).fossile_car
+           WHEN (a_car).hybrid_car IS NOT NULL THEN (a_car).hybrid_car
+           END AS non_null_car,
+       account_id
+FROM cars
+WHERE (a_car).electric_car IS NOT NULL
+   OR (a_car).fossile_car IS NOT NULL
+   OR (a_car).hybrid_car IS NOT NULL;
+
+SELECT (a_car).fossile_car
+FROM cars
+WHERE (a_car).electric_car IS NOT NULL;
+
+-- ---------------------------------------------------------------------
+
+CREATE TYPE persona AS
+(
+    id   INT,
+    name TEXT
+);
+
+CREATE TABLE andreas (id SERIAL PRIMARY KEY, person persona);
+
+INSERT INTO andreas (person) VALUES (ROW(1, 'test')::persona);
+INSERT INTO andreas (person) VALUES (ROW(2, 't')::persona);
+
+SELECT * FROM andreas;
+
+SELECT person FROM andreas;
