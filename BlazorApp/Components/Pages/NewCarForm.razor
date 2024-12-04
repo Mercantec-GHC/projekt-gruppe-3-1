@@ -129,7 +129,16 @@
             FullCooper.PrintEv();
 
             if (FullCooper.GetEvCooper() == null)
+            {
+                Console.WriteLine("The Ev being pushed database is null.");
                 return;
+            }
+
+            if (FullCooper.HasMultipleCars())
+            {
+                Console.WriteLine("SOMEHOW, FullCooper object has more than 1 Cooper.");
+                return;
+            }
             
             await DbService.AddEvToDbAsync(FullCooper.GetEvCooper(), 99);
             

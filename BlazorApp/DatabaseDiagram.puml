@@ -12,7 +12,7 @@ class mini_cooper {
     fuel_type TEXT
     geartype TEXT
     yearly_tax INT
-    images_id INT[]
+    base64_images TEXT[]
 }
 
 class account {

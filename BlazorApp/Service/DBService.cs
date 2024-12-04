@@ -41,18 +41,13 @@ public class DBService
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
-        
-        /*var tempCooper = 
 
-        string query = "INSERT INTO cars (a_car, account_id) " +
-                       "VALUES (ROW(" +
-                       "NULL," +
-                       "ROW (" +
-                            $"ROW({miniCooper.}))," +
-                       "NULL)::car, {userId})";
+        string query =
+            "INSERT INTO cars (a_car, account_id)" +
+            $"VALUES (ROW (ROW (ROW ('{miniCooper.ModelName}', '{miniCooper.Generation}', '{miniCooper.ModelType}', '{miniCooper.Color}', {miniCooper.Price}, {miniCooper.Mileage}, {miniCooper.MaxRange}, {miniCooper.Weight}, '{miniCooper.FuelType}', '{miniCooper.GearType}', {miniCooper.YearlyTax}, ARRAY ['base64string1', 'base64string2'])::mini_cooper, 40, 7.2)::ev_mini_cooper, NULL, NULL)::car,1);";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQuery(cmd);*/
+        await RunAsyncQuery(cmd);
     }
     
     public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper miniCooper, int userId)

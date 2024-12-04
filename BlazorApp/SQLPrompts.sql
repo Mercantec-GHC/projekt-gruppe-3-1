@@ -22,6 +22,10 @@ UPDATE ev_coopers SET id = temp_evs.new_id FROM temp_evs WHERE ev_coopers.id = t
 SELECT setval('ev_coopers_id_seq', (SELECT MAX(id) FROM ev_coopers));
 DROP TABLE temp_table_name;*/
 
+/*DROP TABLE fossil_coopers;
+DROP TABLE ev_coopers;
+DROP TABLE hybrid_coopers;*/
+
 -- CASCADE drops other stuff that is depending on that type/table.
 CREATE TYPE account AS
 (
@@ -137,43 +141,8 @@ INSERT INTO users (a_user)
 VALUES (ROW ('Jonny Doe', 'password789', 11221122, 'johnny.doe@example.com', 'New York', '124 Main St')::account);
 
 INSERT INTO cars (a_car, account_id)
-VALUES (ROW (
-            ROW ( -- Electric Car
-                ROW ('Mini Cooper SE', 2022, 'Hatchback', 'Red', 30000, 5000, 250, 1500, 'Electric', 'Automatic', 200, ARRAY [1, 2])::mini_cooper,
-                32, -- Charge Capacity
-                6.5 -- Km per kWh
-                )::ev_mini_cooper,
-            NULL, -- Fossile Car
-            NULL -- Hybrid Car
-            )::car,
-        1 -- Assuming this user ID exists in the `users` table
-       );
+VALUES (ROW (ROW (ROW ('Mini Cooper Electric', 2023, 'Crossover', 'Silver', 32000, 2000, 270, 1400, 'Electric', 'Automatic', 180, ARRAY ['base64string1', 'base64string2'])::mini_cooper, 40, 7.2)::ev_mini_cooper, NULL, NULL)::car,1);
 
-INSERT INTO cars (a_car, account_id)
-VALUES (ROW (
-            NULL, -- Electric Car
-            ROW ( -- Fossile Car
-                ROW ('Mini Cooper S', 2021, 'Convertible', 'Blue', 25000, 10000, 0, 1400, 'Gasoline', 'Manual', 150, ARRAY ['string', 'string2'])::mini_cooper,
-                55, -- Tank Capacity
-                15.5, -- Km per Liter
-                6 -- Gears
-                )::fossil_mini_cooper,
-            NULL -- Hybrid Car
-            )::car,
-        1 -- Assuming this user ID exists in the `users` table
-       );
+DELETE
+FROM cars;
 
-INSERT INTO cars (a_car, account_id)
-VALUES (ROW (NULL, NULL, ROW (ROW ('Mini Cooper Countryman', 2023, 'SUV', 'Green', 35000, 3000, 200, 1600, 'Hybrid', 'Automatic', 250, ARRAY [2])::mini_cooper,'Gasoline', -- Fuel Type 1
-                'Electric', -- Fuel Type 2
-                45, -- Tank Capacity
-                45, -- Charge Capacity
-                18.0, -- Km per Liter
-                5.5, -- Km per kWh
-                7 -- Gears
-                )::hybrid_mini_cooper
-            )::car,
-        1 -- Assuming this user ID exists in the `users` table
-       );
-
-DELETE FROM cars;

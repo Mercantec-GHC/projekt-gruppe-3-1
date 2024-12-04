@@ -216,7 +216,7 @@ public class MiniCooper
                 Console.WriteLine("A car has already been assigned to this object.");
         }
 
-        private bool HasMultipleCars()
+        public bool HasMultipleCars()
         {
             int carCount = 0;
             if (EvCooper != null)
