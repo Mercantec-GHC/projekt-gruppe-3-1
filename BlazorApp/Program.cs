@@ -19,6 +19,13 @@ namespace BlazorApp
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
                 return new DBService(connectionString);
             });
+            
+            // Added by Andreas-sama uWu~
+            builder.Services.AddScoped<MiniCooper.BaseMiniCooper>();
+            builder.Services.AddScoped<MiniCooper.EvMiniCooper>();
+            builder.Services.AddScoped<MiniCooper.FossilMiniCooper>();
+            builder.Services.AddScoped<MiniCooper.HybridMiniCooper>();
+            builder.Services.AddScoped<MiniCooper.FullMiniCooper>();
 
             var app = builder.Build();
 
@@ -39,6 +46,6 @@ namespace BlazorApp
                 .AddInteractiveServerRenderMode();
 
             app.Run();
-        }
+        }   
     }
 }
