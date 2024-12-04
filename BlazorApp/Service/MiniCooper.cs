@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorApp.Service;
 
 public class MiniCooper
 {
+    public class Andreas()
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
     public class BaseMiniCooper
     {
         public string ModelName { get; set; } = string.Empty;
@@ -167,6 +173,18 @@ public class MiniCooper
                 Console.WriteLine("Hybrid Cooper is null!");
             else
                 HybridCooper?.Print();
+        }
+
+        public void PrintAutomatically()
+        {
+            if (EvCooper != null)
+                EvCooper.Print();
+            else if (FossilCooper != null)
+                FossilCooper.Print();
+            else if (HybridCooper != null)
+                HybridCooper.Print();
+            else
+                Console.WriteLine("No car has been assigned to this object.");
         }
 
         public bool ThereCanOnlyBeOne()

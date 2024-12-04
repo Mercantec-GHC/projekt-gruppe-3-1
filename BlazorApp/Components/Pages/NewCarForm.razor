@@ -104,6 +104,16 @@
 
 @code {
     string form = "";
+    List<MiniCooper.FullMiniCooper> minis = new();
+    protected override async Task OnInitializedAsync()
+    {
+        minis = await DbService.GetMiniCoopersAsync();
+
+        foreach (var car in minis)
+        {
+            car.PrintAutomatically();
+        }
+    }
 
     public async Task HandleValidSubmit()
     {
