@@ -46,6 +46,6 @@ namespace BlazorApp
                 .AddInteractiveServerRenderMode();
 
             app.Run();
-        }
+        }   
     }
 }
