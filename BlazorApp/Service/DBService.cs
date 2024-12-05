@@ -642,4 +642,50 @@ public class DBService
         
         return resolvedImages;
     }
+
+    /// <summary>
+    /// Asynchronously retrieves a user from the database using their unique identifier.
+    /// </summary>
+    /// <param name="id">
+    /// An <see cref="int"/> representing the user's unique identifier in the database.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing an instance of <see cref="UsersService.User"/> with the user's details if found.
+    /// </returns>
+    /// <remarks>
+    /// This method constructs and executes a SQL query to select user details from the 'users' table by the specified ID.
+    /// The query uses direct string interpolation, which may be vulnerable to SQL Injection attacks. It is advisable to use parameterized queries to enhance security.
+    /// </remarks>
+    public async Task<UsersService.User> GetUserByIdAsync(int id)
+    {
+        UsersService.User user = new();
+
+        var conn = GetConnection();
+        string query = "SELECT" +
+                       "id," +
+                       "(a_user).name," +
+                       "(a_user).password," +
+                       "(a_user).mobile," +
+                       "(a_user).email," +
+                       "(a_user).city," +
+                       "(a_user).address" +
+                       $"FROM users WHERE id = {id}";
+        
+        var cmd = new NpgsqlCommand(query, conn);
+        
+        var reader = await cmd.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            user.Id = reader.GetInt32(0);
+            user.Name = reader.GetString(1);
+            user.Password = reader.GetString(2);
+            user.Mobile = reader.GetInt32(3);
+            user.Email = reader.GetString(4);
+            user.City = reader.GetString(5);
+            user.Address = reader.GetString(6);
+        }
+
+        return user;
+    }
 }
