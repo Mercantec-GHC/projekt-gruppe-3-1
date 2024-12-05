@@ -1,11 +1,12 @@
 @page "/new-car"
+@rendermode InteractiveServer
 @using BlazorApp.Service
 @using BlazorApp.Components.Pages.Forms
 @inject DBService DbService
 @inject MiniCooper.BaseMiniCooper BaseCooper
-@inject MiniCooper.EvMiniCooper Ev
-@inject MiniCooper.FossilMiniCooper Fossil
-@inject MiniCooper.HybridMiniCooper Hybrid
+@inject MiniCooper.EvMiniCooper EvCooper
+@inject MiniCooper.FossilMiniCooper FossilCooper
+@inject MiniCooper.HybridMiniCooper HybridCooper
 @inject MiniCooper.FullMiniCooper FullCooper
 @* Remember to add scoped versions of these in the Program.cs *@
 
@@ -65,13 +66,13 @@
     @switch (form)
     {
         case "ev":
-            <EvForm EvFormData="@Ev"/>
+            <EvForm EvCooperFormData="@EvCooper"/>
             break;
         case "fossil":
-            <FossilForm FossilFormData="@Fossil"/>
+            <FossilForm FossilCooperFormData="@FossilCooper"/>
             break;
         case "hybrid":
-            <HybridForm HybridFormData="@Hybrid"/>
+            <HybridForm HybridCooperFormData="@HybridCooper"/>
             break;
         default:
             <p>Select Vehicle Type</p>
@@ -81,11 +82,9 @@
     <button type="submit">Submit Car</button>
 </EditForm>
 
-
-
 <InputFile OnChange="HandleImages" multiple/>
 
-@foreach (var file in loadedFiles)
+@foreach (var file in loadedImages)
 {
     <li>
         <ul>
@@ -104,18 +103,18 @@
 
 @code {
     string form = "";
-    List<MiniCooper.FullMiniCooper> minis = new();
+    /*List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
     protected override async Task OnInitializedAsync()
     {
-        minis = await DbService.GetMiniCoopersAsync();
+        fullMiniCoopers = await DbService.GetMiniCoopersAsync();
 
-        foreach (var car in minis)
+        foreach (var car in fullMiniCoopers)
         {
             car.PrintAutomatically();
         }
-    }
+    }*/
 
-    public async Task HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
         if (form == "")
         {
@@ -124,7 +123,7 @@
             return;
         }
         
-        if (loadedFiles.Count == 0)
+        if (loadedImages.Count == 0)
         {
             Console.WriteLine("No images are loaded");
             // Message saying that the user needs at least 1 picture.
@@ -134,13 +133,13 @@
         Console.WriteLine("Handling valid submit...");
         if (form == "ev")
         {
-            await Ev.SetBaseMiniCooperModel(BaseCooper);
-            FullCooper.SetMiniCooper(Ev);
+            await EvCooper.SetBaseMiniCooperModel(BaseCooper);
+            FullCooper.SetMiniCooper(EvCooper);
             FullCooper.PrintEv();
 
             if (FullCooper.GetEvCooper() == null)
             {
-                Console.WriteLine("The Ev being pushed database is null.");
+                Console.WriteLine("The Ev being pushed to the database is null.");
                 return;
             }
 
@@ -150,41 +149,44 @@
                 return;
             }
             
-            await DbService.AddEvToDbAsync(FullCooper.GetEvCooper(), 99);
-            
-            FullCooper.Clear();
+            await DbService.AddEvToDbAsync(FullCooper.GetEvCooper(), 1);
         }
         else if (form == "fossil")
         {
-            await Fossil.SetBaseMiniCooperModel(BaseCooper);
-            FullCooper.SetMiniCooper(Fossil);
+            await FossilCooper.SetBaseMiniCooperModel(BaseCooper);
+            FullCooper.SetMiniCooper(FossilCooper);
             FullCooper.PrintFossil();
             
             if (FullCooper.GetFossilCooper() == null)
+            {
+                Console.WriteLine("The Fossil being pushed to the database is null.");
                 return;
+            }
             
-            await DbService.AddFossilToDbAsync(FullCooper.GetFossilCooper(), 99);
-            
-            FullCooper.Clear();
+            await DbService.AddFossilToDbAsync(FullCooper.GetFossilCooper(), 1);
         }
         else if (form == "hybrid")
         {
-            await Hybrid.SetBaseMiniCooperModel(BaseCooper);
-            FullCooper.SetMiniCooper(Hybrid);
+            await HybridCooper.SetBaseMiniCooperModel(BaseCooper);
+            FullCooper.SetMiniCooper(HybridCooper);
             FullCooper.PrintHybrid();
             
             if (FullCooper.GetHybridCooper() == null)
+            {
+                Console.WriteLine("The Hybrid being pushed to the database is null.");
                 return;
+            }
             
-            await DbService.AddHybridToDbAsync(FullCooper.GetHybridCooper(), 99);
-
-            FullCooper.Clear();
+            await DbService.AddHybridToDbAsync(FullCooper.GetHybridCooper(), 1);
         }
         else
         {
             Console.WriteLine("Invalid form type");
         }
-
+        
+        FullCooper.Clear();
+        loadedImages = new();
+        StateHasChanged();
     }
 
     private void HandleOptionChange(string option)
@@ -194,7 +196,7 @@
         StateHasChanged();
     }
 
-    private List<IBrowserFile> loadedFiles = new();
+    private List<IBrowserFile> loadedImages = new();
 
     private async Task HandleImages(InputFileChangeEventArgs imageFiles)
     {
@@ -203,13 +205,14 @@
             if (!image.ContentType.Contains("image"))
             {
                 Console.WriteLine($"\"{image.ContentType}\" is not allowed");
+                // Popup message saying so.
                 return;
             }
 
             try
             {
                 await BaseCooper.AddImage(image);
-                loadedFiles.Add(image);
+                loadedImages.Add(image);
             }
             catch (Exception ex)
             {

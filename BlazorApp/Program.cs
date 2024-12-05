@@ -18,6 +18,13 @@ namespace BlazorApp
             builder.Services.AddSingleton(sp =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+                if (connectionString == null)
+                {
+                    Console.WriteLine("Connection string is null.");
+                    return null;
+                }
+                
                 return new DBService(connectionString);
             });
 

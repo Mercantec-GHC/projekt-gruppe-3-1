@@ -40,18 +40,37 @@ public class DBService
         }
     }
 
-    public async Task AddEvToDbAsync(MiniCooper.EvMiniCooper miniCooper, int userId)
+    /// <summary>
+    /// Asynchronously adds an electric vehicle (EV) Mini Cooper entry to the 'cars' table in the database for a specified user.
+    /// </summary>
+    /// <param name="evCooper">
+    /// An instance of <see cref="MiniCooper.EvMiniCooper"/> containing details of the electric Mini Cooper to be added.
+    /// </param>
+    /// <param name="userId">
+    /// An <see cref="int"/> representing the user's unique identifier to associate with the new car entry.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation of adding the EV to the database.
+    /// </returns>
+    /// <remarks>
+    /// This method constructs a SQL query to insert a new car record into the database, associating it with the provided user ID.
+    /// The query uses concatenated string representations for Mini Cooper data, which could lead to SQL Injection vulnerabilities.
+    /// It is recommended to use parameterized queries in production environments to improve security.
+    /// </remarks>
+    public async Task AddEvToDbAsync(MiniCooper.EvMiniCooper evCooper, int userId)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
+
+        var resolvedImagesString = await ResolveImagesAsync(evCooper.Base64Images);
 
         string query =
             "INSERT INTO cars (a_car, account_id)" +
             "VALUES (" +
             "ROW (" +
             "ROW (" +
-            $"ROW ('{miniCooper.ModelName}', '{miniCooper.Generation}', '{miniCooper.ModelType}', '{miniCooper.Color}', {miniCooper.Price}, {miniCooper.Mileage}, {miniCooper.MaxRange}, {miniCooper.Weight}, '{miniCooper.FuelType}', '{miniCooper.GearType}', {miniCooper.YearlyTax}, ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
-            "40, 7.2)::ev_mini_cooper, " +
+            $"ROW ('{evCooper.ModelName}', '{evCooper.Generation}', '{evCooper.ModelType}', '{evCooper.Color}', {evCooper.Price}, {evCooper.Mileage}, {evCooper.MaxRange}, {evCooper.Weight}, '{evCooper.FuelType}', '{evCooper.GearType}', {evCooper.YearlyTax}, ARRAY [{resolvedImagesString}])::mini_cooper, " +
+            $"{evCooper.ChargeCapacity}, {evCooper.KmPrKwh})::ev_mini_cooper, " +
             "NULL," +
             "NULL" +
             ")::car," +
@@ -61,10 +80,29 @@ public class DBService
         await RunAsyncQueryForInsertion(cmd);
     }
 
-    public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper miniCooper, int userId)
+    /// <summary>
+    /// Asynchronously adds a fossil fuel Mini Cooper entry to the 'cars' table in the database for a specified user.
+    /// </summary>
+    /// <param name="fossilCooper">
+    /// An instance of <see cref="MiniCooper.FossilMiniCooper"/> containing details of the fossil fuel Mini Cooper to be added.
+    /// </param>
+    /// <param name="userId">
+    /// An <see cref="int"/> representing the user's unique identifier to associate with the new car entry.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation of adding the fossil fuel Mini Cooper to the database.
+    /// </returns>
+    /// <remarks>
+    /// This method constructs a SQL query to insert a new car record into the database, associating it with the provided user ID.
+    /// The query uses concatenated string representations for Mini Cooper data, which could lead to SQL Injection vulnerabilities.
+    /// It is recommended to use parameterized queries in production environments to enhance security.
+    /// </remarks>
+    public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper fossilCooper, int userId)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
+        
+        var resolvedImagesString = await ResolveImagesAsync(fossilCooper.Base64Images);
 
         string query =
             "INSERT INTO cars (a_car, account_id)" +
@@ -72,8 +110,8 @@ public class DBService
             "ROW (" +
             "NULL," +
             "ROW (" +
-            $"ROW ('{miniCooper.ModelName}', '{miniCooper.Generation}', '{miniCooper.ModelType}', '{miniCooper.Color}', {miniCooper.Price}, {miniCooper.Mileage}, {miniCooper.MaxRange}, {miniCooper.Weight}, '{miniCooper.FuelType}', '{miniCooper.GearType}', {miniCooper.YearlyTax}, ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
-            "40, 7.2)::fossil_mini_cooper, " +
+            $"ROW ('{fossilCooper.ModelName}', '{fossilCooper.Generation}', '{fossilCooper.ModelType}', '{fossilCooper.Color}', {fossilCooper.Price}, {fossilCooper.Mileage}, {fossilCooper.MaxRange}, {fossilCooper.Weight}, '{fossilCooper.FuelType}', '{fossilCooper.GearType}', {fossilCooper.YearlyTax}, ARRAY [{resolvedImagesString}])::mini_cooper, " +
+            $"{fossilCooper.TankCapacity}, {fossilCooper.KmPrLiter}, {fossilCooper.Gears})::fossil_mini_cooper, " +
             "NULL" +
             ")::car," +
             $"{userId});";
@@ -82,11 +120,30 @@ public class DBService
         await RunAsyncQueryForInsertion(cmd);
     }
 
-    public async Task AddHybridToDbAsync(MiniCooper.HybridMiniCooper miniCooper, int userId)
+    /// <summary>
+    /// Asynchronously adds a hybrid Mini Cooper entry to the 'cars' table in the database for a specified user.
+    /// </summary>
+    /// <param name="hybridCooper">
+    /// An instance of <see cref="MiniCooper.HybridMiniCooper"/> containing details of the hybrid Mini Cooper to be added.
+    /// </param>
+    /// <param name="userId">
+    /// An <see cref="int"/> representing the user's unique identifier to associate with the new car entry.
+    /// </param>
+    /// <returns>
+    /// A task representing the asynchronous operation of adding the hybrid Mini Cooper to the database.
+    /// </returns>
+    /// <remarks>
+    /// This method constructs a SQL query to insert a new car record into the database, associating it with the provided user ID.
+    /// The insertion utilizes a concatenated string representation of the Mini Cooper data, which could pose a risk for SQL Injection.
+    /// It is advisable to implement parameterized queries in production environments to enhance security.
+    /// </remarks>
+    public async Task AddHybridToDbAsync(MiniCooper.HybridMiniCooper hybridCooper, int userId)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
+        var resolvedImagesString = await ResolveImagesAsync(hybridCooper.Base64Images);
+        
         string query =
             "INSERT INTO cars (a_car, account_id)" +
             "VALUES (" +
@@ -95,22 +152,24 @@ public class DBService
             "NULL," +
             "ROW (" +
             "ROW (" +
-            $"'{miniCooper.ModelName}'," +
-            $"'{miniCooper.Generation}'," +
-            $"'{miniCooper.ModelType}'," +
-            $"'{miniCooper.Color}'," +
-            $"{miniCooper.Price}," +
-            $"{miniCooper.Mileage}," +
-            $"{miniCooper.MaxRange}," +
-            $"{miniCooper.Weight}," +
-            $"'{miniCooper.FuelType}'," +
-            $"'{miniCooper.GearType}', " +
-            $"{miniCooper.YearlyTax}," +
-            "ARRAY ['base64string1', 'base64string2'])::mini_cooper, " +
-            $"{miniCooper.FuelType1}," +
-            $"{miniCooper.FuelType2}," +
-            $"{miniCooper.TankCapacity}," +
-            $"{miniCooper.ChargeCapacity}," + ")::hybrid_mini_cooper " +
+            $"'{hybridCooper.ModelName}'," +
+            $"'{hybridCooper.Generation}'," +
+            $"'{hybridCooper.ModelType}'," +
+            $"'{hybridCooper.Color}'," +
+            $"{hybridCooper.Price}," +
+            $"{hybridCooper.Mileage}," +
+            $"{hybridCooper.MaxRange}," +
+            $"{hybridCooper.Weight}," +
+            $"'{hybridCooper.FuelType}'," +
+            $"'{hybridCooper.GearType}'," +
+            $"{hybridCooper.YearlyTax}," +
+            $"ARRAY [{resolvedImagesString}])::mini_cooper, " +
+            $"{hybridCooper.FuelType1}," +
+            $"{hybridCooper.FuelType2}," +
+            $"{hybridCooper.TankCapacity}," +
+            $"{hybridCooper.ChargeCapacity}," +
+            $"{hybridCooper.KmPrLiter}," +
+            $"{hybridCooper.KmPrKwh})::hybrid_mini_cooper " +
             ")::car," +
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
@@ -230,9 +289,21 @@ public class DBService
         return result;
     }
 
+    /// <summary>
+    /// Retrieves a list of Mini Cooper car entries from the database and identifies their type as either electric, fossil, or hybrid.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a list of <see cref="MiniCooper.FullMiniCooper"/> instances.
+    /// Each instance represents a Mini Cooper entry from the database.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database, executes a query to retrieve car data, and processes each record to identify the type of car.
+    /// Based on the type, respective methods such as <see cref="GetEvByIdAsync"/> or <see cref="GetFossilByIdAsync"/> are called to get detailed information.
+    /// The method also logs messages to the console indicating which type of car has been added to the list.
+    /// </remarks>
     public async Task<List<MiniCooper.FullMiniCooper>> GetMiniCoopersAsync()
     {
-        List<MiniCooper.FullMiniCooper> miniCoopers = new();
+        List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
@@ -247,21 +318,21 @@ public class DBService
             {
                 var currentId = reader.GetInt32(0);
 
-                if (!reader.IsDBNull(0))
+                if (!reader.IsDBNull(1))
                 {
                     Console.WriteLine("Ev added!");
-                    var read = reader.GetInt32(0);
-                    Console.WriteLine(read);
-
-                    miniCoopers.Add(await GetEvByIdAsync(currentId));
-                }
-                else if (!reader.IsDBNull(1))
-                {
-                    Console.WriteLine("Fossil added!");
+                    Console.WriteLine(reader.GetInt32(0));
+                    fullMiniCoopers.Add(await GetEvByIdAsync(currentId));
                 }
                 else if (!reader.IsDBNull(2))
                 {
+                    Console.WriteLine("Fossil added!");
+                    fullMiniCoopers.Add(await GetFossilByIdAsync(currentId));
+                }
+                else if (!reader.IsDBNull(3))
+                {
                     Console.WriteLine("Hybrid added!");
+                    fullMiniCoopers.Add(await GetHybridByIdAsync(currentId));
                 }
                 else
                 {
@@ -270,9 +341,26 @@ public class DBService
             }
         }
 
-        return miniCoopers;
+        return fullMiniCoopers;
     }
 
+    /// <summary>
+    /// Retrieves detailed information of an electric Mini Cooper by the given ID from the database.
+    /// </summary>
+    /// <param name="id">
+    /// An <see cref="int"/> representing the unique identifier of the electric Mini Cooper to be retrieved.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing an instance of <see cref="MiniCooper.FullMiniCooper"/>
+    /// with detailed information about the specified electric Mini Cooper.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database and executes a query to fetch detailed information for
+    /// the electric Mini Cooper with the specified ID. It handles exceptions by logging error messages to the console.
+    /// The retrieved data is used to populate an instance of <see cref="MiniCooper.FullMiniCooper"/>.
+    /// Note: The SQL query concatenates the car ID directly into the command string, which could lead to SQL Injection
+    /// if the input is not correctly validated in a real-world scenario. It is advisable to use parameterized queries instead.
+    /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetEvByIdAsync(int id)
     {
         MiniCooper.EvMiniCooper evCooper = new();
@@ -280,11 +368,9 @@ public class DBService
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
-        /*var carEv = "(a_car).electric_car";
-        var carEvBase = "(a_car).electric_car.base_cooper";*/
-
         var modelName = "(a_car).electric_car.base_cooper.model_name";
         var generation = "(a_car).electric_car.base_cooper.generation";
+        var modelType = "(a_car).electric_car.base_cooper.model_type";
         var color = "(a_car).electric_car.base_cooper.color";
         var price = "(a_car).electric_car.base_cooper.price";
         var kmDriven = "(a_car).electric_car.base_cooper.km_driven";
@@ -296,12 +382,11 @@ public class DBService
         var chargeCapacity = "(a_car).electric_car.charge_capacity";
         var kmPrKwh = "(a_car).electric_car.km_pr_kwh";
 
-
+        string query =
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
+        // Console.WriteLine("Query: " + query);
         try
         {
-            string query =
-                $"SELECT {modelName}, {generation}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
-            // Console.WriteLine("Query: " + query);
             await using var cmd = new NpgsqlCommand(query, conn);
 
             var reader = await cmd.ExecuteReaderAsync();
@@ -310,16 +395,18 @@ public class DBService
             {
                 evCooper.ModelName = reader.GetString(0);
                 evCooper.Generation = reader.GetInt32(1);
-                evCooper.Color = reader.GetString(2);
-                evCooper.Price = reader.GetInt32(3);
-                evCooper.Mileage = reader.GetInt32(4);
-                evCooper.MaxRange = reader.GetInt32(5);
-                evCooper.Weight = reader.GetInt32(6);
-                evCooper.FuelType = reader.GetString(7);
-                evCooper.GearType = reader.GetString(8);
-                evCooper.YearlyTax = reader.GetDecimal(9);
-                evCooper.ChargeCapacity = reader.GetInt32(10);
-                evCooper.Base64Images = await GetImagesByIdAsync(id);
+                evCooper.ModelType = reader.GetString(2);
+                evCooper.Color = reader.GetString(3);
+                evCooper.Price = reader.GetInt32(4);
+                evCooper.Mileage = reader.GetInt32(5);
+                evCooper.MaxRange = reader.GetInt32(6);
+                evCooper.Weight = reader.GetInt32(7);
+                evCooper.FuelType = reader.GetString(8);
+                evCooper.GearType = reader.GetString(9);
+                evCooper.YearlyTax = reader.GetDecimal(10);
+                evCooper.ChargeCapacity = reader.GetInt32(11);
+                evCooper.KmPrKwh = reader.GetFloat(12);
+                evCooper.Base64Images = await GetImagesByIdAndTypeAsync(id, "electric_car");
             }
             else
             {
@@ -336,7 +423,182 @@ public class DBService
         return fullCooper;
     }
 
-    private async Task<List<string>> GetImagesByIdAsync(int id)
+    /// <summary>
+    /// Asynchronously retrieves detailed information for a fossil Mini Cooper car entry from the database based on the provided ID.
+    /// </summary>
+    /// <param name="id">
+    /// An <see cref="int"/> representing the unique identifier of the fossil Mini Cooper to be retrieved from the database.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a <see cref="MiniCooper.FullMiniCooper"/> instance.
+    /// This instance includes detailed information about the specified fossil Mini Cooper.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database and executes a query to retrieve detailed information for the fossil Mini Cooper
+    /// identified by the given ID. The query retrieves various attributes such as model name, generation, color, and other specifics related
+    /// to the fossil car's specifications. In case of an exception during the query execution, an error message is logged to the console.
+    /// Note: Ensure that the ID parameter is validated to prevent SQL Injection vulnerabilities as the query is constructed using string concatenation.
+    /// </remarks>
+    public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAsync(int id)
+    {
+        MiniCooper.FossilMiniCooper fossilCooper = new();
+
+        await using var conn = new NpgsqlConnection(_connectionString);
+        conn.Open();
+
+        var modelName = "(a_car).fossile_car.base_cooper.model_name";
+        var generation = "(a_car).fossile_car.base_cooper.generation";
+        var modelType = "(a_car).fossile_car.base_cooper.model_type";
+        var color = "(a_car).fossile_car.base_cooper.color";
+        var price = "(a_car).fossile_car.base_cooper.price";
+        var kmDriven = "(a_car).fossile_car.base_cooper.km_driven";
+        var maxRange = "(a_car).fossile_car.base_cooper.max_range";
+        var weight = "(a_car).fossile_car.base_cooper.weight";
+        var fuelType = "(a_car).fossile_car.base_cooper.fuel_type";
+        var gearType = "(a_car).fossile_car.base_cooper.geartype";
+        var yearlyTax = "(a_car).fossile_car.base_cooper.yearly_tax";
+        var tankCapacity = "(a_car).fossile_car.tank_capacity";
+        var kmPrLiter = "(a_car).fossile_car.km_pr_liter";
+        var gears = "(a_car).fossile_car.gears";
+
+        string query =
+            $"SELECT {modelName}, {generation}, {modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {tankCapacity}, {kmPrLiter}, {gears} FROM cars WHERE id = {id};";
+        // Console.WriteLine("Query: " + query);
+        try
+        {
+            await using var cmd = new NpgsqlCommand(query, conn);
+
+            var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                fossilCooper.ModelName = reader.GetString(0);
+                fossilCooper.Generation = reader.GetInt32(1);
+                fossilCooper.ModelType = reader.GetString(2);
+                fossilCooper.Color = reader.GetString(3);
+                fossilCooper.Price = reader.GetInt32(4);
+                fossilCooper.Mileage = reader.GetInt32(5);
+                fossilCooper.MaxRange = reader.GetInt32(6);
+                fossilCooper.Weight = reader.GetInt32(7);
+                fossilCooper.FuelType = reader.GetString(8);
+                fossilCooper.GearType = reader.GetString(9);
+                fossilCooper.YearlyTax = reader.GetDecimal(10);
+                fossilCooper.TankCapacity = reader.GetInt32(11);
+                fossilCooper.KmPrLiter = reader.GetFloat(12);
+                fossilCooper.Gears = reader.GetInt32(13);
+                fossilCooper.Base64Images = await GetImagesByIdAndTypeAsync(id, "fossile_car");
+            }
+            else
+            {
+                Console.WriteLine("No rows returned.");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting fossil by id: " + e.Message);
+        }
+
+        MiniCooper.FullMiniCooper fullCooper = new();
+        fullCooper.SetMiniCooper(fossilCooper);
+        return fullCooper;
+    }
+
+    /// <summary>
+    /// Retrieves a hybrid Mini Cooper from the database based on the provided ID.
+    /// </summary>
+    /// <param name="id">
+    /// An <see cref="int"/> representing the unique identifier of the hybrid Mini Cooper to be retrieved.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains a <see cref="MiniCooper.FullMiniCooper"/> object
+    /// that includes the details of the hybrid Mini Cooper.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database, formulates a SQL query to fetch the hybrid car details, and constructs a
+    /// <see cref="MiniCooper.FullMiniCooper"/> object from the retrieved data. If an exception occurs during database operations, it is logged.
+    /// </remarks>
+    public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAsync(int id)
+    {
+        MiniCooper.HybridMiniCooper hybridCooper = new();
+
+        await using var conn = new NpgsqlConnection(_connectionString);
+        conn.Open();
+
+        var modelName = "(a_car).hybrid_car.base_cooper.model_name";
+        var generation = "(a_car).hybrid_car.base_cooper.generation";
+        var modelType = "(a_car).hybrid_car.base_cooper.model_type";
+        var color = "(a_car).hybrid_car.base_cooper.color";
+        var price = "(a_car).hybrid_car.base_cooper.price";
+        var kmDriven = "(a_car).hybrid_car.base_cooper.km_driven";
+        var maxRange = "(a_car).hybrid_car.base_cooper.max_range";
+        var weight = "(a_car).hybrid_car.base_cooper.weight";
+        var fuelType = "(a_car).hybrid_car.base_cooper.fuel_type";
+        var gearType = "(a_car).hybrid_car.base_cooper.geartype";
+        var yearlyTax = "(a_car).hybrid_car.base_cooper.yearly_tax";
+        var fuelType1 = "(a_car).hybrid_car.tank_capacity";
+        var fuelType2 = "(a_car).hybrid_car.km_pr_liter";
+        var tankCapacity = "(a_car).hybrid_car.tank_capacity";
+        var chargeCapacity = "(a_car).hybrid_car.charge_capacity";
+        var kmPrLiter = "(a_car).hybrid_car.km_pr_liter";
+        var kmPrKwh = "(a_car).hybrid_car.km_pr_kwh";
+        var gears = "(a_car).hybrid_car.gears";
+
+        string query =
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {fuelType1}, {fuelType2}, {tankCapacity}, {chargeCapacity}, {kmPrLiter}, {kmPrKwh}, {gears} FROM cars WHERE id = {id};";
+        // Console.WriteLine("Query: " + query);
+        try
+        {
+            await using var cmd = new NpgsqlCommand(query, conn);
+
+            var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                hybridCooper.ModelName = reader.GetString(0);
+                hybridCooper.Generation = reader.GetInt32(1);
+                hybridCooper.ModelType = reader.GetString(2);
+                hybridCooper.Color = reader.GetString(3);
+                hybridCooper.Price = reader.GetInt32(4);
+                hybridCooper.Mileage = reader.GetInt32(5);
+                hybridCooper.MaxRange = reader.GetInt32(6);
+                hybridCooper.Weight = reader.GetInt32(7);
+                hybridCooper.FuelType = reader.GetString(8);
+                hybridCooper.GearType = reader.GetString(9);
+                hybridCooper.YearlyTax = reader.GetDecimal(10);
+                hybridCooper.FuelType1 = reader.GetString(11);
+                hybridCooper.FuelType2 = reader.GetString(12);
+                hybridCooper.TankCapacity = reader.GetInt32(13);
+                hybridCooper.ChargeCapacity = reader.GetInt32(14);
+                hybridCooper.KmPrLiter = reader.GetFloat(15);
+                hybridCooper.KmPrKwh = reader.GetFloat(16);
+                hybridCooper.Gears = reader.GetInt32(17);
+                hybridCooper.Base64Images = await GetImagesByIdAndTypeAsync(id, "hybrid_car");
+            }
+            else
+            {
+                Console.WriteLine("No rows returned.");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting hybrid by id: " + e.Message);
+        }
+
+        MiniCooper.FullMiniCooper fullCooper = new();
+        fullCooper.SetMiniCooper(hybridCooper);
+        return fullCooper;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cooperType"></param>
+    /// <remarks>
+    /// The "cooperType" parameter HAS to be either "electric_car", "fossil_car" or "hybrid_car".
+    /// </remarks>
+    /// <returns></returns>
+    private async Task<List<string>> GetImagesByIdAndTypeAsync(int id, string cooperType)
     {
         Console.WriteLine("Getting images by id...");
         List<string> base64Images = new();
@@ -347,7 +609,7 @@ public class DBService
             conn.Open();
 
             string query =
-                $"SELECT images FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHERE id = {id}";
+                $"SELECT images FROM cars, unnest((a_car).{cooperType}.base_cooper.base64_images) AS images WHERE id = {id}";
 
             await using var cmd = new NpgsqlCommand(query, conn);
 
@@ -361,9 +623,23 @@ public class DBService
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error getting images by id: " + e.Message);
+            Console.WriteLine("Error getting images by id and type: " + e.Message);
         }
 
         return base64Images;
+    }
+    
+    private async Task<string> ResolveImagesAsync(List<string> base64Images)
+    {
+        string resolvedImages = "";
+
+        foreach (var base64Image in base64Images)
+        {
+            resolvedImages += $"'{base64Image}',";
+        }
+        
+        resolvedImages = resolvedImages.Substring(0, resolvedImages.Length - 1);
+        
+        return resolvedImages;
     }
 }

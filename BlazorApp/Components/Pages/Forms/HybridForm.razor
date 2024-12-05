@@ -1,28 +1,28 @@
 @using BlazorApp.Service
 
-<EditForm Model="HybridFormData">
+<EditForm Model="HybridCooperFormData">
     <label class="form-label">Fuel type 1:</label>
-    <InputText @bind-Value="HybridFormData.FuelType1"/>
+    <InputText @bind-Value="HybridCooperFormData.FuelType1"/>
 
     <label class="form-label">Fuel type 2:</label>
-    <InputText @bind-Value="HybridFormData.FuelType2"/>
+    <InputText @bind-Value="HybridCooperFormData.FuelType2"/>
 
     <label class="form-label">Tank Capacity:</label>
-    <InputNumber @bind-Value="HybridFormData.TankCapacity"/>
+    <InputNumber @bind-Value="HybridCooperFormData.TankCapacity"/>
 
     <label class="form-label">Charge Capacity:</label>
-    <InputNumber @bind-Value="HybridFormData.ChargeCapacity"/>
+    <InputNumber @bind-Value="HybridCooperFormData.ChargeCapacity"/>
 
     <label class="form-label">Km. pr. liter:</label>
-    <InputNumber @bind-Value="HybridFormData.KmPrLiter"/>
+    <InputNumber @bind-Value="HybridCooperFormData.KmPrLiter"/>
 
     <label class="form-label">Km. pr. kilowatt hour:</label>
-    <InputNumber @bind-Value="HybridFormData.KmPrKwh"/>
+    <InputNumber @bind-Value="HybridCooperFormData.KmPrKwh"/>
 
     <label class="form-label">Gears:</label>
-    <InputNumber @bind-Value="HybridFormData.Gears"/>
+    <InputNumber @bind-Value="HybridCooperFormData.Gears"/>
 </EditForm>
 
 @code{
-    [Parameter] public MiniCooper.HybridMiniCooper HybridFormData { get; set; } = new();
+    [Parameter] public MiniCooper.HybridMiniCooper HybridCooperFormData { get; set; } = new();
 }

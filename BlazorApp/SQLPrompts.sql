@@ -212,7 +212,7 @@ FROM cars
 WHERE (a_car).electric_car IS NOT NULL;
 
 -- carEvBase carEv
-SELECT (a_car).electric_car.base_cooper.color, (a_car).electric_car.charge_capacity
+SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car
 FROM cars;
 
 SELECT (a_car).electric_car.base_cooper.model_name,
@@ -228,7 +228,9 @@ SELECT (a_car).electric_car.base_cooper.model_name,
 FROM cars;
 
 SELECT *
-FROM cars WHERE id = 1;
+FROM cars;
+
+SELECT (a_car).electric_car.km_pr_kwh FROM cars;
 
 SELECT images
 FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHERE id = 2;
