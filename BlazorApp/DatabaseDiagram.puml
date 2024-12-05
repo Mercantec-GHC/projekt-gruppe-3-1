@@ -99,7 +99,16 @@ account -> users
 
 @startuml
 'https://plantuml.com/sequence-diagram
-class mini_cooper {
+
+skinparam object{
+    BackgroundColor Cyan
+}
+
+skinparam class{
+    BackgroundColor LightGreen
+}
+
+class mini_cooper <<(C,Plum)>> {
     model_name TEXT
     generation INT
     model_type TEXT
@@ -111,10 +120,10 @@ class mini_cooper {
     fuel_type TEXT
     geartype TEXT
     yearly_tax INT
-    images_id INT[]
+    base64_images TEXT[]
 }
 
-class account {
+class account <<(C,Plum)>>{
     name TEXT
     password TEXT
     phone INT
@@ -123,20 +132,20 @@ class account {
     address TEXT
 }
 
-class ev_mini_cooper{
+class ev_mini_cooper <<(C,Plum)>>{
     base_cooper mini_cooper
     charge_capacity INT
     km_pr_kwh FLOAT
 }
 
-class fossil_mini_cooper {
+class fossil_mini_cooper <<(C,Plum)>>{
     base_cooper mini_cooper
     tank_capacity INT
     km_pr_liter FLOAT
     gears INT
 }
 
-class hybrid_mini_cooper {
+class hybrid_mini_cooper <<(C,Plum)>>{
     base_cooper mini_cooper
     fuel_type1 TEXT
     fuel_type2 TEXT
@@ -147,21 +156,17 @@ class hybrid_mini_cooper {
     gears INT
 }
 
-object images {
-    id SERIAL PRIMARY KEY    
-    image_url TEXT
-}
-
-object users{
-    id SERIAL PRIMARY KEY
-    a_user account
-}
-
-class Car {
+class Car <<(C,Plum)>>{
     fossil_mini_cooper?
     ev_mini_cooper?
     hybrid_mini_cooper?
 }
+
+object users {
+    id SERIAL PRIMARY KEY
+    a_user account
+}
+
 
 object Cars {
     id SERIAL PRIMARY KEY
@@ -170,49 +175,22 @@ object Cars {
     CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES users (id)
 }
 
-Car -|> fossil_mini_cooper
-Car -|> ev_mini_cooper
-Car -|> hybrid_mini_cooper
+Car --|> fossil_mini_cooper
+Car --|> ev_mini_cooper
+Car --|> hybrid_mini_cooper
 
-users -> Cars::id
+users::id -> Cars::id
 
 Car --> Cars
 
-mini_cooper --> images
-
-fossil_mini_cooper -|> mini_cooper
-ev_mini_cooper -|> mini_cooper
-hybrid_mini_cooper -|> mini_cooper
+fossil_mini_cooper --|> mini_cooper
+ev_mini_cooper --|> mini_cooper
+hybrid_mini_cooper --|> mini_cooper
 
 account -> users::a_user
 
 @enduml
 
 @startuml
-object Users{
-    id SERIAL PRIMARY KEY
-    username TEXT
-    password TEXT
-    address TEXT
-    city TEXT
-    email TEXT
-    mobile INT
-}
-
-object Cars{
-    id SERIAL PRIMARY KEY
-    model_name TEXT
-    generation INT
-    fuel_type1 TEXT
-    fuel_type2 TEXT
-    account_id INT
-    gear_type TEXT
-    gears INT
-    charge_capacity FLOAT
-    tank_capacity FLOAT
-    CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES users (id)
-}
-
-Users::id -> Cars::account_id
-
+skinparameters
 @enduml

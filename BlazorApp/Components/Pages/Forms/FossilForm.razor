@@ -1,16 +1,16 @@
 @using BlazorApp.Service
 
-<EditForm Model="FossilFormData">
+<EditForm Model="FossilCooperFormData">
     <label class="form-label">Tank Capacity:</label>
-    <InputNumber @bind-Value="FossilFormData.TankCapacity"/>
+    <InputNumber @bind-Value="FossilCooperFormData.TankCapacity"/>
 
     <label class="form-label">Km. pr. liter:</label>
-    <InputNumber @bind-Value="FossilFormData.KmPrLiter"/>
+    <InputNumber @bind-Value="FossilCooperFormData.KmPrLiter"/>
 
     <label class="form-label">Gears (0 if automatic):</label>
-    <InputNumber @bind-Value="FossilFormData.Gears"/>
+    <InputNumber @bind-Value="FossilCooperFormData.Gears"/>
 </EditForm>
 
 @code{
-    [Parameter] public MiniCooper.FossilMiniCooper FossilFormData { get; set; } = new();
+    [Parameter] public MiniCooper.FossilMiniCooper FossilCooperFormData { get; set; } = new();
 }
