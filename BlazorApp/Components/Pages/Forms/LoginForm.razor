@@ -1,0 +1,13 @@
+@using BlazorApp.Service
+
+<EditForm Model="@LoginFormData">
+    <label class="form-label">Battery charge:</label>
+    <InputNumber @bind-Value="LoginFormData.Username"/>
+
+    <label class="form-label">Km. pr. kilowatt hour: </label>
+    <InputNumber @bind-Value="LoginFormData.Password"/>
+</EditForm>
+
+@code{
+    [Parameter] public Users.EvUsers LoginFormData { get; set; } = new();
+}

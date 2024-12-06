@@ -1,0 +1,93 @@
+@page "/login"
+@using BlazorApp.Service
+@inject DBService DbService
+@inject Users.BaseUsers BaseUser
+@* Remember to add scoped versions of these in the Program.cs *@
+
+<div class="dropdown">
+    <a class="btn btn-secondary custom-layout dropdown-toggle btn-lg" href="#" role="button" data-bs-toggle="dropdown"
+       aria-expanded="false">
+        Vehicle Options
+    </a>
+
+
+</div>
+
+<EditForm Model="@BaseUser" OnValidSubmit="@HandleValidSubmit">
+    <label class="form-label">Model Name:</label>
+    <InputText @bind-Value="BaseUser.ModelName"/>
+
+    <label class="form-label">Generation:</label>
+    <InputNumber @bind-Value="BaseUser.Generation"/>
+
+    <label class="form-label">Model Type:</label>
+    <InputText @bind-Value="BaseUser.ModelType"/>
+
+    <label class="form-label">Color:</label>
+    <InputText @bind-Value="BaseUser.Color"/>
+
+    <label class="form-label">Price:</label>
+    <InputNumber @bind-Value="BaseUser.Price"/>
+
+    <label class="form-label">Mileage:</label>
+    <InputNumber @bind-Value="BaseUser.Mileage"/>
+
+    <label class="form-label">Max range:</label>
+    <InputNumber @bind-Value="BaseUser.MaxRange"/>
+
+    <label class="form-label">Weight:</label>
+    <InputNumber @bind-Value="BaseUser.Weight"/>
+
+    <label class="form-label">Fuel type:</label>
+    <InputText @bind-Value="BaseUser.FuelType"/>
+
+    <label class="form-label">Gear type:</label>
+    <InputText @bind-Value="BaseUser.GearType"/>
+
+    <label class="form-label">Yearly tax:</label>
+    <InputNumber @bind-Value="BaseUser.YearlyTax"/>
+    @switch (form)
+    {
+        case "ev":
+            <EvForm LoginFormData="@Ev"/>
+            break;
+        default:
+            <p>Select Vehicle Type</p>
+            break;
+    }
+
+
+    <button type="submit">Submit Car</button>
+</EditForm>
+
+
+
+
+@code {
+    string form = "";
+
+    public async Task HandleValidSubmit()
+    {
+        if (form == "")
+        {
+            Console.WriteLine("No car base selected");
+            // Message saying that the user needs to pick an option.
+            return;
+        }
+        
+
+        
+        Console.WriteLine("Handling valid submit...");
+
+    }
+
+    private void HandleOptionChange(string option)
+    {
+        Console.WriteLine("Handling option...");
+        form = option;
+        StateHasChanged();
+    }
+
+
+
+}
