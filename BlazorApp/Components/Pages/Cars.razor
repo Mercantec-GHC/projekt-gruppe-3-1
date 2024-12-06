@@ -1,10 +1,53 @@
 ﻿@page "/cars"
+@using BlazorApp.Service
+@inject DBService DbService
 
 <PageTitle>Cars Marketplace</PageTitle>
 
-<div class="max-w-6xl mx-auto px-4 py-8">
-    <CarHeader />
-    <CarFilters />
-    <PopularCategories />
-    <CarListings />
+<h2 style="padding:  20px;">Mini Coopers</h2>
+
+<div class="container-fluid text-end" style="background-color: #012169; padding: 20px;">
+    <div class="d-flex justify-content-end flex-wrap"></div>
+        @if (fullMiniCoopers == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            @foreach (var miniCooper in fullMiniCoopers)
+            {
+                var baseCooper = miniCooper.GetEvCooper() as MiniCooper.BaseMiniCooper ??
+                                 miniCooper.GetFossilCooper() as MiniCooper.BaseMiniCooper ??
+                                 miniCooper.GetHybridCooper() as MiniCooper.BaseMiniCooper;
+
+                if (baseCooper != null)
+                {
+                    <div class="card mb-3" style="max-inline-size: 540px;">
+                        <div class="col-md-4">
+                            <img src="data:image/jpeg;base64,@baseCooper.Base64Images.FirstOrDefault()"
+                                 class="img-fluid rounded-start" alt="@baseCooper.ModelName">
+                        </div>
+                        <div class="col-md-8">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@baseCooper.ModelName, @baseCooper.Generation - @baseCooper.ModelType</h5>
+                            <p class="card-text">Color: @baseCooper.Color</p>
+                            <p class="card-text">Price: @baseCooper.Price</p>
+                            <p class="card-text">Mileage: @baseCooper.Mileage</p>
+                            <p class="card-text">Max Range: @baseCooper.MaxRange</p>
+                        </div>
+                    </div>
+                }
+            }
+        }
 </div>
+
+@code {
+    private List<MiniCooper.FullMiniCooper>? fullMiniCoopers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        fullMiniCoopers = await DbService.GetMiniCoopersAsync();
+        fullMiniCoopers = fullMiniCoopers.Take(10).ToList();
+    }
+}
