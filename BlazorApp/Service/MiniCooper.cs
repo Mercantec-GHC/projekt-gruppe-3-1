@@ -130,6 +130,16 @@ public class MiniCooper
             CarId = carId;
             UserId = userId;
         }
+        
+        public int GetCarId()
+        {
+            return CarId;
+        }
+        
+        public int GetUserId()
+        {
+            return UserId;
+        }
 
         public string GetSingleImage()
         {
