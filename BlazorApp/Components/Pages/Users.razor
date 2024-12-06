@@ -8,13 +8,13 @@
 
 <div class="container-fluid text-end" style="background-color: #012169; padding: 20px;">
     <div class="d-flex justify-content-end flex-wrap"></div>
-    @if (fullUsers == null)
+    @if (users == null)
     {
         <p>Loading...</p>
     }
     else
     {
-        @foreach (var user_2 in fullUsers)
+        @foreach (var user_2 in users)
         {
             var baseUser = user_2.GetEvUser() as UsersService.User;
             <div class="card mb-3" style="max-inline-size: 540px;">
@@ -35,12 +35,10 @@
 </div>
 
 @code {
-    private List<UsersService.FullUser>? fullUsers;
+    private List<UsersService.FullUser>? users;
 
     protected override async Task OnInitializedAsync()
     {
-        // fullUsers = await DbService.GetUserByIdAsync();
-        // fullUsers = fullUsers.Take(10).ToList();
-        //note
+        users = await DbService.GetUserByIdAsync(); // Put id ind.
     }
 }
