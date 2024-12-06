@@ -130,6 +130,18 @@ public class MiniCooper
             CarId = carId;
             UserId = userId;
         }
+
+        public List<string> GetImages()
+        {
+            if (EvCooper != null)
+                return EvCooper.Base64Images;
+            else if (FossilCooper != null)
+                return FossilCooper.Base64Images;
+            else if (HybridCooper != null)
+                return HybridCooper.Base64Images;
+            else
+                return new List<string>();
+        }
         
         public int GetCarId()
         {
@@ -139,6 +151,18 @@ public class MiniCooper
         public int GetUserId()
         {
             return UserId;
+        }
+
+        public string GetImageByIndex(int index)
+        {
+            if (EvCooper != null)
+                return EvCooper.Base64Images[index];
+            else if (FossilCooper != null)
+                return FossilCooper.Base64Images[index];
+            else if (HybridCooper != null)
+                return HybridCooper.Base64Images[index];
+            else
+                return string.Empty;
         }
 
         public string GetSingleImage()

@@ -11,7 +11,32 @@
         {
             <div class="col" style="padding: 10px">
                 <div class="card h-100">
-                    <img src="data:image/png;base64,@fullMiniCooper.GetSingleImage()" alt="ops..." class="card-img"/>
+
+                    <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="data:image/png;base64,@fullMiniCooper.GetSingleImage()" class="d-block w-100"
+                                     alt="HeaderImage">
+                            </div>
+                            @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
+                            {
+                                <div class="carousel-item">
+                                    <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)" class="d-block w-100" alt="sliderImage">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@fullMiniCooper.GetCarId()"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#@fullMiniCooper.GetCarId()"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
                     <div class="card-body">
                         <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
                         <p class="card-text">@fullMiniCooper.GetPrice()</p>
@@ -23,15 +48,20 @@
 
 </div>
 
+<button onclick="@DeleteAndResetTable">Delete everything.</button>
+
 @code{
 
     List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 
     private async Task GetFullMiniCoopers()
     {
-        fullMiniCoopers.Add(await DbService.GetEvByIdAsync(2));
-        fullMiniCoopers.Add(await DbService.GetEvByIdAsync(3));
-        fullMiniCoopers.Add(await DbService.GetFossilByIdAsync(5));
+        fullMiniCoopers = await DbService.GetAllMiniCoopersAsync();
+    }
+
+    private async Task DeleteAndResetTable()
+    {
+        await DbService.DELETEEVERYTHING("cars");
     }
 
 }

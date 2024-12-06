@@ -77,7 +77,7 @@ public class DBService
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQueryForInsertion(cmd);
+        await RunAsyncQuery(cmd);
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ public class DBService
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQueryForInsertion(cmd);
+        await RunAsyncQuery(cmd);
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ public class DBService
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQueryForInsertion(cmd);
+        await RunAsyncQuery(cmd);
     }
 
     /// <summary>
@@ -207,9 +207,21 @@ public class DBService
         string query = $"DELETE FROM cars WHERE car_id = {carId}";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQueryForInsertion(cmd);
+        await RunAsyncQuery(cmd);
 
         await ResetTableIdsAsync("cars");
+    }
+
+    public async Task DELETEEVERYTHING(string tableName)
+    {
+        await using var conn = GetConnection();
+
+        string query = "DELETE FROM cars;";
+        await using var cmd = new NpgsqlCommand(query, conn);
+        
+        await RunAsyncQuery(cmd);
+        
+        await ResetTableIdsAsync(tableName);
     }
 
     /// <summary>
@@ -236,7 +248,7 @@ public class DBService
     /// await ResetTableIdsAsync("my_table");
     /// </code>
     /// </example>
-    private async Task ResetTableIdsAsync(string tableName)
+    public async Task ResetTableIdsAsync(string tableName)
     {
         // Since we are using "using", we dont have to add a close statement at the end, because "using" does that.
         await using var conn = new NpgsqlConnection(_connectionString);
@@ -253,7 +265,7 @@ public class DBService
                        $"DROP TABLE temp_{tableName};";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await RunAsyncQueryForInsertion(cmd);
+        await RunAsyncQuery(cmd);
     }
 
     /// <summary>
@@ -278,7 +290,7 @@ public class DBService
     /// Console.WriteLine($"Total records affected: {affectedRecords}");
     /// </code>
     /// </example>
-    private async Task<int> RunAsyncQueryForInsertion(NpgsqlCommand query)
+    private async Task<int> RunAsyncQuery(NpgsqlCommand query)
     {
         int result = await query.ExecuteNonQueryAsync();
         if (result <= 0)

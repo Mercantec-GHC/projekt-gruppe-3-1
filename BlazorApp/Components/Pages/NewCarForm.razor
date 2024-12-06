@@ -103,16 +103,7 @@
 
 @code {
     string form = "";
-    /*List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
-    protected override async Task OnInitializedAsync()
-    {
-        fullMiniCoopers = await DbService.GetMiniCoopersAsync();
-
-        foreach (var car in fullMiniCoopers)
-        {
-            car.PrintAutomatically();
-        }
-    }*/
+    const int currentUserId = 1;
 
     private async Task HandleValidSubmit()
     {
@@ -149,7 +140,7 @@
                 return;
             }
             
-            await DbService.AddEvToDbAsync(FullCooper.GetEvCooper(), 1);
+            await DbService.AddEvToDbAsync(FullCooper.GetEvCooper(), currentUserId);
         }
         else if (form == "fossil")
         {
@@ -163,7 +154,7 @@
                 return;
             }
             
-            await DbService.AddFossilToDbAsync(FullCooper.GetFossilCooper(), 1);
+            await DbService.AddFossilToDbAsync(FullCooper.GetFossilCooper(), currentUserId);
         }
         else if (form == "hybrid")
         {
@@ -177,7 +168,7 @@
                 return;
             }
             
-            await DbService.AddHybridToDbAsync(FullCooper.GetHybridCooper(), 1);
+            await DbService.AddHybridToDbAsync(FullCooper.GetHybridCooper(), currentUserId);
         }
         else
         {
