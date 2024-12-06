@@ -19,7 +19,7 @@ public class MiniCooper
         public string GearType { get; set; } = string.Empty;
         public decimal YearlyTax { get; set; }
         public List<string> Base64Images { get; set; } = new();
-        
+
         public void PrintBaseMiniCooper()
         {
             Console.WriteLine($"__Mini-Cooper__\n" +
@@ -70,7 +70,7 @@ public class MiniCooper
     {
         public int ChargeCapacity { get; set; }
         public float KmPrKwh { get; set; }
-        
+
         public void Print()
         {
             PrintBaseMiniCooper();
@@ -103,7 +103,7 @@ public class MiniCooper
         public float KmPrLiter { get; set; }
         public float KmPrKwh { get; set; }
         public int Gears { get; set; } // 0 If auto
-        
+
         public void Print()
         {
             PrintBaseMiniCooper();
@@ -127,12 +127,12 @@ public class MiniCooper
         {
             return EvCooper;
         }
-        
+
         public FossilMiniCooper? GetFossilCooper()
         {
             return FossilCooper;
         }
-        
+
         public HybridMiniCooper? GetHybridCooper()
         {
             return HybridCooper;
@@ -153,7 +153,7 @@ public class MiniCooper
             else
                 EvCooper?.Print();
         }
-        
+
         public void PrintFossil()
         {
             if (FossilCooper == null)
@@ -161,7 +161,7 @@ public class MiniCooper
             else
                 FossilCooper?.Print();
         }
-        
+
         public void PrintHybrid()
         {
             if (HybridCooper == null)
@@ -189,13 +189,13 @@ public class MiniCooper
                 Console.WriteLine("There is already an Electric Cooper");
                 return false;
             }
-            
+
             if (FossilCooper != null)
             {
                 Console.WriteLine("There is already a Fossil Cooper");
                 return false;
             }
-            
+
             if (HybridCooper != null)
             {
                 Console.WriteLine("There is already a Hybrid Cooper");
