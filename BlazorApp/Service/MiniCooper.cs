@@ -165,7 +165,7 @@ public class MiniCooper
                 return string.Empty;
         }
 
-        public string GetSingleImage()
+        public string GetFirstImage()
         {
             if (EvCooper != null)
                 return EvCooper.Base64Images[0];

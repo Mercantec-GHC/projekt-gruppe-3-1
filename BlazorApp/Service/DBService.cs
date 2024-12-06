@@ -164,12 +164,13 @@ public class DBService
             $"'{hybridCooper.GearType}'," +
             $"{hybridCooper.YearlyTax}," +
             $"ARRAY [{resolvedImagesString}])::mini_cooper, " +
-            $"{hybridCooper.FuelType1}," +
-            $"{hybridCooper.FuelType2}," +
+            $"'{hybridCooper.FuelType1}'," +
+            $"'{hybridCooper.FuelType2}'," +
             $"{hybridCooper.TankCapacity}," +
             $"{hybridCooper.ChargeCapacity}," +
             $"{hybridCooper.KmPrLiter}," +
-            $"{hybridCooper.KmPrKwh})::hybrid_mini_cooper " +
+            $"{hybridCooper.KmPrKwh},"+
+            $"{hybridCooper.Gears})::hybrid_mini_cooper " +
             ")::car," +
             $"{userId});";
         await using var cmd = new NpgsqlCommand(query, conn);
@@ -317,8 +318,7 @@ public class DBService
     {
         List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 
-        await using var conn = new NpgsqlConnection(_connectionString);
-        conn.Open();
+        await using var conn = GetConnection();
 
         string query =
             "SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;";
@@ -552,8 +552,8 @@ public class DBService
         var fuelType = "(a_car).hybrid_car.base_cooper.fuel_type";
         var gearType = "(a_car).hybrid_car.base_cooper.geartype";
         var yearlyTax = "(a_car).hybrid_car.base_cooper.yearly_tax";
-        var fuelType1 = "(a_car).hybrid_car.tank_capacity";
-        var fuelType2 = "(a_car).hybrid_car.km_pr_liter";
+        var fuelType1 = "(a_car).hybrid_car.fuel_type1";
+        var fuelType2 = "(a_car).hybrid_car.fuel_type2";
         var tankCapacity = "(a_car).hybrid_car.tank_capacity";
         var chargeCapacity = "(a_car).hybrid_car.charge_capacity";
         var kmPrLiter = "(a_car).hybrid_car.km_pr_liter";
@@ -571,6 +571,7 @@ public class DBService
 
             if (await reader.ReadAsync())
             {
+                Console.WriteLine("Getting stuff:");
                 hybridCooper.ModelName = reader.GetString(0);
                 hybridCooper.Generation = reader.GetInt32(1);
                 hybridCooper.ModelType = reader.GetString(2);
@@ -599,6 +600,7 @@ public class DBService
         catch (Exception e)
         {
             Console.WriteLine("Error getting hybrid by id: " + e.Message);
+            Console.WriteLine("Stacktrace: " + e.StackTrace);
         }
 
         MiniCooper.FullMiniCooper fullCooper = new();
