@@ -1,0 +1,37 @@
+﻿@page "/developer"
+@using BlazorApp.Service
+@inject DBService DbService
+
+<button onclick="@GetFullMiniCoopers">Get full mini coopers.</button>
+
+<div class="container">
+
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1">
+        @foreach (var fullMiniCooper in fullMiniCoopers)
+        {
+            <div class="col" style="padding: 10px">
+                <div class="card h-100">
+                    <img src="data:image/png;base64,@fullMiniCooper.GetSingleImage()" alt="ops..." class="card-img"/>
+                    <div class="card-body">
+                        <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
+                        <p class="card-text">@fullMiniCooper.GetPrice()</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@code{
+
+    List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
+
+    private async Task GetFullMiniCoopers()
+    {
+        fullMiniCoopers.Add(await DbService.GetEvByIdAsync(2));
+        fullMiniCoopers.Add(await DbService.GetEvByIdAsync(3));
+        fullMiniCoopers.Add(await DbService.GetFossilByIdAsync(5));
+    }
+
+}

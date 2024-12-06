@@ -47,7 +47,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        fullMiniCoopers = await DbService.GetMiniCoopersAsync();
+        fullMiniCoopers = await DbService.GetAllMiniCoopersAsync();
         fullMiniCoopers = fullMiniCoopers.Take(10).ToList();
     }
 }

@@ -301,7 +301,7 @@ public class DBService
     /// Based on the type, respective methods such as <see cref="GetEvByIdAsync"/> or <see cref="GetFossilByIdAsync"/> are called to get detailed information.
     /// The method also logs messages to the console indicating which type of car has been added to the list.
     /// </remarks>
-    public async Task<List<MiniCooper.FullMiniCooper>> GetMiniCoopersAsync()
+    public async Task<List<MiniCooper.FullMiniCooper>> GetAllMiniCoopersAsync()
     {
         List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 
@@ -321,18 +321,23 @@ public class DBService
                 if (!reader.IsDBNull(1))
                 {
                     Console.WriteLine("Ev added!");
-                    Console.WriteLine(reader.GetInt32(0));
-                    fullMiniCoopers.Add(await GetEvByIdAsync(currentId));
+                    var tempFullCooper = await GetEvByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, reader.GetInt32(4));
+                    fullMiniCoopers.Add(tempFullCooper);
                 }
                 else if (!reader.IsDBNull(2))
                 {
                     Console.WriteLine("Fossil added!");
-                    fullMiniCoopers.Add(await GetFossilByIdAsync(currentId));
+                    var tempFullCooper = await GetFossilByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, reader.GetInt32(4));
+                    fullMiniCoopers.Add(tempFullCooper);
                 }
                 else if (!reader.IsDBNull(3))
                 {
                     Console.WriteLine("Hybrid added!");
-                    fullMiniCoopers.Add(await GetHybridByIdAsync(currentId));
+                    var tempFullCooper = await GetHybridByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, reader.GetInt32(4));
+                    fullMiniCoopers.Add(tempFullCooper);
                 }
                 else
                 {

@@ -119,9 +119,57 @@ public class MiniCooper
 
     public class FullMiniCooper
     {
+        private int CarId { get; set; }
+        private int UserId {get; set;}
         private EvMiniCooper? EvCooper { get; set; }
         private FossilMiniCooper? FossilCooper { get; set; }
         private HybridMiniCooper? HybridCooper { get; set; }
+
+        public void SetIds(int carId, int userId)
+        {
+            CarId = carId;
+            UserId = userId;
+        }
+
+        public string GetSingleImage()
+        {
+            if (EvCooper != null)
+                return EvCooper.Base64Images[0];
+            else if (FossilCooper != null)
+                return FossilCooper.Base64Images[0];
+            else if (HybridCooper != null)
+                return HybridCooper.Base64Images[0];
+            else
+                return string.Empty;
+        }
+
+        public string GetModelName()
+        {
+            if (EvCooper != null)
+                return EvCooper.ModelName;
+            else if (FossilCooper != null)
+                return FossilCooper.ModelName;
+            else if (HybridCooper != null)
+                return HybridCooper.ModelName;
+            else
+            {
+                return "No car name has been assigned to this object.";
+            }
+        }
+
+        public decimal GetPrice()
+        {
+            if (EvCooper != null)
+                return EvCooper.Price;
+            else if (FossilCooper != null)
+                return FossilCooper.Price;
+            else if (HybridCooper != null)
+                return HybridCooper.Price;
+            else
+            {
+                return 0;
+            }
+        }
 
         public EvMiniCooper? GetEvCooper()
         {
