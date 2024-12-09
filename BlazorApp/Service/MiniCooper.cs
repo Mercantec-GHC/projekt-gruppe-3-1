@@ -142,6 +142,42 @@ public class MiniCooper
             else
                 return new List<string>();
         }
+
+        public string GetModelType()
+        {
+            if (EvCooper != null)
+                return EvCooper.ModelType;
+            else if (FossilCooper != null)
+                return FossilCooper.ModelType;
+            else if (HybridCooper != null)
+                return HybridCooper.ModelType;
+            else
+                return string.Empty;
+        }
+
+        public string GetFuelType()
+        {
+            if (EvCooper != null)
+                return EvCooper.FuelType;
+            else if (FossilCooper != null)
+                return FossilCooper.FuelType;
+            else if (HybridCooper != null)
+                return HybridCooper.FuelType;
+            else
+                return string.Empty;
+        }
+
+        public string GetGearType()
+        {
+            if (EvCooper != null)
+                return EvCooper.GearType;
+            else if (FossilCooper != null)
+                return FossilCooper.GearType;
+            else if (HybridCooper != null)
+                return HybridCooper.GearType;
+            else
+                return string.Empty;
+        }
         
         public int GetCarId()
         {

@@ -22,6 +22,16 @@ public class UsersService
             City = city;
             Address = address;
         }
+        public void SetUser(User user)
+        {
+            Id = user.Id;
+            Name = user.Name;
+            Password = user.Password;
+            Mobile = user.Mobile;
+            Email = user.Email;
+            City = user.City;
+            Address = user.Address;
+        }
 
         public void Print()
         {
