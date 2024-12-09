@@ -1,0 +1,43 @@
+﻿    @page "/profil_oplysninger"
+@using BlazorApp.Service
+@inject DBService DbService
+
+<PageTitle>Brugere</PageTitle>
+
+<h2 style="padding:  20px;">Brugere</h2>
+
+<div class="container-fluid" style="background-color: #012169; padding: 20px;">
+    @if (users == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (!users.Any())
+    {
+        <p>Ingen brugere fundet.</p>
+    }
+    else
+    {
+        @foreach (var user in users)
+        {
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="card-body">
+                    <h5 class="card-title">@user.Name</h5>
+                    <p class="card-text">Password: @user.Password</p>
+                    <p class="card-text">Mobile: @user.Mobile</p>
+                    <p class="card-text">Email: @user.Email</p>
+                    <p class="card-text">City: @user.City</p>
+                    <p class="card-text">Address: @user.Address</p>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private List<UsersService.User>? users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await DbService.GetAllUsersAsync(); 
+    }
+}

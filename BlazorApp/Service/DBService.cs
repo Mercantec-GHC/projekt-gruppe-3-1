@@ -101,7 +101,7 @@ public class DBService
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
-        
+
         var resolvedImagesString = await ResolveImagesAsync(fossilCooper.Base64Images);
 
         string query =
@@ -143,7 +143,7 @@ public class DBService
         conn.Open();
 
         var resolvedImagesString = await ResolveImagesAsync(hybridCooper.Base64Images);
-        
+
         string query =
             "INSERT INTO cars (a_car, account_id)" +
             "VALUES (" +
@@ -169,7 +169,7 @@ public class DBService
             $"{hybridCooper.TankCapacity}," +
             $"{hybridCooper.ChargeCapacity}," +
             $"{hybridCooper.KmPrLiter}," +
-            $"{hybridCooper.KmPrKwh},"+
+            $"{hybridCooper.KmPrKwh}," +
             $"{hybridCooper.Gears})::hybrid_mini_cooper " +
             ")::car," +
             $"{userId});";
@@ -219,9 +219,9 @@ public class DBService
 
         string query = "DELETE FROM cars;";
         await using var cmd = new NpgsqlCommand(query, conn);
-        
+
         await RunAsyncQuery(cmd);
-        
+
         await ResetTableIdsAsync(tableName);
     }
 
@@ -647,7 +647,7 @@ public class DBService
 
         return base64Images;
     }
-    
+
     private async Task<string> ResolveImagesAsync(List<string> base64Images)
     {
         string resolvedImages = "";
@@ -656,9 +656,9 @@ public class DBService
         {
             resolvedImages += $"'{base64Image}',";
         }
-        
+
         resolvedImages = resolvedImages.Substring(0, resolvedImages.Length - 1);
-        
+
         return resolvedImages;
     }
 
@@ -689,9 +689,9 @@ public class DBService
                        "(a_user).city," +
                        "(a_user).address" +
                        $"FROM users WHERE id = {id}";
-        
+
         var cmd = new NpgsqlCommand(query, conn);
-        
+
         var reader = await cmd.ExecuteReaderAsync();
 
         if (await reader.ReadAsync())
@@ -721,11 +721,12 @@ public class DBService
             Console.WriteLine("Mobile is already in use.");
             return;
         }
-        
+
         var conn = GetConnection();
-        
-        string query = $"INSERT INTO users (a_user) VALUES (ROW('{user.Name}', '{user.Password}', {user.Mobile}, '{user.Email}', '{user.City}', '{user.Address}')::account)";
-        
+
+        string query =
+            $"INSERT INTO users (a_user) VALUES (ROW('{user.Name}', '{user.Password}', {user.Mobile}, '{user.Email}', '{user.City}', '{user.Address}')::account)";
+
         var cmd = new NpgsqlCommand(query, conn);
 
         try
@@ -734,8 +735,8 @@ public class DBService
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error adding user to database: "+ex.Message);
-            Console.WriteLine("Stacktrace: "+ex.StackTrace);
+            Console.WriteLine("Error adding user to database: " + ex.Message);
+            Console.WriteLine("Stacktrace: " + ex.StackTrace);
             throw;
         }
     }
@@ -745,7 +746,7 @@ public class DBService
         var conn = GetConnection();
 
         string query = $"SELECT (a_user).email FROM users WHERE (a_user).email = '{email}'";
-        
+
         var cmd = new NpgsqlCommand(query, conn);
 
         try
@@ -759,10 +760,57 @@ public class DBService
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error getting email: "+ex.Message);
+            Console.WriteLine("Error getting email: " + ex.Message);
             Console.WriteLine(ex.StackTrace);
             throw;
         }
+    }
+
+    public async Task<List<MiniCooper.FullMiniCooper>> GetFullMiniCoopersByUserId(int userId)
+    {
+        List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
+
+        await using var conn = GetConnection();
+
+        string query =
+            $"SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car FROM cars WHERE account_id = {userId}";
+        await using var cmd = new NpgsqlCommand(query, conn);
+
+        await using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                var currentId = reader.GetInt32(0);
+
+                if (!reader.IsDBNull(1))
+                {
+                    Console.WriteLine("Ev added!");
+                    var tempFullCooper = await GetEvByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, userId);
+                    fullMiniCoopers.Add(tempFullCooper);
+                }
+                else if (!reader.IsDBNull(2))
+                {
+                    Console.WriteLine("Fossil added!");
+                    var tempFullCooper = await GetFossilByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, userId);
+                    fullMiniCoopers.Add(tempFullCooper);
+                }
+                else if (!reader.IsDBNull(3))
+                {
+                    Console.WriteLine("Hybrid added!");
+                    var tempFullCooper = await GetHybridByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, userId);
+                    fullMiniCoopers.Add(tempFullCooper);
+                }
+                else
+                {
+                    Console.WriteLine("No car has been assigned to this object.");
+                }
+            }
+        }
+
+        return fullMiniCoopers;
     }
 
     public async Task<bool> IsMobileTakenAsync(int mobile)
@@ -770,7 +818,7 @@ public class DBService
         var conn = GetConnection();
 
         string query = $"SELECT (a_user).mobile FROM users WHERE (a_user).mobile = {mobile}";
-        
+
         var cmd = new NpgsqlCommand(query, conn);
 
         try
@@ -784,9 +832,91 @@ public class DBService
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error getting email: "+ex.Message);
+            Console.WriteLine("Error getting email: " + ex.Message);
             Console.WriteLine(ex.StackTrace);
             throw;
         }
     }
+
+    public async Task<UsersService.User> LogUserOn(string email, string password)
+    {
+        var user = new UsersService.User();
+
+        var conn = GetConnection();
+
+        string query =
+            $"SELECT id, (a_user).name, (a_user).password, (a_user).mobile, (a_user).email, (a_user).city, (a_user).address FROM users WHERE (a_user).email = '{email}' AND (a_user).password = '{password}'";
+
+        var cmd = new NpgsqlCommand(query, conn);
+
+        try
+        {
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                user.Id = reader.GetInt32(0);
+                user.Name = reader.GetString(1);
+                user.Password = reader.GetString(2);
+                user.Mobile = reader.GetInt32(3);
+                user.Email = reader.GetString(4);
+                user.City = reader.GetString(5);
+                user.Address = reader.GetString(6);
+            }
+            else
+            {
+                Console.WriteLine("No user with this email and password was found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error signing user in: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
+        }
+
+        return user;
+    }
+
+
+
+    public async Task<List<UsersService.User>> GetAllUsersAsync()
+    {
+        List<UsersService.User> users = new();
+
+        var conn = GetConnection();
+        string query = "SELECT " +
+                       "id, " +
+                       "(a_user).name, " +
+                       "(a_user).password, " +
+                       "(a_user).mobile, " +
+                       "(a_user).email, " +
+                       "(a_user).city, " +
+                       "(a_user).address " +
+                       "FROM users";
+
+        await using var cmd = new NpgsqlCommand(query, conn);
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            UsersService.User user = new()
+            {
+                Id = reader.GetInt32(0),
+                Name = reader.GetString(1),
+                Password = reader.GetString(2),
+                Mobile = reader.GetInt32(3),
+                Email = reader.GetString(4),
+                City = reader.GetString(5),
+                Address = reader.GetString(6)
+            };
+
+            users.Add(user);
+        }
+
+        return users;
+    }
+
+
+
 }

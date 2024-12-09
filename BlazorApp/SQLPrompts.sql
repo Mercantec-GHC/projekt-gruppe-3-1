@@ -12,6 +12,9 @@ DROP TABLE temp_users;
 
 DELETE FROM users;
 
+SELECT * FROM users;
+SELECT id, (a_user).name,(a_user).password, (a_user).mobile, (a_user).email, (a_user).city, (a_user).address FROM users WHERE (a_user).email = 'email' AND (a_user).password = 'you';
+
 /*CREATE TABLE images
 (
     id        SERIAL PRIMARY KEY,

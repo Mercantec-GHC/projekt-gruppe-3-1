@@ -4,10 +4,16 @@ public class UsersService
 {
     public class User
     {
-        public int Id { get; set; }
+        public int Id
+        {
+            get; set;
+        }
         public string Name { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public int Mobile { get; set; }
+        public int Mobile
+        {
+            get; set;
+        }
         public string Email { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
@@ -22,6 +28,16 @@ public class UsersService
             City = city;
             Address = address;
         }
+        public void SetUser(User user)
+        {
+            Id = user.Id;
+            Name = user.Name;
+            Password = user.Password;
+            Mobile = user.Mobile;
+            Email = user.Email;
+            City = user.City;
+            Address = user.Address;
+        }
 
         public void Print()
         {
@@ -34,5 +50,5 @@ public class UsersService
                               $"Address: {Address}\n");
         }
     }
-    
+
 }
