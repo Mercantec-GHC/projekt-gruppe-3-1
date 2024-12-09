@@ -878,8 +878,6 @@ public class DBService
         return user;
     }
 
-
-
     public async Task<List<UsersService.User>> GetAllUsersAsync()
     {
         List<UsersService.User> users = new();
@@ -916,7 +914,4 @@ public class DBService
 
         return users;
     }
-
-
-
 }

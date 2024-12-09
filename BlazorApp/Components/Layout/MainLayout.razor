@@ -6,12 +6,12 @@
 }
 
 @if (currentUrl.Contains("/dashboard") ||
-       currentUrl.Contains("/profil_oplysninger") ||
+     currentUrl.Contains("/profil_oplysninger") ||
      currentUrl.Contains("/mine_bilannoncer") ||
      currentUrl.Contains("/betalings_historik") ||
-      currentUrl.Contains("/settings"))
+     currentUrl.Contains("/settings"))
 {
-    <NavMenu />
+    <NavMenu/>
 
     <!-- Custom layout for /login -->
     <div>
@@ -24,14 +24,17 @@
                         <div class="col-md-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <img src="https://cbx-prod.b-cdn.net/COLOURBOX7139093.jpg" alt="Smiley face" width="42" height="42" class="rounded-circle" style="border:5px solid black">
+                                    <img src="https://cbx-prod.b-cdn.net/COLOURBOX7139093.jpg" alt="Smiley face"
+                                         width="42" height="42" class="rounded-circle" style="border:5px solid black">
                                     <h5 class="card-title">Navn</h5>
 
-                                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                                         aria-orientation="vertical">
                                         <div class="list-group">
                                             @if (currentUrl.Contains("/dashboard"))
                                             {
-                                                <a href="/dashboard" class="list-group-item list-group-item-action active">Dashboard</a>
+                                                <a href="/dashboard"
+                                                   class="list-group-item list-group-item-action active">Dashboard</a>
                                             }
                                             else
                                             {
@@ -39,31 +42,41 @@
                                             }
                                             @if (currentUrl.Contains("/profil_oplysninger"))
                                             {
-                                                <a href="/profil_oplysninger" class="list-group-item list-group-item-action active">Profil oplysninger</a>
+                                                <a href="/profil_oplysninger"
+                                                   class="list-group-item list-group-item-action active">Profil
+                                                    oplysninger</a>
                                             }
                                             else
                                             {
-                                                <a href="/profil_oplysninger" class="list-group-item list-group-item-action">Profil oplysninger</a>
+                                                <a href="/profil_oplysninger"
+                                                   class="list-group-item list-group-item-action">Profil oplysninger</a>
                                             }
                                             @if (currentUrl.Contains("/mine_bilannoncer"))
                                             {
-                                                <a href="/mine_bilannoncer" class="list-group-item list-group-item-action active">Mine Bilannoncer</a>
+                                                <a href="/mine_bilannoncer"
+                                                   class="list-group-item list-group-item-action active">Mine
+                                                    Bilannoncer</a>
                                             }
                                             else
                                             {
-                                                <a href="/mine_bilannoncer" class="list-group-item list-group-item-action">Mine Bilannoncer</a>
+                                                <a href="/mine_bilannoncer"
+                                                   class="list-group-item list-group-item-action">Mine Bilannoncer</a>
                                             }
                                             @if (currentUrl.Contains("/betalings_historik"))
                                             {
-                                                <a href="/betalings_historik" class="list-group-item list-group-item-action active">Betalings historik</a>
+                                                <a href="/betalings_historik"
+                                                   class="list-group-item list-group-item-action active">Betalings
+                                                    historik</a>
                                             }
                                             else
                                             {
-                                                <a href="/betalings_historik" class="list-group-item list-group-item-action">Betalings historik</a>
+                                                <a href="/betalings_historik"
+                                                   class="list-group-item list-group-item-action">Betalings historik</a>
                                             }
                                             @if (currentUrl.Contains("/settings"))
                                             {
-                                                <a href="/settings" class="list-group-item list-group-item-action active">Settings</a>
+                                                <a href="/settings"
+                                                   class="list-group-item list-group-item-action active">Settings</a>
                                             }
                                             else
                                             {
@@ -80,10 +93,11 @@
                                     <h5 class="card-title">Biler liste</h5>
                                     <p class="card-text">Her kan du se alle data for dine oprettede salgsannoncer</p>
                                     <div class="tab-content" id="v-pills-tabContent">
-                                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+                                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                             aria-labelledby="v-pills-home-tab" tabindex="0">
                                             @Body
                                         </div>
-                                    </div>          
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +110,7 @@
 else
 {
     <!-- Default layout for other pages -->
-    <NavMenu />
+    <NavMenu/>
     <div>
         <main>
             @Body
