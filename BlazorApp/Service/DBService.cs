@@ -101,7 +101,7 @@ public class DBService
     {
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
-        
+
         var resolvedImagesString = await ResolveImagesAsync(fossilCooper.Base64Images);
 
         string query =
@@ -143,7 +143,7 @@ public class DBService
         conn.Open();
 
         var resolvedImagesString = await ResolveImagesAsync(hybridCooper.Base64Images);
-        
+
         string query =
             "INSERT INTO cars (a_car, account_id)" +
             "VALUES (" +
@@ -628,7 +628,7 @@ public class DBService
 
         return base64Images;
     }
-    
+
     private async Task<string> ResolveImagesAsync(List<string> base64Images)
     {
         string resolvedImages = "";
@@ -637,9 +637,9 @@ public class DBService
         {
             resolvedImages += $"'{base64Image}',";
         }
-        
+
         resolvedImages = resolvedImages.Substring(0, resolvedImages.Length - 1);
-        
+
         return resolvedImages;
     }
 
@@ -656,36 +656,41 @@ public class DBService
     /// This method constructs and executes a SQL query to select user details from the 'users' table by the specified ID.
     /// The query uses direct string interpolation, which may be vulnerable to SQL Injection attacks. It is advisable to use parameterized queries to enhance security.
     /// </remarks>
-    public async Task<UsersService.User> GetUserByIdAsync(int id)
+    public async Task<List<UsersService.User>> GetAllUsersAsync()
     {
-        UsersService.User user = new();
+        List<UsersService.User> users = new();
 
         var conn = GetConnection();
-        string query = "SELECT" +
-                       "id," +
-                       "(a_user).name," +
-                       "(a_user).password," +
-                       "(a_user).mobile," +
-                       "(a_user).email," +
-                       "(a_user).city," +
-                       "(a_user).address" +
-                       $"FROM users WHERE id = {id}";
-        
-        var cmd = new NpgsqlCommand(query, conn);
-        
-        var reader = await cmd.ExecuteReaderAsync();
+        string query = "SELECT " +
+                       "id, " +
+                       "(a_user).name, " +
+                       "(a_user).password, " +
+                       "(a_user).mobile, " +
+                       "(a_user).email, " +
+                       "(a_user).city, " +
+                       "(a_user).address " +
+                       "FROM users";
 
-        if (await reader.ReadAsync())
+        await using var cmd = new NpgsqlCommand(query, conn);
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
         {
-            user.Id = reader.GetInt32(0);
-            user.Name = reader.GetString(1);
-            user.Password = reader.GetString(2);
-            user.Mobile = reader.GetInt32(3);
-            user.Email = reader.GetString(4);
-            user.City = reader.GetString(5);
-            user.Address = reader.GetString(6);
+            UsersService.User user = new()
+            {
+                Id = reader.GetInt32(0),
+                Name = reader.GetString(1),
+                Password = reader.GetString(2),
+                Mobile = reader.GetInt32(3),
+                Email = reader.GetString(4),
+                City = reader.GetString(5),
+                Address = reader.GetString(6)
+            };
+
+            users.Add(user);
         }
 
-        return user;
+        return users;
     }
+
 }
