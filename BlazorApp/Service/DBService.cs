@@ -272,7 +272,7 @@ public class DBService
     /// <summary>
     /// Udfører en given async-SQL kommando og retunerer antal af rækker påvirket.
     /// </summary>
-    /// <param name="query">
+    /// <param name="command">
     /// A <see cref="NpgsqlCommand"/> object that represents the SQL command to execute. This command should be 
     /// set up with the necessary connection and parameters before calling this method.
     /// </param>
@@ -291,9 +291,9 @@ public class DBService
     /// Console.WriteLine($"Total records affected: {affectedRecords}");
     /// </code>
     /// </example>
-    private async Task<int> RunAsyncQuery(NpgsqlCommand query)
+    private async Task<int> RunAsyncQuery(NpgsqlCommand command)
     {
-        int result = await query.ExecuteNonQueryAsync();
+        int result = await command.ExecuteNonQueryAsync();
         if (result <= 0)
             Console.WriteLine("No records affected.");
         else
@@ -706,5 +706,87 @@ public class DBService
         }
 
         return user;
+    }
+
+    public async Task AddUserAsync(UsersService.User user)
+    {
+        if (await IsEmailTakenAsync(user.Email))
+        {
+            Console.WriteLine("Email is already in use.");
+            return;
+        }
+
+        if (await IsMobileTakenAsync(user.Mobile))
+        {
+            Console.WriteLine("Mobile is already in use.");
+            return;
+        }
+        
+        var conn = GetConnection();
+        
+        string query = $"INSERT INTO users (a_user) VALUES (ROW('{user.Name}', '{user.Password}', {user.Mobile}, '{user.Email}', '{user.City}', '{user.Address}')::account)";
+        
+        var cmd = new NpgsqlCommand(query, conn);
+
+        try
+        {
+            await RunAsyncQuery(cmd);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error adding user to database: "+ex.Message);
+            Console.WriteLine("Stacktrace: "+ex.StackTrace);
+            throw;
+        }
+    }
+
+    public async Task<bool> IsEmailTakenAsync(string email)
+    {
+        var conn = GetConnection();
+
+        string query = $"SELECT (a_user).email FROM users WHERE (a_user).email = '{email}'";
+        
+        var cmd = new NpgsqlCommand(query, conn);
+
+        try
+        {
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+                return true;
+            else
+                return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting email: "+ex.Message);
+            Console.WriteLine(ex.StackTrace);
+            throw;
+        }
+    }
+
+    public async Task<bool> IsMobileTakenAsync(int mobile)
+    {
+        var conn = GetConnection();
+
+        string query = $"SELECT (a_user).mobile FROM users WHERE (a_user).mobile = {mobile}";
+        
+        var cmd = new NpgsqlCommand(query, conn);
+
+        try
+        {
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+                return true;
+            else
+                return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting email: "+ex.Message);
+            Console.WriteLine(ex.StackTrace);
+            throw;
+        }
     }
 }

@@ -1,14 +1,16 @@
 ﻿-- Disse fire linjer vil genstarte opbygningen af id numre korrekt. HUSK at bruge dem når du har slettet en række i en tabel.
 -- bare skift alle table_name ud med dem 
-CREATE TEMP TABLE temp_cars AS
+CREATE TEMP TABLE temp_users AS
 SELECT *, ROW_NUMBER() OVER (ORDER BY id) as new_id
-FROM cars;
-UPDATE cars
-SET id = temp_cars.new_id
-FROM temp_cars
-WHERE cars.id = temp_cars.id;
-SELECT setval('cars_id_seq', (SELECT MAX(id) FROM cars));
-DROP TABLE temp_cars;
+FROM users;
+UPDATE users
+SET id = temp_users.new_id
+FROM temp_users
+WHERE users.id = temp_users.id;
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
+DROP TABLE temp_users;
+
+DELETE FROM users;
 
 /*CREATE TABLE images
 (
@@ -238,3 +240,16 @@ FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHER
 SELECT (a_car).electric_car.base_cooper.model_name, (a_car).electric_car.base_cooper.generation, (a_car).electric_car.base_cooper.color, (a_car).electric_car.base_cooper.price, (a_car).electric_car.base_cooper.km_driven, (a_car).electric_car.base_cooper.max_range, (a_car).electric_car.base_cooper.weight, (a_car).electric_car.base_cooper.fuel_type, (a_car).electric_car.base_cooper.geartype, (a_car).electric_car.base_cooper.yearly_tax, (a_car).electric_car.charge_capacity, (a_car).electric_car.km_pr_kwh FROM cars WHERE id = 2;
 
 SELECT (a_car).electric_car.base_cooper.model_name, (a_car).electric_car.base_cooper.generation, (a_car).electric_car.base_cooper.color, (a_car).electric_car.base_cooper.price, (a_car).electric_car.base_cooper.km_driven, (a_car).electric_car.base_cooper.max_range, (a_car).electric_car.base_cooper.weight, (a_car).electric_car.base_cooper.fuel_type, (a_car).electric_car.base_cooper.geartype, (a_car).electric_car.base_cooper.yearly_tax, (a_car).electric_car.charge_capacity, (a_car).electric_car.km_pr_kwh FROM cars WHERE id = 2;
+
+SELECT * FROM cars WHERE id = 99;
+
+SELECT (a_user).email FROM users WHERE (a_user).email = 'jogn.doe@example.com';
+
+-- Inserting a user example
+INSERT INTO users (a_user)
+VALUES (ROW ('Alice Smith', 'pass123', 9876543210, 'alice.smith@example.com', 'Los Angeles', '456 Elm St')::account);
+
+-- Inserting another user
+INSERT INTO users (a_user) VALUES (ROW ('Bob Brown', 'mypassword', 87654321, 'bob.brown@example.com', 'San Francisco', '789 Pine St')::account);
+
+SELECT * FROM users;

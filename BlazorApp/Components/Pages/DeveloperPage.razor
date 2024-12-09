@@ -1,8 +1,9 @@
 ﻿@page "/developer"
 @using BlazorApp.Service
 @inject DBService DbService
+@inject UsersService.User user
 
-<button onclick="@GetFullMiniCoopers">Get full mini coopers.</button>
+@* <button onclick="@GetFullMiniCoopers">Get full mini coopers.</button> *@
 
 <div class="container">
 
@@ -49,9 +50,42 @@
 
 </div>
 
-@* <button onclick="@DeleteAndResetTable">Delete everything.</button> *@
+<EditForm Model="@user" OnValidSubmit="@HandleUserForm">
+    <label>Navn</label>
+    <InputText @bind-Value="user.Name"/>
+    
+    <label>Password</label>
+    <InputText @bind-Value="user.Password"/>
+    
+    <label>Mobile</label>
+    <InputNumber @bind-Value="user.Mobile"/>
+    
+    <label>Email</label>
+    <InputText @bind-Value="user.Email"/>
+    
+    <label>City</label>
+    <InputText @bind-Value="user.City"/>
+    
+    <label>Address</label>
+    <InputText @bind-Value="user.Address"/>
+    
+    <button class="btn btn-primary" type="submit">Submit</button>
+</EditForm>
+
+<button class="btn btn-danger" onclick="@GetCar">Get car</button>
 
 @code{
+
+    private async Task GetCar()
+    {
+        await DbService.GetEvByIdAsync(99);
+    }
+
+    private async Task HandleUserForm()
+    {
+        user.Print();
+        await DbService.AddUserAsync(user);
+    }
 
     List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 

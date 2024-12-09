@@ -27,14 +27,13 @@ namespace BlazorApp
                 
                 return new DBService(connectionString);
             });
-
-            NpgsqlConnection.GlobalTypeMapper.MapComposite<MiniCooper.FullMiniCooper>("my_composite_type");
             
             builder.Services.AddScoped<MiniCooper.BaseMiniCooper>();
             builder.Services.AddScoped<MiniCooper.EvMiniCooper>();
             builder.Services.AddScoped<MiniCooper.FossilMiniCooper>();
             builder.Services.AddScoped<MiniCooper.HybridMiniCooper>();
             builder.Services.AddScoped<MiniCooper.FullMiniCooper>();
+            builder.Services.AddScoped<UsersService.User>();
 
             var app = builder.Build();
 
