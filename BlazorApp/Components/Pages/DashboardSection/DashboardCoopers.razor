@@ -83,7 +83,6 @@
 
     private async Task GetCoopers()
     {
-        user.Id = 1;
         userFullMiniCoopers = await DbService.GetFullMiniCoopersByUserId(user.Id);
     }
 

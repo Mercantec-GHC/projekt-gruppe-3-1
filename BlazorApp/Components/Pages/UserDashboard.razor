@@ -1,6 +1,7 @@
 ﻿@page "/user-dashboard"
 @using BlazorApp.Service
 @using BlazorApp.Components.Pages.DashboardSection
+@inject NavigationManager NavigationManager
 @inject DBService DbService
 @inject UsersService.User user
 
@@ -12,7 +13,7 @@
                     <div class="card-body">
                         <img src="https://cbx-prod.b-cdn.net/COLOURBOX7139093.jpg" alt="Smiley face" width="42"
                              height="42" class="rounded-circle" style="border:5px solid black">
-                        <h5 class="card-title">Navn</h5>
+                        <h5 class="card-title">@user.Name</h5>
 
                         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                              aria-orientation="vertical">
@@ -21,16 +22,16 @@
                                         class="list-group-item list-group-item-action bg-secondary text-white active">
                                     Dashboard
                                 </button>
+
                                 <button type="button" onclick="@(() => HandleSection("profile-info"))"
                                         class="bg-body-secondary list-group-item list-group-item-action">Profil
                                     oplysninger
                                 </button>
-                                @*<a href="/mine_bilannoncer"
-                               class="bg-body-secondary list-group-item list-group-item-action">Mine Bilannoncer</a>
-                            <a href="/betalings_historik"
-                               class="bg-body-secondary list-group-item list-group-item-action">Betalings
-                                historik</a>
-                            <a href="/settings" class="bg-body-secondary list-group-item list-group-item-action">Settings</a>*@
+
+                                <button type="button" onclick="@(() => HandleSection("create-mini-cooper"))"
+                                        class="bg-body-secondary list-group-item list-group-item-action">Opret Mini
+                                    Cooper
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -44,6 +45,9 @@
                         break;
                     case "profile-info":
                         <ProfileInfo/>
+                        break;
+                    case "create-mini-cooper":
+                        <NewCarDashboard/>
                         break;
                     default:
                         <p>Choose a section</p>
@@ -61,7 +65,11 @@
 
     protected override void OnInitialized()
     {
-        
+        if (user.Id == 0)
+        {
+            Console.WriteLine("User not logged in.");
+            NavigationManager.NavigateTo("/");
+        }
     }
 
     private void HandleSection(string option)

@@ -1,15 +1,23 @@
-﻿namespace BlazorApp.Service;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BlazorApp.Service;
 
 public class UsersService
 {
     public class User
     {
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; } = string.Empty;
+        [Required]
         public string Password { get; set; } = string.Empty;
+        [Required]
         public int Mobile { get; set; }
+        [Required]
         public string Email { get; set; } = string.Empty;
+        [Required]
         public string City { get; set; } = string.Empty;
+        [Required]
         public string Address { get; set; } = string.Empty;
 
         public void SetUser(int id, string name, string password, int mobile, string email, string city, string address)

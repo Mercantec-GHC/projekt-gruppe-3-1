@@ -16,7 +16,6 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="#" style="color: white;">Home</a>
-                <a class="nav-link" href="/new-car" style="color: white;">New Car Form</a>
             </div>
             <div class="navbar-nav  ms-auto">
 
@@ -29,7 +28,8 @@
                 }
                 else
                 {
-                    <a href="/dashboard"><p style="color: white">@user.Id Dashboard</p></a>
+                    <a href="/user-dashboard"><p style="color: white">@user.Name Dashboard</p></a>
+                    <button type="button" class="btn btn-danger" onclick="@LogUserOut">Logout</button>
                 }
 
             </div>
@@ -57,13 +57,53 @@
                 </EditForm>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="@LoadRegisterForm">Register</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
+            @if (loadRegisterForm)
+            {
+                <div class="modal-footer">
+                    <EditForm Model="@user" OnSubmit="@HandleRegister">
+                        <DataAnnotationsValidator/>
+                        
+                        <label>Full Name</label>
+                        <InputText @bind-Value="user.Name"/>
+                        
+                        <label>Password</label>
+                        <InputText @bind-Value="user.Password"/>
+                        
+                        <label>Mobile Number</label>
+                        <InputNumber @bind-Value="user.Mobile"/>
+                        
+                        <label>Email</label>
+                        <InputText @bind-Value="user.Email"/>
+                        
+                        <label>City</label>
+                        <InputText @bind-Value="user.City"/>
+                        
+                        <label>Address</label>
+                        <InputText @bind-Value="user.Address"/>
+                        
+                        <button type="submit" class="btn btn-primary">Register Account</button>
+                    </EditForm>
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @code{
+    bool loadRegisterForm = false;
+
+    private async Task HandleRegister()
+    {
+        await DbService.AddUserAsync(user);
+    }
+
+    private void LoadRegisterForm()
+    {
+        loadRegisterForm = loadRegisterForm == false;
+    }
 
     private async Task HandleLogin()
     {
@@ -79,6 +119,12 @@
         user.Print();
 
         NavigationManager.NavigateTo("/user-dashboard");
+    }
+
+    private void LogUserOut()
+    {
+        user.Clear();
+        NavigationManager.NavigateTo("/");
     }
 
 }
