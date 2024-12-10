@@ -8,34 +8,16 @@ public class MiniCooper
     public class BaseMiniCooper
     {
         public string ModelName { get; set; } = string.Empty;
-        public int Generation
-        {
-            get; set;
-        }
+        public int Generation { get; set; }
         public string ModelType { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
-        public int Price
-        {
-            get; set;
-        }
-        public int Mileage
-        {
-            get; set;
-        }
-        public int MaxRange
-        {
-            get; set;
-        }
-        public int Weight
-        {
-            get; set;
-        }
+        public int Price { get; set; }
+        public int Mileage { get; set; }
+        public int MaxRange { get; set; }
+        public int Weight { get; set; }
         public string FuelType { get; set; } = string.Empty; // Fossil/Diesel/Electricity/Hybrid.
         public string GearType { get; set; } = string.Empty;
-        public decimal YearlyTax
-        {
-            get; set;
-        }
+        public decimal YearlyTax { get; set; }
         public List<string> Base64Images { get; set; } = new();
 
         public void PrintBaseMiniCooper()
@@ -86,14 +68,8 @@ public class MiniCooper
 
     public class EvMiniCooper : BaseMiniCooper
     {
-        public int ChargeCapacity
-        {
-            get; set;
-        }
-        public float KmPrKwh
-        {
-            get; set;
-        }
+        public int ChargeCapacity { get; set; }
+        public float KmPrKwh { get; set; }
 
         public void Print()
         {
@@ -105,18 +81,9 @@ public class MiniCooper
 
     public class FossilMiniCooper : BaseMiniCooper
     {
-        public int TankCapacity
-        {
-            get; set;
-        }
-        public float KmPrLiter
-        {
-            get; set;
-        }
-        public int Gears
-        {
-            get; set;
-        } // 0 If auto
+        public int TankCapacity { get; set; }
+        public float KmPrLiter { get; set; }
+        public int Gears { get; set; } // 0 If auto
 
         public void Print()
         {
@@ -131,26 +98,11 @@ public class MiniCooper
     {
         public string FuelType1 { get; set; } = string.Empty;
         public string FuelType2 { get; set; } = string.Empty;
-        public float TankCapacity
-        {
-            get; set;
-        }
-        public float ChargeCapacity
-        {
-            get; set;
-        }
-        public float KmPrLiter
-        {
-            get; set;
-        }
-        public float KmPrKwh
-        {
-            get; set;
-        }
-        public int Gears
-        {
-            get; set;
-        } // 0 If auto
+        public float TankCapacity { get; set; }
+        public float ChargeCapacity { get; set; }
+        public float KmPrLiter { get; set; }
+        public float KmPrKwh { get; set; }
+        public int Gears { get; set; } // 0 If auto
 
         public void Print()
         {
@@ -167,26 +119,11 @@ public class MiniCooper
 
     public class FullMiniCooper
     {
-        private int CarId
-        {
-            get; set;
-        }
-        private int UserId
-        {
-            get; set;
-        }
-        private EvMiniCooper? EvCooper
-        {
-            get; set;
-        }
-        private FossilMiniCooper? FossilCooper
-        {
-            get; set;
-        }
-        private HybridMiniCooper? HybridCooper
-        {
-            get; set;
-        }
+        private int CarId { get; set; }
+        private int UserId { get; set; }
+        private EvMiniCooper? EvCooper { get; set; }
+        private FossilMiniCooper? FossilCooper { get; set; }
+        private HybridMiniCooper? HybridCooper { get; set; }
 
         public void SetIds(int carId, int userId)
         {
@@ -421,6 +358,51 @@ public class MiniCooper
                 carCount++;
 
             return carCount != 1;
+        }
+
+        public string GetGeneration()
+        {
+            if (EvCooper != null)
+                return EvCooper.Generation.ToString();
+            else if (FossilCooper != null)
+                return FossilCooper.Generation.ToString();
+            else if (HybridCooper != null)
+                return HybridCooper.Generation.ToString();
+            else
+                return string.Empty;
+        }
+
+        public List<FullMiniCooper> SortByEv(List<FullMiniCooper> fullMiniCoopers)
+        {
+            List<FullMiniCooper> sortedFullMiniCoopers = new();
+            foreach (var fullCooper in fullMiniCoopers)
+            {
+                if (fullCooper.GetEvCooper() != null)
+                    sortedFullMiniCoopers.Add(fullCooper);
+            }
+            return sortedFullMiniCoopers;
+        }
+        
+        public List<FullMiniCooper> SortByFossil(List<FullMiniCooper> fullMiniCoopers)
+        {
+            List<FullMiniCooper> sortedFullMiniCoopers = new();
+            foreach (var fullCooper in fullMiniCoopers)
+            {
+                if (fullCooper.GetFossilCooper() != null)
+                    sortedFullMiniCoopers.Add(fullCooper);
+            }
+            return sortedFullMiniCoopers;
+        }
+        
+        public List<FullMiniCooper> SortByHybrid(List<FullMiniCooper> fullMiniCoopers)
+        {
+            List<FullMiniCooper> sortedFullMiniCoopers = new();
+            foreach (var fullCooper in fullMiniCoopers)
+            {
+                if (fullCooper.GetHybridCooper() != null)
+                    sortedFullMiniCoopers.Add(fullCooper);
+            }
+            return sortedFullMiniCoopers;
         }
     }
 }

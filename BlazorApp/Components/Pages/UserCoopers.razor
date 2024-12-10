@@ -1,0 +1,73 @@
+﻿@page "/user-coopers"
+@using BlazorApp.Service
+@inject DBService DbService
+@inject UsersService.User user
+
+<button onclick="@GetCoopers">Get own coopers</button>
+
+<div class="container">
+
+    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1">
+        @foreach (var fullMiniCooper in userFullMiniCoopers)
+        {
+            <div class="col" style="padding: 10px">
+                <div class="card h-100">
+
+                    <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
+                        <div class="carousel-inner">
+                            <div
+                                class="carousel-item active"> @* Karrusel skal have en "active" klasse, ellers så bliver ikke vist. - Bootstrap *@
+                                <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()" class="card-img" alt="HeaderImage">
+                            </div>
+                            @* Siden vi skal have et "header" element, så starter vi ved 1, i stedet for 0. *@
+                            @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
+                            {
+                                <div class="carousel-item">
+                                    <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)"
+                                         class="card-img" alt="sliderImage">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@fullMiniCooper.GetCarId()"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#@fullMiniCooper.GetCarId()"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
+                        <p class="card-text">@fullMiniCooper.GetModelType()</p>
+                        <p class="card-text">@fullMiniCooper.GetPrice().ToString(" .kr")</p>
+                        <p class="card-text">@fullMiniCooper.GetFuelType()</p>
+                        <p class="card-text">@fullMiniCooper.GetGearType()</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<button onclick="@PrintUser">Print User</button>
+
+@code{
+    List<MiniCooper.FullMiniCooper> userFullMiniCoopers = new();
+
+    private async Task GetCoopers()
+    {
+        user.Id = 1;
+        userFullMiniCoopers = await DbService.GetFullMiniCoopersByUserId(user.Id);
+    }
+
+    private void PrintUser()
+    {
+        user.Print();
+    }
+
+}

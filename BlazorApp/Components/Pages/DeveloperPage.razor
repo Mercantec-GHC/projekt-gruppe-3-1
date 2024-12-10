@@ -3,7 +3,7 @@
 @inject DBService DbService
 @inject UsersService.User user
 
-@* <button onclick="@GetFullMiniCoopers">Get full mini coopers.</button> *@
+<button onclick="@GetFullMiniCoopers">Get full mini coopers.</button>
 
 <div class="container">
 
@@ -74,8 +74,28 @@
 
 <button class="btn btn-danger" onclick="@GetCar">Get car</button>
 
-@code{
+<button onclick="@SetUserId">Set user id</button>
 
+<EditForm Model="@user" OnValidSubmit="@LogUserIn">
+    <label>Email</label>
+    <InputText @bind-Value="userEmail"/>
+
+    <label>Password</label>
+    <InputText @bind-Value="userPassword"/>
+    
+    <button class="btn btn-primary" type="submit">Login</button>
+</EditForm>
+
+@code{
+    string userEmail = string.Empty;
+    string userPassword = string.Empty;
+
+    private async Task LogUserIn()
+    {
+        var tempUser = await DbService.LogUserOn(userEmail, userPassword);
+        user.SetUser(tempUser);
+    }
+    
     private async Task GetCar()
     {
         await DbService.GetEvByIdAsync(99);
@@ -97,6 +117,11 @@
     private async Task DeleteAndResetTable()
     {
         await DbService.DELETEEVERYTHING("cars");
+    }
+
+    private void SetUserId()
+    {
+        user.Id = 2;
     }
 
 }
