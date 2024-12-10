@@ -25,6 +25,7 @@ public class DBService
         connection.Open();
         return connection;
     }
+
     public async Task<List<UsersService.User>> GetAllUsersAsync()
     {
         List<UsersService.User> users = new();
@@ -61,7 +62,7 @@ public class DBService
 
         return users;
     }
-    
+
     /// <summary>
     /// Retrieves a list of Mini Cooper car entries from the database and identifies their type as either electric, fossil, or hybrid.
     /// </summary>
@@ -120,8 +121,8 @@ public class DBService
 
         return fullMiniCoopers;
     }
-    
-        /// <summary>
+
+    /// <summary>
     /// Retrieves detailed information of an electric Mini Cooper by the given ID from the database.
     /// </summary>
     /// <param name="id">
@@ -367,7 +368,7 @@ public class DBService
         fullCooper.SetMiniCooper(hybridCooper);
         return fullCooper;
     }
-    
+
     public async Task<List<MiniCooper.FullMiniCooper>> GetFullMiniCoopersByUserId(int userId)
     {
         List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
@@ -414,10 +415,10 @@ public class DBService
 
         return fullMiniCoopers;
     }
-    
-    public async Task<List<MiniCooper.FullMiniCooper>> GetFullMiniCooperById(int carId)
+
+    public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperById(int carId)
     {
-        List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
+        MiniCooper.FullMiniCooper fullMiniCooper = new();
 
         await using var conn = GetConnection();
 
@@ -427,41 +428,50 @@ public class DBService
 
         await using (var reader = await cmd.ExecuteReaderAsync())
         {
-            while (await reader.ReadAsync())
+            try
             {
-                var userId = reader.GetInt32(3);
-                
-                if (!reader.IsDBNull(0))
+                if (await reader.ReadAsync())
                 {
-                    Console.WriteLine("Ev added!");
-                    var tempFullCooper = await GetEvByIdAsync(carId);
-                    tempFullCooper.SetIds(carId, userId);
-                    fullMiniCoopers.Add(tempFullCooper);
+                    var userId = reader.GetInt32(3);
+
+                    if (!reader.IsDBNull(0))
+                    {
+                        Console.WriteLine("Ev added!");
+                        var tempFullCooper = await GetEvByIdAsync(carId);
+                        tempFullCooper.SetIds(carId, userId);
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                    }
+                    else if (!reader.IsDBNull(1))
+                    {
+                        Console.WriteLine("Fossil added!");
+                        var tempFullCooper = await GetFossilByIdAsync(carId);
+                        tempFullCooper.SetIds(carId, userId);
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetFossilCooper());
+                    }
+                    else if (!reader.IsDBNull(2))
+                    {
+                        Console.WriteLine("Hybrid added!");
+                        var tempFullCooper = await GetHybridByIdAsync(carId);
+                        tempFullCooper.SetIds(carId, userId);
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetHybridCooper());
+                    }
+                    else
+                    {
+                        Console.WriteLine("No car has been assigned to this object.");
+                    }
                 }
-                else if (!reader.IsDBNull(1))
-                {
-                    Console.WriteLine("Fossil added!");
-                    var tempFullCooper = await GetFossilByIdAsync(carId);
-                    tempFullCooper.SetIds(carId, userId);
-                    fullMiniCoopers.Add(tempFullCooper);
-                }
-                else if (!reader.IsDBNull(2))
-                {
-                    Console.WriteLine("Hybrid added!");
-                    var tempFullCooper = await GetHybridByIdAsync(carId);
-                    tempFullCooper.SetIds(carId, userId);
-                    fullMiniCoopers.Add(tempFullCooper);
-                }
-                else
-                {
-                    Console.WriteLine("No car has been assigned to this object.");
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error getting Full Mini Cooper by Id: " + ex.Message);
+                Console.WriteLine("StackTrace: " + ex.Message);
+                throw;
             }
         }
 
-        return fullMiniCoopers;
+        return fullMiniCooper;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -501,7 +511,7 @@ public class DBService
 
         return base64Images;
     }
-    
+
     /// <summary>
     /// Asynchronously retrieves a user from the database using their unique identifier.
     /// </summary>
@@ -946,6 +956,4 @@ public class DBService
 
         return user;
     }
-
-    
 }
