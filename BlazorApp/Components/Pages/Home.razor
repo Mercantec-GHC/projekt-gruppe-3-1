@@ -23,7 +23,7 @@
         <div class="col">
             <div class="card h-100">
                 <a href="">
-                    <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByFossil"/>
+                    <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin"/>
                 </a>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="col">
             <div class="card h-100">
                 <a href="">
-                    <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid"/>
+                    <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel"/>
                 </a>
             </div>
         </div>
@@ -39,7 +39,7 @@
         <div class="col">
             <div class="card h-100">
                 <a href="">
-                    <img src="images/hybrid.jpg" class="card-img" alt="category pic..."/>
+                    <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid"/>
                 </a>
             </div>
         </div>
@@ -105,7 +105,6 @@
 
 
 @code {
-    private string? connectionStatus;
     List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
     List<MiniCooper.FullMiniCooper> sortedFullMiniCoopers = new();
 
@@ -117,19 +116,32 @@
 
     private void SortByEv()
     {
-        Console.WriteLine("Sorting by Ev");
+        Console.WriteLine("Sorting by Ev...");
+        
         var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
         sortedFullMiniCoopers = fullMiniCooperCaller.SortByEv(fullMiniCoopers);
     }
 
-    private void SortByFossil()
+    private void SortByBenzin()
     {
+        Console.WriteLine("Sorting by Benzin...");
+
         var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
-        sortedFullMiniCoopers = fullMiniCooperCaller.SortByFossil(fullMiniCoopers);
+        sortedFullMiniCoopers = fullMiniCooperCaller.SortByBenzin(fullMiniCoopers);
+    }
+
+    private void SortByDiesel()
+    {
+        Console.WriteLine("Sorting by Diesel...");
+        
+        var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
+        sortedFullMiniCoopers = fullMiniCooperCaller.SortByDiesel(fullMiniCoopers);
     }
 
     private void SortByHybrid()
     {
+        Console.WriteLine("Sorting by Hybrid...");
+        
         var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
         sortedFullMiniCoopers = fullMiniCooperCaller.SortByHybrid(fullMiniCoopers);
     }

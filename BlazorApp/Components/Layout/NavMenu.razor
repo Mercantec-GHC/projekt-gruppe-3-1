@@ -1,5 +1,9 @@
-﻿@* Top page navbar*@
+﻿@using BlazorApp.Service
+@inject DBService DbService
+@inject UsersService.User user
+@inject NavigationManager NavigationManager
 
+@* Top page navbar*@
 <nav class="navbar navbar-expand-lg" style="background-color: #012169">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
@@ -12,23 +16,69 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="#" style="color: white;">Home</a>
-                <a class="nav-link" href="/cars" style="color: white;">Cars</a>
                 <a class="nav-link" href="/new-car" style="color: white;">New Car Form</a>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Account
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Log On</a></li>
-                        <li><a class="dropdown-item" href="/new-car">New Form Coopers</a></li>
-                        <li><a class="dropdown-item" href="/user-coopers">View Personal Coopers</a></li>
-                    </ul>
-                </div>
             </div>
             <div class="navbar-nav  ms-auto">
-                <a class="Login" href="/dashboard" style="color: white;">Login</a>
+
+                @if (user.Id == 0)
+                {
+                    @* Knap for login modal *@
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Login
+                    </button>
+                }
+                else
+                {
+                    <a href="/dashboard"><p style="color: white">@user.Id Dashboard</p></a>
+                }
+
             </div>
         </div>
     </div>
 </nav>
+
+@* Login modal form *@
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Login Form</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@user" OnValidSubmit="@HandleLogin">
+                    <label class="col-form-label">Email</label>
+                    <InputText @bind-Value="user.Email"/>
+
+                    <label class="col-form-label">Password</label>
+                    <InputText @bind-Value="user.Password"/>
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    private async Task HandleLogin()
+    {
+        var tempUser = await DbService.LogUserOn(user.Email, user.Password);
+
+        if (tempUser.Id == 0)
+        {
+            Console.WriteLine("User was not found");
+            return;
+        }
+
+        user.SetUser(tempUser);
+        user.Print();
+
+        NavigationManager.NavigateTo("/user-dashboard");
+    }
+
+}

@@ -15,7 +15,7 @@ public class MiniCooper
         public int Mileage { get; set; }
         public int MaxRange { get; set; }
         public int Weight { get; set; }
-        public string FuelType { get; set; } = string.Empty; // Fossil/Diesel/Electricity/Hybrid.
+        public string FuelType { get; set; } = string.Empty; // Benzin/Diesel/Electricity/Hybrid.
         public string GearType { get; set; } = string.Empty;
         public decimal YearlyTax { get; set; }
         public List<string> Base64Images { get; set; } = new();
@@ -380,6 +380,30 @@ public class MiniCooper
                 if (fullCooper.GetEvCooper() != null)
                     sortedFullMiniCoopers.Add(fullCooper);
             }
+            return sortedFullMiniCoopers;
+        }
+
+        public List<FullMiniCooper> SortByBenzin(List<FullMiniCooper> fullMiniCoopers)
+        {
+            List<FullMiniCooper> sortedFullMiniCoopers = new();
+            foreach (var fullCooper in fullMiniCoopers)
+            {
+                if (fullCooper.GetFossilCooper() != null && (fullCooper.GetFossilCooper().FuelType == "Benzin" || fullCooper.GetFossilCooper().FuelType == "Petrol"))
+                    sortedFullMiniCoopers.Add(fullCooper);
+            }
+
+            return sortedFullMiniCoopers;
+        }
+        
+        public List<FullMiniCooper> SortByDiesel(List<FullMiniCooper> fullMiniCoopers)
+        {
+            List<FullMiniCooper> sortedFullMiniCoopers = new();
+            foreach (var fullCooper in fullMiniCoopers)
+            {
+                if (fullCooper.GetFossilCooper() != null && fullCooper.GetFossilCooper().FuelType == "Diesel")
+                    sortedFullMiniCoopers.Add(fullCooper);
+            }
+
             return sortedFullMiniCoopers;
         }
         

@@ -13,4 +13,11 @@
     <PackageReference Include="Npgsql" Version="8.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Cars\CarFilters.razor" />
+    <_ContentIncludedByDefault Remove="Components\Cars\CarHeader.razor" />
+    <_ContentIncludedByDefault Remove="Components\Cars\CarListings.razor" />
+    <_ContentIncludedByDefault Remove="Components\Cars\PopularCategories.razor" />
+  </ItemGroup>
+
 </Project>
