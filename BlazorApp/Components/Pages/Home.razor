@@ -5,12 +5,14 @@
 
 <PageTitle>Mini Basen</PageTitle>
 
+<div id="home_page">
 <div class="mb-3" style="width: 18rem; display: inline-block; align-content: center;">
     <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Mini Cooper Example...">
 </div>
 
 <div class="container">
-    <div class="row row-cols-4 g-1">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
+
 
         <div class="col">
             <div class="card h-100">
@@ -49,7 +51,8 @@
 
 <div class="container">
 
-    <div class="row row-cols-4 row-cols-sm-5 row-cols-md-6 row-cols-lg-8 g-1">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
+
         @foreach (var fullMiniCooper in sortedFullMiniCoopers)
         {
             <div class="col" style="padding: 10px">
@@ -101,8 +104,8 @@
         }
     </div>
 
+    </div>
 </div>
-
 
 @code {
     private string? connectionStatus;

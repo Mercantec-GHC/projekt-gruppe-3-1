@@ -1,0 +1,25 @@
+﻿.gallery-cell {
+    width: 100% !important;
+    margin: 0 !important; /* Ingen margin */
+    display: flex !important; /* Gør cellerne til flex-containere */
+    align-items: center !important; /* Centrerer indholdet vertikalt */
+    justify-content: center !important; /* Centrerer indholdet horisontalt */
+    text-align: center !important;
+    padding: 10px 0 !important; /* Padding til top og bund */
+    height: 300px !important; /* Standard højde */
+    overflow: hidden !important; /* Skjul overskydende indhold */
+}
+
+    /* Billede stil */
+    .gallery-cell img {
+        max-width: 100% !important; /* Billederne vil aldrig overstige cellebredden */
+        max-height: 100% !important; /* Billederne vil aldrig overstige cellehøjden */
+        object-fit: contain !important; /* Holder billedets aspektforhold */
+        height: 400px !important; /* Tillad automatisk højde */
+    }
+
+@media (max-width: 768px) {
+    .gallery-cell {
+        height: 200px !important; /* Justeret højde til mobile enheder */
+    }
+}

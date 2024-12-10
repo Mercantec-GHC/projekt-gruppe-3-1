@@ -102,8 +102,7 @@ select {
     }
 
 .car-image {
-    imagePaths [CarPic]
-    position: relative;
+    imagePaths [CarPic] position: relative;
     aspect-ratio: 16/9;
     background-color: #f3f4f6;
 }
@@ -171,4 +170,41 @@ select {
 img {
     width: 100%;
     height: auto;
+}
+
+#home_page .col {
+    margin-bottom: 15px;
+}
+
+
+    #home_page .col img {
+        height: 175px !important;
+        width: 100% !important;
+        max-width: 100%; /* Billederne vil aldrig overstige cellebredden */
+        max-height: 100%; /* Billederne vil aldrig overstige cellehøjden */
+        object-fit: contain; /* Holder billedets aspektforhold */
+    }
+
+
+#home_page .slide img {
+    height: 100px !important;
+    width: 100% !important;
+    max-width: 100%; /* Billederne vil aldrig overstige cellebredden */
+    max-height: 100%; /* Billederne vil aldrig overstige cellehøjden */
+    object-fit: contain; /* Holder billedets aspektforhold */
+}
+
+
+
+#home_page .card-body {
+    background-color: #e5e7eb;
+}
+
+#home_page .carousel-item {
+    background-color: #ffffff;
+}
+
+#home_page .carousel-control-next,
+#home_page .carousel-control-prev {
+    background-color: #939393;
 }
