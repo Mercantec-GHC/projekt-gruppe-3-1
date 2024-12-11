@@ -7,7 +7,7 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #012169">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="/images/Minibasen Mini.png" alt="Minibasen"/>
+            <img src="/images/Minibasen Mini.png" alt="Minibasen" />
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,13 +23,13 @@
                 {
                     @* Knap for login modal *@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        Login
+                        Log ind
                     </button>
                 }
                 else
                 {
                     <a href="/user-dashboard"><p style="color: white">@user.Name Dashboard</p></a>
-                    <button type="button" class="btn btn-danger" onclick="@LogUserOut">Logout</button>
+                    <button type="button" class="btn btn-danger" onclick="@LogUserOut">Log ud</button>
                 }
 
             </div>
@@ -42,113 +42,136 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Login Form</h1>
+                @if (loadRegisterForm)
+                {
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Registrer Formular</h1>
+                }
+                else
+                {
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Log ind Formular</h1>
+                }
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <EditForm Model="@user" OnValidSubmit="@HandleLogin">
+                @if (!loadRegisterForm)
+                {
+                    <EditForm Model="@user" OnValidSubmit="@HandleLogin">
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="fullName" class="col-form-label">Full Name</label>
-                    </div>
-                        <div class="col-md-8">
-                            <InputText @bind-Value="user.Email" class="form-label" />
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="fullName" class="col-form-label">Fulde navn</label>
+                            </div>
+                            <div class="col-md-8">
+                                <InputText @bind-Value="user.Email" class="form-label w-100" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="password" class="col-form-label">Password</label>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="password" type="password" class="col-form-label">Kodeord</label>
+                            </div>
+                            <div class="col-md-8">
+                                <InputText type="password" @bind-Value="user.Password" class="form-label w-100" />
+                            </div>
                         </div>
-                        <div class="col-md-8">
-                            <InputText @bind-Value="user.Password" class="form-label" />
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
 
-                </EditForm>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="@LoadRegisterForm">Register</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-            @if (loadRegisterForm)
-            {
-                <div class="modal-footer">
-                    <div style="width: 100%; display: block;">
+                        <div class="d-flex justify-content-end">
+
+                            <button type="submit" class="btn btn-primary">Log ind</button>
+                        </div>
+
+                    </EditForm>
+                }
+                else
+                {
                     <EditForm Model="@user" OnSubmit="@HandleRegister">
-                        <DataAnnotationsValidator/>
+                        <DataAnnotationsValidator />
 
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="fullName" class="col-form-label">Full Name</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <InputText id="fullName" @bind-Value="user.Name" class="form-label" />
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="fullName" class="col-form-label">Fulde navn</label>
                             </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="password" class="col-form-label">Password</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <InputText id="password" @bind-Value="user.Password" class="form-label" aria-describedby="passwordHelpInline" />
-                                </div>
+                            <div class="col-md-8">
+                                <InputText id="fullName" @bind-Value="user.Name" class="form-label w-100" />
                             </div>
+                        </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="mobile" class="col-form-label">Mobile Number</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <InputNumber id="mobile" @bind-Value="user.Mobile" class="form-label" />
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="password" class="col-form-label">Kodeord</label>
                             </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="email" class="col-form-label">Email</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <InputText id="email" @bind-Value="user.Email" class="form-label" />
-                                </div>
+                            <div class="col-md-8">
+                                <InputText id="password" type="password" @bind-Value="user.Password" class="form-label w-100" aria-describedby="passwordHelpInline" />
+                                @* <div id="passwordHelpBlock" class="form-text"> *@
+                                @*         Dit kodeord skal være 8-20 tegn langt, indeholde bogstaver og tal og må ikke indeholde mellemrum, specialtegn eller emoji. *@
+                                @* </div> *@
                             </div>
+                        </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="city" class="col-form-label">City</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <InputText id="city" @bind-Value="user.City" class="form-label" />
-                                </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="mobile" class="col-form-label">Mobil nummer</label>
                             </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="address" class="col-form-label">Address</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <InputText id="address" @bind-Value="user.Address" class="form-label" />
-                                </div>
+                            <div class="col-md-8">
+                                <InputNumber id="mobile" @bind-Value="user.Mobile" class="form-label w-100" />
                             </div>
+                        </div>
 
-                        <div class="d-flex justify-content-start">
-                            <button type="submit" class="btn btn-primary">Register Account</button>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="email" class="col-form-label">E-mail</label>
+                            </div>
+                            <div class="col-md-8">
+                                <InputText id="email" @bind-Value="user.Email" class="form-label w-100" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="city" class="col-form-label">City</label>
+                            </div>
+                            <div class="col-md-8">
+                                <InputText id="city" @bind-Value="user.City" class="form-label w-100" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="address" class="col-form-label">Adresse</label>
+                            </div>
+                            <div class="col-md-8">
+                                <InputText id="address" @bind-Value="user.Address" class="form-label w-100" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+
+                            <button type="submit" class="btn btn-primary">Registrer Profil</button>
                         </div>
                     </EditForm>
-                    </div>
-                </div>
-            }
+                }
+            </div>
+
+            <div class="modal-footer d-flex justify-content-start">
+                @if (loadRegisterForm)
+                {
+                    <p>Har du allerede en profil?
+                        <a href="" @onclick="@LoadLoginForm">Log ind</a>
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        Har du ikke en profil?
+                        <a href="" @onclick="@LoadRegisterForm">Tilmeld</a>
+                    </p>
+                }
+            </div>
         </div>
     </div>
 </div>
 
-@code{
+@code {
     bool loadRegisterForm = false;
 
     private async Task HandleRegister()
@@ -158,7 +181,12 @@
 
     private void LoadRegisterForm()
     {
-        loadRegisterForm = loadRegisterForm == false;
+        loadRegisterForm = true;
+    }
+
+    private void LoadLoginForm()
+    {
+        loadRegisterForm = false;
     }
 
     private async Task HandleLogin()
