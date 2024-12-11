@@ -47,13 +47,29 @@
             </div>
             <div class="modal-body">
                 <EditForm Model="@user" OnValidSubmit="@HandleLogin">
-                    <label class="col-form-label">Email</label>
-                    <InputText @bind-Value="user.Email"/>
 
-                    <label class="col-form-label">Password</label>
-                    <InputText @bind-Value="user.Password"/>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="fullName" class="col-form-label">Full Name</label>
+                    </div>
+                        <div class="col-md-8">
+                            <InputText @bind-Value="user.Email" class="form-label" />
+                        </div>
+                    </div>
 
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="password" class="col-form-label">Password</label>
+                        </div>
+                        <div class="col-md-8">
+                            <InputText @bind-Value="user.Password" class="form-label" />
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+
                 </EditForm>
             </div>
             <div class="modal-footer">
@@ -63,29 +79,69 @@
             @if (loadRegisterForm)
             {
                 <div class="modal-footer">
+                    <div style="width: 100%; display: block;">
                     <EditForm Model="@user" OnSubmit="@HandleRegister">
                         <DataAnnotationsValidator/>
-                        
-                        <label>Full Name</label>
-                        <InputText @bind-Value="user.Name"/>
-                        
-                        <label>Password</label>
-                        <InputText @bind-Value="user.Password"/>
-                        
-                        <label>Mobile Number</label>
-                        <InputNumber @bind-Value="user.Mobile"/>
-                        
-                        <label>Email</label>
-                        <InputText @bind-Value="user.Email"/>
-                        
-                        <label>City</label>
-                        <InputText @bind-Value="user.City"/>
-                        
-                        <label>Address</label>
-                        <InputText @bind-Value="user.Address"/>
-                        
-                        <button type="submit" class="btn btn-primary">Register Account</button>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="fullName" class="col-form-label">Full Name</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <InputText id="fullName" @bind-Value="user.Name" class="form-label" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="password" class="col-form-label">Password</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <InputText id="password" @bind-Value="user.Password" class="form-label" aria-describedby="passwordHelpInline" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="mobile" class="col-form-label">Mobile Number</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <InputNumber id="mobile" @bind-Value="user.Mobile" class="form-label" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="email" class="col-form-label">Email</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <InputText id="email" @bind-Value="user.Email" class="form-label" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="city" class="col-form-label">City</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <InputText id="city" @bind-Value="user.City" class="form-label" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="address" class="col-form-label">Address</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <InputText id="address" @bind-Value="user.Address" class="form-label" />
+                                </div>
+                            </div>
+
+                        <div class="d-flex justify-content-start">
+                            <button type="submit" class="btn btn-primary">Register Account</button>
+                        </div>
                     </EditForm>
+                    </div>
                 </div>
             }
         </div>
