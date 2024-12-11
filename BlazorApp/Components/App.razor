@@ -2,25 +2,25 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="css/cars.css" />
-    <link rel="stylesheet" href="BlazorApp.styles.css" />
-    <link rel="stylesheet" href="css/home.css" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="app.css"/>
+    <link rel="stylesheet" href="css/cars.css"/>
+    <link rel="stylesheet" href="BlazorApp.styles.css"/>
+    <link rel="stylesheet" href="css/home.css"/>
 
     <!-- Flickity CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.2.2/flickity.min.css">
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet @rendermode="@InteractiveServer" />
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <HeadOutlet @rendermode="@InteractiveServer"/>
 </head>
 
 <body>
-    <Routes @rendermode="@InteractiveServer" />
-    <script src="_framework/blazor.web.js"></script>
-    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+<Routes @rendermode="@InteractiveServer"/> @* @rendermode="@InteractiveServer" fjern det, og OnInitializedAstync loader kun en gang. Mens alt andet går i stykker. *@
+<script src="_framework/blazor.web.js"></script>
+<script src="bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -530,29 +530,40 @@ public class DBService
         UsersService.User user = new();
 
         var conn = GetConnection();
-        string query = "SELECT" +
-                       "id," +
-                       "(a_user).name," +
-                       "(a_user).password," +
-                       "(a_user).mobile," +
+        string query = "SELECT " +
+                       "id, " +
+                       "(a_user).name, " +
+                       "(a_user).password, " +
+                       "(a_user).mobile, " +
                        "(a_user).email," +
                        "(a_user).city," +
-                       "(a_user).address" +
+                       "(a_user).address " +
                        $"FROM users WHERE id = {id}";
+
+        // string query = $"SELECT * FROM users WHERE id = {id}"; This wont work because we access a UDT.
 
         var cmd = new NpgsqlCommand(query, conn);
 
-        var reader = await cmd.ExecuteReaderAsync();
-
-        if (await reader.ReadAsync())
+        try
         {
-            user.Id = reader.GetInt32(0);
-            user.Name = reader.GetString(1);
-            user.Password = reader.GetString(2);
-            user.Mobile = reader.GetInt32(3);
-            user.Email = reader.GetString(4);
-            user.City = reader.GetString(5);
-            user.Address = reader.GetString(6);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                user.Id = reader.GetInt32(0);
+                user.Name = reader.GetString(1);
+                user.Password = reader.GetString(2);
+                user.Mobile = reader.GetInt32(3);
+                user.Email = reader.GetString(4);
+                user.City = reader.GetString(5);
+                user.Address = reader.GetString(6);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting user by id: "+ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
         }
 
         return user;
@@ -723,7 +734,7 @@ public class DBService
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
-        string query = $"DELETE FROM cars WHERE car_id = {carId}";
+        string query = $"DELETE FROM cars WHERE id = {carId}";
         await using var cmd = new NpgsqlCommand(query, conn);
 
         await RunAsyncQuery(cmd);
@@ -955,5 +966,13 @@ public class DBService
         }
 
         return user;
+    }
+
+    public async Task EditUser(UsersService.User user)
+    {
+        var conn = GetConnection();
+        string query = $"UPDATE users SET a_user.name = '{user.Name}', a_user.password = '{user.Password}', a_user.email = '{user.Email}', a_user.mobile = {user.Mobile}, a_user.city = '{user.City}', a_user.address = '{user.Address}' WHERE id = {user.Id}";
+        var cmd = new NpgsqlCommand(query, conn);
+        await RunAsyncQuery(cmd);
     }
 }
