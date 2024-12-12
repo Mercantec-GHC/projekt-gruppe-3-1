@@ -1,4 +1,4 @@
-# H1-Projekt {Indsæt gruppenavn}
+# H1-Projekt Gruppe 3
 Her skal alt omkring jeres projekt være. Alle jeres OOP klasser, Diagrammer (UML, Database, mm.), Blazorkode og SQL scripts. 
 Projektet han findes her - [Notion](https://www.notion.so/mercantec/Projekt-H1-Webshop-3eafa5e658f44a21a7edea55d419c3e8)
 
