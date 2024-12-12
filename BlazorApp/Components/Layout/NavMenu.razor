@@ -44,11 +44,11 @@
             <div class="modal-header">
                 @if (loadRegisterForm)
                 {
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Registrer Formular</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Registrer formular</h1>
                 }
                 else
                 {
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Log ind Formular</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Log ind formular</h1>
                 }
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -57,12 +57,19 @@
                 {
                     <EditForm Model="@user" OnValidSubmit="@HandleLogin">
 
+                        <div class="text-danger">
+                            @errorMessage
+                        </div>
+
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label for="fullName" class="col-form-label">Fulde navn</label>
+                                <label for="email" class="col-form-label">E-mail</label>
                             </div>
                             <div class="col-md-8">
                                 <InputText @bind-Value="user.Email" class="form-label w-100" />
+                            </div>
+                            <div class="text-danger">
+                                @errorMessageEmail
                             </div>
                         </div>
 
@@ -72,6 +79,9 @@
                             </div>
                             <div class="col-md-8">
                                 <InputText type="password" @bind-Value="user.Password" class="form-label w-100" />
+                            </div>
+                            <div class="text-danger">
+                                @errorMessagePassword
                             </div>
                         </div>
 
@@ -84,8 +94,9 @@
                 }
                 else
                 {
-                    <EditForm Model="@user" OnSubmit="@HandleRegister">
+                    <EditForm Model="@user" OnValidSubmit="@HandleRegister">
                         <DataAnnotationsValidator />
+                        @* <ValidationSumma ry /> *@
 
                         <div class="row mb-3">
                             <div class="col-md-4">
@@ -93,8 +104,10 @@
                             </div>
                             <div class="col-md-8">
                                 <InputText id="fullName" @bind-Value="user.Name" class="form-label w-100" />
+                                <ValidationMessage For="@(() => user.Name)" />
                             </div>
                         </div>
+
 
                         <div class="row mb-3">
                             <div class="col-md-4">
@@ -102,9 +115,7 @@
                             </div>
                             <div class="col-md-8">
                                 <InputText id="password" type="password" @bind-Value="user.Password" class="form-label w-100" aria-describedby="passwordHelpInline" />
-                                @* <div id="passwordHelpBlock" class="form-text"> *@
-                                @*         Dit kodeord skal være 8-20 tegn langt, indeholde bogstaver og tal og må ikke indeholde mellemrum, specialtegn eller emoji. *@
-                                @* </div> *@
+                                <ValidationMessage For="@(() => user.Password)" />
                             </div>
                         </div>
 
@@ -114,6 +125,7 @@
                             </div>
                             <div class="col-md-8">
                                 <InputNumber id="mobile" @bind-Value="user.Mobile" class="form-label w-100" />
+                                <ValidationMessage For="@(() => user.Mobile)" />
                             </div>
                         </div>
 
@@ -123,6 +135,7 @@
                             </div>
                             <div class="col-md-8">
                                 <InputText id="email" @bind-Value="user.Email" class="form-label w-100" />
+                                <ValidationMessage For="@(() => user.Email)" />
                             </div>
                         </div>
 
@@ -132,6 +145,7 @@
                             </div>
                             <div class="col-md-8">
                                 <InputText id="city" @bind-Value="user.City" class="form-label w-100" />
+                                <ValidationMessage For="@(() => user.City)" />
                             </div>
                         </div>
 
@@ -141,11 +155,11 @@
                             </div>
                             <div class="col-md-8">
                                 <InputText id="address" @bind-Value="user.Address" class="form-label w-100" />
+                                <ValidationMessage For="@(() => user.Address)" />
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end">
-
                             <button type="submit" class="btn btn-primary">Registrer Profil</button>
                         </div>
                     </EditForm>
@@ -188,22 +202,53 @@
     {
         loadRegisterForm = false;
     }
+    private string errorMessage = string.Empty;
+    private string errorMessageEmail = string.Empty;
+    private string errorMessagePassword = string.Empty;
+
+
 
     private async Task HandleLogin()
     {
-        var tempUser = await DbService.LogUserOn(user.Email, user.Password);
+        // Nulstil fejlbeskeder
+        errorMessage = string.Empty;
+        errorMessageEmail = string.Empty;
+        errorMessagePassword = string.Empty;
 
-        if (tempUser.Id == 0)
+        // Valider e-mail
+        if (string.IsNullOrWhiteSpace(user.Email))
         {
-            Console.WriteLine("User was not found");
+            errorMessageEmail = "E-mail felt skal udfyldes.";
+        }
+
+        // Valider kodeord
+        if (string.IsNullOrWhiteSpace(user.Password))
+        {
+            errorMessagePassword = "Kodeord felt skal udfyldes.";
+        }
+
+        // Stop, hvis der er fejl
+        if (!string.IsNullOrEmpty(errorMessageEmail) || !string.IsNullOrEmpty(errorMessagePassword))
+        {
             return;
         }
 
-        user.SetUser(tempUser);
-        user.Print();
-
-        NavigationManager.NavigateTo("/user-dashboard");
+        // Tjek brugeroplysninger mod databasen
+        var tempUser = await DbService.LogUserOn(user.Email, user.Password);
+        if (tempUser != null && tempUser.Id != 0)
+        {
+            user.SetUser(tempUser);
+            NavigationManager.NavigateTo("/user-dashboard");
+        }
+        else
+        {
+            errorMessage = "Forkert e-mail eller kodeord.";
+        }
     }
+
+
+
+
 
     private void LogUserOut()
     {

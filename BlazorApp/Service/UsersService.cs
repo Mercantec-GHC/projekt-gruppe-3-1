@@ -6,18 +6,35 @@ public class UsersService
 {
     public class User
     {
-        public int Id { get; set; }
-        [Required]
+        public int Id
+        {
+            get; set;
+        }
+
+        // Validering af felter
+        [Required(ErrorMessage = "Fulde navn er påkrævet")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Fulde navn skal være mellem 3 og 100 tegn")]
         public string Name { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "Kodeord er påkrævet")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Kodeord skal være mindst 6 tegn")]
         public string Password { get; set; } = string.Empty;
-        [Required]
-        public int Mobile { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Mobilnummer er påkrævet")]
+        [Range(10000000, 99999999, ErrorMessage = "Mobilnummer skal være et gyldigt 8-cifret nummer")]
+        public int Mobile
+        {
+            get; set;
+        }
+
+        [Required(ErrorMessage = "E-mail er påkrævet")]
+        [EmailAddress(ErrorMessage = "Ugyldig e-mail adresse")]
         public string Email { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "By er påkrævet")]
         public string City { get; set; } = string.Empty;
-        [Required]
+
+        [Required(ErrorMessage = "Adresse er påkrævet")]
         public string Address { get; set; } = string.Empty;
 
         public void SetUser(int id, string name, string password, int mobile, string email, string city, string address)
