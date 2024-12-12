@@ -3,6 +3,8 @@ using Npgsql.PostgresTypes;
 
 namespace BlazorApp.Service;
 
+//"Host=ep-restless-snow-a2okt6hh.eu-central-1.aws.neon.tech;Username=bilbasen_owner;Password=RIA6nJt1Xwgo;Database=bilbasen;sslmode=require;"
+
 using Npgsql;
 
 public class DBService
