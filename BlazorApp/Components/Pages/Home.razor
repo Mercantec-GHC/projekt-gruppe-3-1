@@ -51,6 +51,10 @@
     <div class="container">
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
+            @*@if (sortedFullMiniCoopers.Count == 0 && sortedFullMiniCoopers.Count == fullMiniCoopers.FullMiniCoopers.Count)
+            {
+                <p>Refresh to get the latest cars</p>
+            }*@
             @if (sortedFullMiniCoopers.Count == 0)
             {
                 <p>Loading...</p>
@@ -151,7 +155,7 @@
 
         StateHasChanged();
     }
-    
+
     // Hver gang vi efterlader siden og kommer tilbage, bliver vi nødt til sætte vores "lokale" biler til at være lig
     // med vores scoped biler.
     protected override void OnInitialized()

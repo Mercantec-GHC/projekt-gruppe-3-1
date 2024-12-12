@@ -30,6 +30,7 @@ public class DBService
 
     public async Task<List<UsersService.User>> GetAllUsersAsync()
     {
+        Console.WriteLine("Getting all users...");
         List<UsersService.User> users = new();
 
         var conn = GetConnection();
@@ -79,6 +80,7 @@ public class DBService
     /// </remarks>
     public async Task<List<MiniCooper.FullMiniCooper>> GetAllMiniCoopersAsync()
     {
+        Console.WriteLine("Getting all mini coopers...");
         List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 
         await using var conn = GetConnection();
@@ -143,6 +145,7 @@ public class DBService
     /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetEvByIdAsync(int id)
     {
+        Console.WriteLine("Getting ev by id...");
         MiniCooper.EvMiniCooper evCooper = new();
 
         await using var conn = new NpgsqlConnection(_connectionString);
@@ -221,6 +224,7 @@ public class DBService
     /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAsync(int id)
     {
+        Console.WriteLine("Getting fossil by id...");
         MiniCooper.FossilMiniCooper fossilCooper = new();
 
         await using var conn = new NpgsqlConnection(_connectionString);
@@ -299,6 +303,7 @@ public class DBService
     /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAsync(int id)
     {
+        Console.WriteLine("Getting hybrid by id...");
         MiniCooper.HybridMiniCooper hybridCooper = new();
 
         await using var conn = new NpgsqlConnection(_connectionString);
@@ -373,6 +378,7 @@ public class DBService
 
     public async Task<List<MiniCooper.FullMiniCooper>> GetFullMiniCoopersByUserId(int userId)
     {
+        Console.WriteLine("Getting full mini coopers by user id...");
         List<MiniCooper.FullMiniCooper> fullMiniCoopers = new();
 
         await using var conn = GetConnection();
@@ -420,6 +426,7 @@ public class DBService
 
     public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperById(int carId)
     {
+        Console.WriteLine("Getting full mini cooper by id...");
         MiniCooper.FullMiniCooper fullMiniCooper = new();
 
         await using var conn = GetConnection();
@@ -529,6 +536,7 @@ public class DBService
     /// </remarks>
     public async Task<UsersService.User> GetUserByIdAsync(int id)
     {
+        Console.WriteLine("Getting user by id...");
         UsersService.User user = new();
 
         var conn = GetConnection();
@@ -590,6 +598,7 @@ public class DBService
     /// </remarks>
     public async Task AddEvToDbAsync(MiniCooper.EvMiniCooper evCooper, int userId)
     {
+        Console.WriteLine("Adding ev to db...");
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
@@ -630,6 +639,7 @@ public class DBService
     /// </remarks>
     public async Task AddFossilToDbAsync(MiniCooper.FossilMiniCooper fossilCooper, int userId)
     {
+        Console.WriteLine("Adding fossil to db...");
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
@@ -670,6 +680,7 @@ public class DBService
     /// </remarks>
     public async Task AddHybridToDbAsync(MiniCooper.HybridMiniCooper hybridCooper, int userId)
     {
+        Console.WriteLine("Adding hybrid to db...");
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
@@ -733,6 +744,7 @@ public class DBService
     /// </example>
     public async Task DeleteCarByIdAsync(int carId)
     {
+        Console.WriteLine("Deleting car by id...");
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
@@ -746,6 +758,7 @@ public class DBService
 
     public async Task DELETEEVERYTHING(string tableName)
     {
+        Console.WriteLine("!!!DELETING EVERTHING!!!");
         await using var conn = GetConnection();
 
         string query = "DELETE FROM cars;";
@@ -782,6 +795,7 @@ public class DBService
     /// </example>
     public async Task ResetTableIdsAsync(string tableName)
     {
+        Console.WriteLine("Resetting table IDs...");
         // Since we are using "using", we dont have to add a close statement at the end, because "using" does that.
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
@@ -824,6 +838,7 @@ public class DBService
     /// </example>
     private async Task<int> RunAsyncQuery(NpgsqlCommand command)
     {
+        Console.WriteLine("Running async query...");
         int result = await command.ExecuteNonQueryAsync();
         if (result <= 0)
             Console.WriteLine("No records affected.");
@@ -835,6 +850,7 @@ public class DBService
 
     private async Task<string> ResolveImagesAsync(List<string> base64Images)
     {
+        Console.WriteLine("Resolving images...");
         string resolvedImages = "";
 
         foreach (var base64Image in base64Images)
@@ -849,6 +865,7 @@ public class DBService
 
     public async Task AddUserAsync(UsersService.User user)
     {
+        Console.WriteLine("Adding user...");
         if (await IsEmailTakenAsync(user.Email))
         {
             Console.WriteLine("Email is already in use.");
@@ -882,6 +899,7 @@ public class DBService
 
     public async Task<bool> IsEmailTakenAsync(string email)
     {
+        Console.WriteLine("Checking if email is taken...");
         var conn = GetConnection();
 
         string query = $"SELECT (a_user).email FROM users WHERE (a_user).email = '{email}'";
@@ -907,6 +925,7 @@ public class DBService
 
     public async Task<bool> IsMobileTakenAsync(int mobile)
     {
+        Console.WriteLine("Checking if mobile is taken...");
         var conn = GetConnection();
 
         string query = $"SELECT (a_user).mobile FROM users WHERE (a_user).mobile = {mobile}";
@@ -932,6 +951,7 @@ public class DBService
 
     public async Task<UsersService.User> LogUserOn(string email, string password)
     {
+        Console.WriteLine("Logging user on...");
         var user = new UsersService.User();
 
         var conn = GetConnection();
@@ -972,6 +992,7 @@ public class DBService
 
     public async Task EditUser(UsersService.User user)
     {
+        Console.WriteLine("Editing user...");
         var conn = GetConnection();
         string query = $"UPDATE users SET a_user.name = '{user.Name}', a_user.password = '{user.Password}', a_user.email = '{user.Email}', a_user.mobile = {user.Mobile}, a_user.city = '{user.City}', a_user.address = '{user.Address}' WHERE id = {user.Id}";
         var cmd = new NpgsqlCommand(query, conn);
