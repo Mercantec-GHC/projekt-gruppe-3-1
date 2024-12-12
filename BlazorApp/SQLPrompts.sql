@@ -256,3 +256,11 @@ VALUES (ROW ('Alice Smith', 'pass123', 9876543210, 'alice.smith@example.com', 'L
 INSERT INTO users (a_user) VALUES (ROW ('Bob Brown', 'mypassword', 87654321, 'bob.brown@example.com', 'San Francisco', '789 Pine St')::account);
 
 SELECT * FROM users;
+
+UPDATE users SET a_user.name = 'Mark6' WHERE id = 10;
+
+SELECT id, (a_user).name FROM users ORDER BY id;
+
+UPDATE cars SET a_car.fossile_car.base_cooper.fuel_type = 'Benzin' WHERE id =9;
+
+SELECT * FROM cars;

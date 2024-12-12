@@ -429,4 +429,9 @@ public class MiniCooper
             return sortedFullMiniCoopers;
         }
     }
+
+    public class FullMiniCoopersState
+    {
+        public List<FullMiniCooper> FullMiniCoopers { get; set; } = new();
+    }
 }

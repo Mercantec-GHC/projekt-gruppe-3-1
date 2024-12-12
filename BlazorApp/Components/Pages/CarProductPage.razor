@@ -1,6 +1,47 @@
-﻿@page "/carproduct"
-@rendermode InteractiveServer
+﻿@page "/carproduct/{ModelName:var}/{carId:int}"
 @using BlazorApp.Service
 @inject DBService DbService
+@inject NavigationManager NavigationManager
 
-<h3>Product Page</h3>
+<PageTitle>Product Page</PageTitle>
+
+<h3>Bil Detaljer</h3>
+
+@if (fullMiniCooper == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="container-fluid">
+        <div>
+            <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()"
+                 class="w-100"
+                 alt="HeaderImage">
+        </div>
+        <div class="container-fluid" style="text-align: left;"></div>
+            <h5>@fullMiniCooper.GetModelName()</h5>
+            <p>@fullMiniCooper.GetModelType()</p>
+            <p>@fullMiniCooper.GetGeneration()</p>
+            <p>@fullMiniCooper.GetFuelType()</p>
+            <p>@fullMiniCooper.GetGearType()</p>
+            <p>@fullMiniCooper.GetPrice().ToString(".kr")</p>
+        </div>
+}
+
+@code {
+    [Parameter]
+    public int carId { get; set; }
+    
+    public class FullMiniCooper
+
+    {
+        public string ModelName { get; set; }
+    }
+
+    private MiniCooper.FullMiniCooper? fullMiniCooper;
+
+    protected override async Task OnInitializedAsync()
+    {
+        fullMiniCooper = await GetFullMiniCooperById(carId);
+    }

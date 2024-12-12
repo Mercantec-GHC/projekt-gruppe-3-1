@@ -1,57 +1,175 @@
 ﻿@namespace BlazorApp.Components.Pages.DashboardSection
 @using BlazorApp.Service
 @inject DBService DbService
+@inject UsersService.User user
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Biler liste</h5>
-        <p class="card-text">Her kan du se alle data for dine oprettede salgsannoncer</p>
+        <h5 class="card-title">Profil Info</h5>
+        <p class="card-text">Her kan du ændre dine personlige oplysninger</p>
         <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                  aria-labelledby="v-pills-home-tab" tabindex="0">
-                <PageTitle>Brugere</PageTitle>
+                <p>@user.Name</p>
+                <p>@user.Password</p>
+                <p>@user.Mobile</p>
+                <p>@user.Email</p>
+                <p>@user.City</p>
+                <p>@user.Address</p>
+            </div>
 
-                <h2 style="padding:  20px;">Brugere</h2>
+            <div class="dropdown">
+                <a class="btn btn-secondary custom-layout dropdown-toggle btn-lg" href="#" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    Change an option
+                </a>
 
-                <div class="container-fluid" style="background-color: #012169; padding: 20px;">
-                    @if (users == null)
-                    {
-                        <p>Loading...</p>
-                    }
-                    else if (!users.Any())
-                    {
-                        <p>Ingen brugere fundet.</p>
-                    }
-                    else
-                    {
-                        @foreach (var user in users)
-                        {
-                            <div class="card mb-3" style="max-width: 540px;">
-                                <div class="card-body">
-                                    <h5 class="card-title">@user.Name</h5>
-                                    <p class="card-text">Password: @user.Password</p>
-                                    <p class="card-text">Mobile: @user.Mobile</p>
-                                    <p class="card-text">Email: @user.Email</p>
-                                    <p class="card-text">City: @user.City</p>
-                                    <p class="card-text">Address: @user.Address</p>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("name"))">
+                            Change Name
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("password"))">
+                            Change Password
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("mobile"))">
+                            Change Mobile
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("email"))">
+                            Change Email
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("city"))">
+                            Change City
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("address"))">
+                            Change Address
+                        </button>
+                    </li>
+                </ul>
 
-                @code {
-                    private List<UsersService.User>? users;
-
-                    protected override async Task OnInitializedAsync()
-                    {
-                        users = await DbService.GetAllUsersAsync();
-                    }
-
+                @switch (userInfoOption)
+                {
+                    case "name":
+                        <label>New name:</label>
+                        <InputText @bind-Value="newName" class="form-control" />
+                        <button type="button" onclick="@ChangeUserInfo">Change Name</button>
+                        break;
+                    case "password":
+                        <label>New password:</label>
+                        <InputText @bind-Value="newPassword" class="form-control" />
+                        <button type="button" onclick="@ChangeUserInfo">Change password</button>
+                        break;
+                    case "mobile":
+                        <label>New mobile:</label>
+                        <InputNumber @bind-Value="newMobile" class="form-control" />
+                        <button type="button" onclick="@ChangeUserInfo">Change mobil</button>
+                        break;
+                    case "email":
+                        <label>New email:</label>
+                        <InputText @bind-Value="newEmail" class="form-control" />
+                        <button type="button" onclick="@ChangeUserInfo">Change email</button>
+                        break;
+                    case "city":
+                        <label>New city:</label>
+                        <InputText @bind-Value="newCity" class="form-control" />
+                        <button type="button" onclick="@ChangeUserInfo">Change city</button>
+                        break;
+                    case "address":
+                        <label>New address:</label>
+                        <InputText @bind-Value="newAddress" class="form-control" />
+                        <button type="button" onclick="@ChangeUserInfo">Change address</button>
+                        break;
                 }
-
-
             </div>
         </div>
     </div>
 </div>
+
+@code {
+    UsersService.User userSettings = new();
+    string userInfoOption = string.Empty;
+    
+    string newName =string.Empty;
+    string newPassword = string.Empty;
+    int newMobile;
+    string newEmail = string.Empty;
+    string newCity = string.Empty;
+    string newAddress = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userSettings = await DbService.GetUserByIdAsync(user.Id);
+    }
+
+    private void ChangeUserInfoOption(string option)
+    {
+        Console.WriteLine("Changing user info option...");
+        userInfoOption = option;
+    }
+
+    private async Task ChangeUserInfo()
+    {
+        Console.WriteLine("Changing user info...");
+        if (newName != string.Empty)
+        {
+            user.Name = newName;
+            user.Print();
+            await DbService.EditUser(user);
+        }
+        else if (newPassword != string.Empty)
+        {
+            user.Password = newPassword;
+            user.Print();
+            await DbService.EditUser(user);
+        }
+        else if (newMobile != 0)
+        {
+            user.Mobile = newMobile;
+            user.Print();
+            await DbService.EditUser(user);
+        }
+        else if (newEmail != string.Empty)
+        {
+            user.Email = newEmail;
+            user.Print();
+            await DbService.EditUser(user);
+        }
+        else if (newCity != string.Empty)
+        {
+            user.City = newCity;
+            user.Print();
+            await DbService.EditUser(user);
+        }
+        else if (newAddress != string.Empty)
+        {
+            user.Address = newAddress;
+            user.Print();
+            await DbService.EditUser(user);
+        }
+        else
+            Console.WriteLine("Every variable is empty.");
+        
+        ResetNewVariables();
+    }
+
+    private void ResetNewVariables()
+    {
+        newName = string.Empty;
+        newPassword = string.Empty;
+        newMobile = 0;
+        newEmail = string.Empty;
+        newCity = string.Empty;
+        newAddress = string.Empty;
+    }
+
+}

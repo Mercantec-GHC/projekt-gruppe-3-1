@@ -34,6 +34,7 @@ namespace BlazorApp
             builder.Services.AddScoped<MiniCooper.HybridMiniCooper>();
             builder.Services.AddScoped<MiniCooper.FullMiniCooper>();
             builder.Services.AddScoped<UsersService.User>();
+            builder.Services.AddScoped<MiniCooper.FullMiniCoopersState>();
 
             var app = builder.Build();
 
