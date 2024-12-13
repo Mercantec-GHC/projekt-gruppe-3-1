@@ -33,6 +33,11 @@
                                         class="bg-body-secondary list-group-item list-group-item-action">Opret Mini
                                     Cooper
                                 </button>
+
+                                <button type="button" onclick="@(() => HandleSection("edit-cooper"))"
+                                        class="bg-body-secondary list-group-item list-group-item-action">Redigerer Mini
+                                    Cooper
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -49,6 +54,9 @@
                         break;
                     case "create-mini-cooper":
                         <NewCarDashboard/>
+                        break;
+                    case "edit-cooper":
+                        <EditCarDashboard/>
                         break;
                     default:
                         <p>Choose a section</p>

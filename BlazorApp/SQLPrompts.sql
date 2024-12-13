@@ -10,10 +10,21 @@ WHERE users.id = temp_users.id;
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 DROP TABLE temp_users;
 
-DELETE FROM users;
+DELETE
+FROM users;
 
-SELECT * FROM users;
-SELECT id, (a_user).name,(a_user).password, (a_user).mobile, (a_user).email, (a_user).city, (a_user).address FROM users WHERE (a_user).email = 'email' AND (a_user).password = 'you';
+SELECT *
+FROM users;
+SELECT id,
+       (a_user).name,
+       (a_user).password,
+       (a_user).mobile,
+       (a_user).email,
+       (a_user).city,
+       (a_user).address
+FROM users
+WHERE (a_user).email = 'email'
+  AND (a_user).password = 'you';
 
 /*CREATE TABLE images
 (
@@ -235,32 +246,82 @@ FROM cars;
 SELECT *
 FROM cars;
 
-SELECT (a_car).electric_car.km_pr_kwh FROM cars;
+SELECT (a_car).electric_car.km_pr_kwh
+FROM cars;
 
 SELECT images
-FROM cars, unnest((a_car).electric_car.base_cooper.base64_images) AS images WHERE id = 2;
+FROM cars,
+     unnest((a_car).electric_car.base_cooper.base64_images) AS images
+WHERE id = 2;
 
-SELECT (a_car).electric_car.base_cooper.model_name, (a_car).electric_car.base_cooper.generation, (a_car).electric_car.base_cooper.color, (a_car).electric_car.base_cooper.price, (a_car).electric_car.base_cooper.km_driven, (a_car).electric_car.base_cooper.max_range, (a_car).electric_car.base_cooper.weight, (a_car).electric_car.base_cooper.fuel_type, (a_car).electric_car.base_cooper.geartype, (a_car).electric_car.base_cooper.yearly_tax, (a_car).electric_car.charge_capacity, (a_car).electric_car.km_pr_kwh FROM cars WHERE id = 2;
+SELECT (a_car).electric_car.base_cooper.model_name,
+       (a_car).electric_car.base_cooper.generation,
+       (a_car).electric_car.base_cooper.color,
+       (a_car).electric_car.base_cooper.price,
+       (a_car).electric_car.base_cooper.km_driven,
+       (a_car).electric_car.base_cooper.max_range,
+       (a_car).electric_car.base_cooper.weight,
+       (a_car).electric_car.base_cooper.fuel_type,
+       (a_car).electric_car.base_cooper.geartype,
+       (a_car).electric_car.base_cooper.yearly_tax,
+       (a_car).electric_car.charge_capacity,
+       (a_car).electric_car.km_pr_kwh
+FROM cars
+WHERE id = 2;
 
-SELECT (a_car).electric_car.base_cooper.model_name, (a_car).electric_car.base_cooper.generation, (a_car).electric_car.base_cooper.color, (a_car).electric_car.base_cooper.price, (a_car).electric_car.base_cooper.km_driven, (a_car).electric_car.base_cooper.max_range, (a_car).electric_car.base_cooper.weight, (a_car).electric_car.base_cooper.fuel_type, (a_car).electric_car.base_cooper.geartype, (a_car).electric_car.base_cooper.yearly_tax, (a_car).electric_car.charge_capacity, (a_car).electric_car.km_pr_kwh FROM cars WHERE id = 2;
+SELECT (a_car).electric_car.base_cooper.model_name,
+       (a_car).electric_car.base_cooper.generation,
+       (a_car).electric_car.base_cooper.color,
+       (a_car).electric_car.base_cooper.price,
+       (a_car).electric_car.base_cooper.km_driven,
+       (a_car).electric_car.base_cooper.max_range,
+       (a_car).electric_car.base_cooper.weight,
+       (a_car).electric_car.base_cooper.fuel_type,
+       (a_car).electric_car.base_cooper.geartype,
+       (a_car).electric_car.base_cooper.yearly_tax,
+       (a_car).electric_car.charge_capacity,
+       (a_car).electric_car.km_pr_kwh
+FROM cars
+WHERE id = 2;
 
-SELECT * FROM cars WHERE id = 99;
+SELECT *
+FROM cars
+WHERE id = 99;
 
-SELECT (a_user).email FROM users WHERE (a_user).email = 'jogn.doe@example.com';
+SELECT (a_user).email
+FROM users
+WHERE (a_user).email = 'jogn.doe@example.com';
 
 -- Inserting a user example
 INSERT INTO users (a_user)
 VALUES (ROW ('Alice Smith', 'pass123', 9876543210, 'alice.smith@example.com', 'Los Angeles', '456 Elm St')::account);
 
 -- Inserting another user
-INSERT INTO users (a_user) VALUES (ROW ('Bob Brown', 'mypassword', 87654321, 'bob.brown@example.com', 'San Francisco', '789 Pine St')::account);
+INSERT INTO users (a_user)
+VALUES (ROW ('Bob Brown', 'mypassword', 87654321, 'bob.brown@example.com', 'San Francisco', '789 Pine St')::account);
 
-SELECT * FROM users;
+SELECT *
+FROM users;
 
-UPDATE users SET a_user.name = 'Mark6' WHERE id = 10;
+UPDATE users
+SET a_user.name = 'Mark6'
+WHERE id = 10;
 
-SELECT id, (a_user).name FROM users ORDER BY id;
+SELECT id, (a_user).name
+FROM users
+ORDER BY id;
 
-UPDATE cars SET a_car.fossile_car.base_cooper.fuel_type = 'Benzin' WHERE id =9;
+UPDATE cars
+SET a_car.fossile_car.base_cooper.fuel_type = 'Benzin'
+WHERE id = 9;
 
-SELECT * FROM cars;
+SELECT *
+FROM cars;
+
+SELECT (a_car).electric_car
+FROM cars
+WHERE (a_car).electric_car.base_cooper.model_name = 'Mini Copstr';
+
+SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car
+FROM cars
+WHERE account_id = 1 AND (a_car).electric_car.base_cooper.model_name = 'name';

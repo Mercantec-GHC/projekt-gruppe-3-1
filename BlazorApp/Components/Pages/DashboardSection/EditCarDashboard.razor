@@ -1,0 +1,31 @@
+﻿@using BlazorApp.Service
+@inject DBService DbService
+@inject UsersService.User user
+
+<label>Enter car to edit</label>
+<InputText @bind-Value="carName"/>
+<button type="button" onclick="@GetCooper">Get Cooper</button>
+
+@if (fullMiniCooper == null)
+{
+    <p>Enter car.</p>
+}
+else
+{
+    <EditForm Model="@fullMiniCooper">
+
+    </EditForm>
+}
+
+@code{
+
+    string carName = "";
+    MiniCooper.FullMiniCooper? fullMiniCooper;
+
+    private async Task GetCooper()
+    {
+        fullMiniCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
+        fullMiniCooper.PrintAutomatically();
+    }
+
+}

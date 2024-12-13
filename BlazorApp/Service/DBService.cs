@@ -4,7 +4,6 @@ using Npgsql.PostgresTypes;
 namespace BlazorApp.Service;
 
 //"Host=ep-restless-snow-a2okt6hh.eu-central-1.aws.neon.tech;Username=bilbasen_owner;Password=RIA6nJt1Xwgo;Database=bilbasen;sslmode=require;"
-
 using Npgsql;
 
 public class DBService
@@ -124,6 +123,260 @@ public class DBService
         }
 
         return fullMiniCoopers;
+    }
+
+    public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperByUserIdAndName(int userId, string carName)
+    {
+        Console.WriteLine("Getting full mini cooper by user id and name...");
+        MiniCooper.FullMiniCooper fullMiniCooper = new();
+
+        await using var conn = GetConnection();
+
+        string query =
+            $"SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car FROM cars WHERE account_id = {userId};";
+        await using var cmd = new NpgsqlCommand(query, conn);
+
+        await using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                var currentId = reader.GetInt32(0);
+
+                if (!reader.IsDBNull(1))
+                {
+                    var tempFullCooper = await GetEvByIdAndName(currentId, carName);
+                    if (tempFullCooper.GetEvCooper() == null)
+                        Console.WriteLine("Ev not found...");
+                    else
+                    {
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                        return fullMiniCooper;
+                    }
+                }
+                else if (!reader.IsDBNull(2))
+                {
+                    var tempFullCooper = await GetFossilByIdAndName(currentId, carName);
+                    if (tempFullCooper.GetFossilCooper() == null)
+                        Console.WriteLine("Fossil not found...");
+                    else
+                    {
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetFossilCooper());
+                        return fullMiniCooper;
+                    }
+                }
+                else if (!reader.IsDBNull(3))
+                {
+                    var tempFullCooper = await GetHybridByIdAndName(currentId, carName);
+                    if (tempFullCooper.GetHybridCooper() == null)
+                        Console.WriteLine("Hybrid not found...");
+                    else
+                    {
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                        return fullMiniCooper;
+                    }
+                }
+                else
+                    Console.WriteLine("No car has been assigned to this object.");
+            }
+        }
+
+        return fullMiniCooper;
+    }
+
+    public async Task<MiniCooper.FullMiniCooper> GetEvByIdAndName(int carId, string carName)
+    {
+        Console.WriteLine("Getting ev by name...");
+        MiniCooper.EvMiniCooper evCooper = new();
+        MiniCooper.FullMiniCooper fullCooper = new();
+
+        var conn = GetConnection();
+
+        var modelName = "(a_car).electric_car.base_cooper.model_name";
+        var generation = "(a_car).electric_car.base_cooper.generation";
+        var modelType = "(a_car).electric_car.base_cooper.model_type";
+        var color = "(a_car).electric_car.base_cooper.color";
+        var price = "(a_car).electric_car.base_cooper.price";
+        var kmDriven = "(a_car).electric_car.base_cooper.km_driven";
+        var maxRange = "(a_car).electric_car.base_cooper.max_range";
+        var weight = "(a_car).electric_car.base_cooper.weight";
+        var fuelType = "(a_car).electric_car.base_cooper.fuel_type";
+        var gearType = "(a_car).electric_car.base_cooper.geartype";
+        var yearlyTax = "(a_car).electric_car.base_cooper.yearly_tax";
+        var chargeCapacity = "(a_car).electric_car.charge_capacity";
+        var kmPrKwh = "(a_car).electric_car.km_pr_kwh";
+
+        string query =
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {carId} AND {modelName} = '{carName}';";
+        // Console.WriteLine("Query: " + query);
+        try
+        {
+            await using var cmd = new NpgsqlCommand(query, conn);
+
+            var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                evCooper.ModelName = reader.GetString(0);
+                evCooper.Generation = reader.GetInt32(1);
+                evCooper.ModelType = reader.GetString(2);
+                evCooper.Color = reader.GetString(3);
+                evCooper.Price = reader.GetInt32(4);
+                evCooper.Mileage = reader.GetInt32(5);
+                evCooper.MaxRange = reader.GetInt32(6);
+                evCooper.Weight = reader.GetInt32(7);
+                evCooper.FuelType = reader.GetString(8);
+                evCooper.GearType = reader.GetString(9);
+                evCooper.YearlyTax = reader.GetDecimal(10);
+                evCooper.ChargeCapacity = reader.GetInt32(11);
+                evCooper.KmPrKwh = reader.GetFloat(12);
+                evCooper.Base64Images = await GetImagesByIdAndTypeAsync(carId, "electric_car");
+
+                fullCooper.SetMiniCooper(evCooper);
+            }
+            else
+                Console.WriteLine("No rows returned.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting ev by id and name: " + e.Message);
+            Console.WriteLine("StackTrace: " + e.StackTrace);
+        }
+
+        return fullCooper;
+    }
+
+    public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAndName(int carId, string carName)
+    {
+        Console.WriteLine("Getting fossil by name...");
+        MiniCooper.FossilMiniCooper fossilCooper = new();
+        MiniCooper.FullMiniCooper fullCooper = new();
+
+        var conn = GetConnection();
+
+        var modelName = "(a_car).fossile_car.base_cooper.model_name";
+        var generation = "(a_car).fossile_car.base_cooper.generation";
+        var modelType = "(a_car).fossile_car.base_cooper.model_type";
+        var color = "(a_car).fossile_car.base_cooper.color";
+        var price = "(a_car).fossile_car.base_cooper.price";
+        var kmDriven = "(a_car).fossile_car.base_cooper.km_driven";
+        var maxRange = "(a_car).fossile_car.base_cooper.max_range";
+        var weight = "(a_car).fossile_car.base_cooper.weight";
+        var fuelType = "(a_car).fossile_car.base_cooper.fuel_type";
+        var gearType = "(a_car).fossile_car.base_cooper.geartype";
+        var yearlyTax = "(a_car).fossile_car.base_cooper.yearly_tax";
+        var chargeCapacity = "(a_car).fossile_car.tank_capacity";
+        var kmPrLiter = "(a_car).fossile_car.km_pr_liter";
+
+        string query =
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrLiter} FROM cars WHERE id = {carId} AND {modelName} = '{carName}';";
+        // Console.WriteLine("Query: " + query);
+        try
+        {
+            await using var cmd = new NpgsqlCommand(query, conn);
+
+            var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                fossilCooper.ModelName = reader.GetString(0);
+                fossilCooper.Generation = reader.GetInt32(1);
+                fossilCooper.ModelType = reader.GetString(2);
+                fossilCooper.Color = reader.GetString(3);
+                fossilCooper.Price = reader.GetInt32(4);
+                fossilCooper.Mileage = reader.GetInt32(5);
+                fossilCooper.MaxRange = reader.GetInt32(6);
+                fossilCooper.Weight = reader.GetInt32(7);
+                fossilCooper.FuelType = reader.GetString(8);
+                fossilCooper.GearType = reader.GetString(9);
+                fossilCooper.YearlyTax = reader.GetDecimal(10);
+                fossilCooper.TankCapacity = reader.GetInt32(11);
+                fossilCooper.KmPrLiter = reader.GetFloat(12);
+                fossilCooper.Base64Images = await GetImagesByIdAndTypeAsync(carId, "fossile_car");
+
+                fullCooper.SetMiniCooper(fossilCooper);
+            }
+            else
+                Console.WriteLine("No rows returned.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting fossil by id and name: " + e.Message);
+            Console.WriteLine("StackTrace: " + e.StackTrace);
+        }
+
+        return fullCooper;
+    }
+
+    public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAndName(int carId, string carName)
+    {
+        Console.WriteLine("Getting hybrid by name...");
+        MiniCooper.HybridMiniCooper hybridCooper = new();
+        MiniCooper.FullMiniCooper fullCooper = new();
+
+        var conn = GetConnection();
+
+        var modelName = "(a_car).hybrid_car.base_cooper.model_name";
+        var generation = "(a_car).hybrid_car.base_cooper.generation";
+        var modelType = "(a_car).hybrid_car.base_cooper.model_type";
+        var color = "(a_car).hybrid_car.base_cooper.color";
+        var price = "(a_car).hybrid_car.base_cooper.price";
+        var kmDriven = "(a_car).hybrid_car.base_cooper.km_driven";
+        var maxRange = "(a_car).hybrid_car.base_cooper.max_range";
+        var weight = "(a_car).hybrid_car.base_cooper.weight";
+        var fuelType = "(a_car).hybrid_car.base_cooper.fuel_type";
+        var gearType = "(a_car).hybrid_car.base_cooper.geartype";
+        var yearlyTax = "(a_car).hybrid_car.base_cooper.yearly_tax";
+        var fuelType1 = "(a_car).hybrid_car.fuel_type1";
+        var fuelType2 = "(a_car).hybrid_car.fuel_type2";
+        var tankCapacity = "(a_car).hybrid_car.tank_capacity";
+        var chargeCapacity = "(a_car).hybrid_car.charge_capacity";
+        var kmPrLiter = "(a_car).hybrid_car.km_pr_liter";
+        var kmPrKwh = "(a_car).hybrid_car.km_pr_kwh";
+        var gears = "(a_car).hybrid_car.gears";
+
+        string query =
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {fuelType1}, {fuelType2}, {tankCapacity}, {chargeCapacity}, {kmPrLiter}, {kmPrKwh}, {gears} FROM cars WHERE id = {carId} AND {modelName} = '{carName}';";
+        // Console.WriteLine("Query: " + query);
+        try
+        {
+            await using var cmd = new NpgsqlCommand(query, conn);
+
+            var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                hybridCooper.ModelName = reader.GetString(0);
+                hybridCooper.Generation = reader.GetInt32(1);
+                hybridCooper.ModelType = reader.GetString(2);
+                hybridCooper.Color = reader.GetString(3);
+                hybridCooper.Price = reader.GetInt32(4);
+                hybridCooper.Mileage = reader.GetInt32(5);
+                hybridCooper.MaxRange = reader.GetInt32(6);
+                hybridCooper.Weight = reader.GetInt32(7);
+                hybridCooper.FuelType = reader.GetString(8);
+                hybridCooper.GearType = reader.GetString(9);
+                hybridCooper.YearlyTax = reader.GetDecimal(10);
+                hybridCooper.FuelType1 = reader.GetString(11);
+                hybridCooper.FuelType2 = reader.GetString(12);
+                hybridCooper.TankCapacity = reader.GetInt32(13);
+                hybridCooper.ChargeCapacity = reader.GetInt32(14);
+                hybridCooper.KmPrLiter = reader.GetFloat(15);
+                hybridCooper.KmPrKwh = reader.GetFloat(16);
+                hybridCooper.Gears = reader.GetInt32(17);
+                hybridCooper.Base64Images = await GetImagesByIdAndTypeAsync(carId, "hybrid_car");
+
+                fullCooper.SetMiniCooper(hybridCooper);
+            }
+            else
+                Console.WriteLine("No rows returned.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error getting hybrid by id and name: " + e.Message);
+            Console.WriteLine("StackTrace: " + e.StackTrace);
+        }
+
+        return fullCooper;
     }
 
     /// <summary>
@@ -487,7 +740,7 @@ public class DBService
     /// <param name="id"></param>
     /// <param name="cooperType"></param>
     /// <remarks>
-    /// The "cooperType" parameter HAS to be either "electric_car", "fossil_car" or "hybrid_car".
+    /// The "cooperType" parameter HAS to be either "electric_car", "fossile_car" or "hybrid_car".
     /// </remarks>
     /// <returns></returns>
     private async Task<List<string>> GetImagesByIdAndTypeAsync(int id, string cooperType)
@@ -571,7 +824,7 @@ public class DBService
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error getting user by id: "+ex.Message);
+            Console.WriteLine("Error getting user by id: " + ex.Message);
             Console.WriteLine("StackTrace: " + ex.StackTrace);
             throw;
         }
@@ -994,7 +1247,8 @@ public class DBService
     {
         Console.WriteLine("Editing user...");
         var conn = GetConnection();
-        string query = $"UPDATE users SET a_user.name = '{user.Name}', a_user.password = '{user.Password}', a_user.email = '{user.Email}', a_user.mobile = {user.Mobile}, a_user.city = '{user.City}', a_user.address = '{user.Address}' WHERE id = {user.Id}";
+        string query =
+            $"UPDATE users SET a_user.name = '{user.Name}', a_user.password = '{user.Password}', a_user.email = '{user.Email}', a_user.mobile = {user.Mobile}, a_user.city = '{user.City}', a_user.address = '{user.Address}' WHERE id = {user.Id}";
         var cmd = new NpgsqlCommand(query, conn);
         await RunAsyncQuery(cmd);
     }
