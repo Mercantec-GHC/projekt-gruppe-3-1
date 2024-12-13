@@ -19,19 +19,22 @@
                         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                              aria-orientation="vertical">
                             <div class="list-group">
-                                <button type="button" onclick="@(() => HandleSection("dashboard"))"
-                                        class="list-group-item list-group-item-action bg-secondary text-white active">
+                                <button type="button"
+                                        class="@GetButtonClasses("dashboard")"
+                                        onclick="@(() => HandleSection("dashboard"))">
                                     Dashboard
                                 </button>
 
-                                <button type="button" onclick="@(() => HandleSection("profile-info"))"
-                                        class="bg-body-secondary list-group-item list-group-item-action">Profil
-                                    oplysninger
+                                <button type="button"
+                                        class="@GetButtonClasses("profile-info")"
+                                        onclick="@(() => HandleSection("profile-info"))">
+                                    Profil oplysninger
                                 </button>
 
-                                <button type="button" onclick="@(() => HandleSection("create-mini-cooper"))"
-                                        class="bg-body-secondary list-group-item list-group-item-action">Opret Mini
-                                    Cooper
+                                <button type="button"
+                                        class="@GetButtonClasses("create-mini-cooper")"
+                                        onclick="@(() => HandleSection("create-mini-cooper"))">
+                                    Opret Mini Cooper
                                 </button>
 
                                 <button type="button" onclick="@(() => HandleSection("edit-cooper"))"
@@ -59,7 +62,7 @@
                         <EditCarDashboard/>
                         break;
                     default:
-                        <p>Choose a section</p>
+                        <DashboardCoopers />
                         break;
                 }
             </div>
@@ -70,7 +73,7 @@
 
 @code{
 
-    string sectionOption = "";
+    string sectionOption = "dashboard";
 
     protected override void OnInitialized()
     {
@@ -85,6 +88,13 @@
     {
         Console.WriteLine("Setting option...");
         sectionOption = option;
+    }
+
+    private string GetButtonClasses(string option)
+    {
+        return sectionOption == option
+            ? "list-group-item list-group-item-action bg-secondary text-white active"
+            : "bg-body-secondary list-group-item list-group-item-action";
     }
 
 }
