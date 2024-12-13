@@ -22,9 +22,10 @@
                 @if (user.Id == 0)
                 {
                     @* Knap for login modal *@
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <button type="button" class="btn btn-primary" @onclick="ShowModal">
                         Log ind
                     </button>
+
                 }
                 else
                 {
@@ -38,7 +39,7 @@
 </nav>
 
 @* Login modal form *@
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade @(isModalVisible ? "show" : "")" style="display: @(isModalVisible ? "block" : "none");" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -50,7 +51,7 @@
                 {
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Log ind formular</h1>
                 }
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if (!loadRegisterForm)
@@ -187,11 +188,12 @@
 
 @code {
     bool loadRegisterForm = false;
+    private bool isModalVisible = false;
 
-    private async Task HandleRegister()
-    {
-        await DbService.AddUserAsync(user);
-    }
+    private string errorMessage = string.Empty;
+    private string errorMessageEmail = string.Empty;
+    private string errorMessagePassword = string.Empty;
+
 
     private void LoadRegisterForm()
     {
@@ -202,9 +204,6 @@
     {
         loadRegisterForm = false;
     }
-    private string errorMessage = string.Empty;
-    private string errorMessageEmail = string.Empty;
-    private string errorMessagePassword = string.Empty;
 
 
 
@@ -238,6 +237,7 @@
         if (tempUser != null && tempUser.Id != 0)
         {
             user.SetUser(tempUser);
+            isModalVisible = false;
             NavigationManager.NavigateTo("/user-dashboard");
         }
         else
@@ -246,14 +246,28 @@
         }
     }
 
+    private async Task HandleRegister()
+    {
+        await DbService.AddUserAsync(user);
+        isModalVisible = false;
+    }
 
 
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
 
 
     private void LogUserOut()
     {
         user.Clear();
         NavigationManager.NavigateTo("/");
+    }
+
+    private void ShowModal()
+    {
+        isModalVisible = true;
     }
 
 }

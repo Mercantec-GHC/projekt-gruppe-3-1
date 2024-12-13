@@ -32,37 +32,38 @@
 
 <EditForm Model="@BaseCooper" OnValidSubmit="@HandleValidSubmit">
     <label class="form-label">Model Name:</label>
-    <InputText @bind-Value="BaseCooper.ModelName"/>
+    <InputText @bind-Value="BaseCooper.ModelName" class="form-control" />
 
     <label class="form-label">Generation:</label>
-    <InputNumber @bind-Value="BaseCooper.Generation"/>
+    <InputNumber @bind-Value="BaseCooper.Generation" class="form-control" />
 
     <label class="form-label">Model Type:</label>
-    <InputText @bind-Value="BaseCooper.ModelType"/>
+    <InputText @bind-Value="BaseCooper.ModelType" class="form-control" />
 
     <label class="form-label">Color:</label>
-    <InputText @bind-Value="BaseCooper.Color"/>
+    <InputText @bind-Value="BaseCooper.Color" class="form-control" />
 
     <label class="form-label">Price:</label>
-    <InputNumber @bind-Value="BaseCooper.Price"/>
+    <InputNumber @bind-Value="BaseCooper.Price" class="form-control" />
 
     <label class="form-label">Mileage:</label>
-    <InputNumber @bind-Value="BaseCooper.Mileage"/>
+    <InputNumber @bind-Value="BaseCooper.Mileage" class="form-control" />
 
     <label class="form-label">Max range:</label>
-    <InputNumber @bind-Value="BaseCooper.MaxRange"/>
+    <InputNumber @bind-Value="BaseCooper.MaxRange" class="form-control" />
 
     <label class="form-label">Weight:</label>
-    <InputNumber @bind-Value="BaseCooper.Weight"/>
+    <InputNumber @bind-Value="BaseCooper.Weight" class="form-control" />
 
     <label class="form-label">Fuel type:</label>
-    <InputText @bind-Value="BaseCooper.FuelType"/>
+    <InputText @bind-Value="BaseCooper.FuelType" class="form-control" />
 
     <label class="form-label">Gear type:</label>
-    <InputText @bind-Value="BaseCooper.GearType"/>
+    <InputText @bind-Value="BaseCooper.GearType" class="form-control" />
 
     <label class="form-label">Yearly tax:</label>
-    <InputNumber @bind-Value="BaseCooper.YearlyTax"/>
+    <InputNumber @bind-Value="BaseCooper.YearlyTax" class="form-control" />
+
 
     @switch (form)
     {
