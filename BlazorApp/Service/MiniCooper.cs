@@ -64,6 +64,11 @@ public class MiniCooper
             var base64Image = Convert.ToBase64String(imageBytes);
             Base64Images.Add(base64Image);
         }
+        
+        public BaseMiniCooper GetBase()
+        {
+            return this;
+        }
     }
 
     public class EvMiniCooper : BaseMiniCooper
@@ -256,14 +261,86 @@ public class MiniCooper
             return HybridCooper;
         }
 
-        public void Clear()
+        public string GetGeneration()
         {
-            Console.WriteLine("Clearing cars...");
-            EvCooper = null;
-            FossilCooper = null;
-            HybridCooper = null;
+            if (EvCooper != null)
+                return EvCooper.Generation.ToString();
+            else if (FossilCooper != null)
+                return FossilCooper.Generation.ToString();
+            else if (HybridCooper != null)
+                return HybridCooper.Generation.ToString();
+            else
+                return string.Empty;
+        }
+        
+        public void SetMiniCooper(EvMiniCooper evCooper)
+        {
+            if (ThereCanOnlyBeOne())
+                EvCooper = evCooper;
+            else
+                Console.WriteLine("A car has already been assigned to this object.");
         }
 
+        public void SetMiniCooper(FossilMiniCooper fossilCooper)
+        {
+            if (ThereCanOnlyBeOne())
+                FossilCooper = fossilCooper;
+            else
+                Console.WriteLine("A car has already been assigned to this object.");
+        }
+
+        public void SetMiniCooper(HybridMiniCooper hybridCooper)
+        {
+            if (ThereCanOnlyBeOne())
+                HybridCooper = hybridCooper;
+            else
+                Console.WriteLine("A car has already been assigned to this object.");
+        }
+        
+        public BaseMiniCooper? GetBaseCooper()
+        {
+            if (EvCooper != null)
+            {
+                return EvCooper.GetBase();
+            }
+            else if (FossilCooper != null)
+            {
+                return FossilCooper.GetBase();
+            }
+            else if (HybridCooper != null)
+            {
+                return HybridCooper.GetBase();
+            }
+            else
+            {
+                Console.WriteLine("No car has been assigned to this object.");
+                return null;
+            }
+        }
+
+        public bool ThereCanOnlyBeOne()
+        {
+            if (EvCooper != null)
+            {
+                Console.WriteLine("There is already an Electric Cooper");
+                return false;
+            }
+
+            if (FossilCooper != null)
+            {
+                Console.WriteLine("There is already a Fossil Cooper");
+                return false;
+            }
+
+            if (HybridCooper != null)
+            {
+                Console.WriteLine("There is already a Hybrid Cooper");
+                return false;
+            }
+
+            return true;
+        }
+        
         public void PrintEv()
         {
             if (EvCooper == null)
@@ -300,53 +377,6 @@ public class MiniCooper
                 Console.WriteLine("No car has been assigned to this object.");
         }
 
-        public bool ThereCanOnlyBeOne()
-        {
-            if (EvCooper != null)
-            {
-                Console.WriteLine("There is already an Electric Cooper");
-                return false;
-            }
-
-            if (FossilCooper != null)
-            {
-                Console.WriteLine("There is already a Fossil Cooper");
-                return false;
-            }
-
-            if (HybridCooper != null)
-            {
-                Console.WriteLine("There is already a Hybrid Cooper");
-                return false;
-            }
-
-            return true;
-        }
-
-        public void SetMiniCooper(EvMiniCooper evCooper)
-        {
-            if (ThereCanOnlyBeOne())
-                EvCooper = evCooper;
-            else
-                Console.WriteLine("A car has already been assigned to this object.");
-        }
-
-        public void SetMiniCooper(FossilMiniCooper fossilCooper)
-        {
-            if (ThereCanOnlyBeOne())
-                FossilCooper = fossilCooper;
-            else
-                Console.WriteLine("A car has already been assigned to this object.");
-        }
-
-        public void SetMiniCooper(HybridMiniCooper hybridCooper)
-        {
-            if (ThereCanOnlyBeOne())
-                HybridCooper = hybridCooper;
-            else
-                Console.WriteLine("A car has already been assigned to this object.");
-        }
-
         public bool HasMultipleCars()
         {
             int carCount = 0;
@@ -360,18 +390,6 @@ public class MiniCooper
             return carCount != 1;
         }
 
-        public string GetGeneration()
-        {
-            if (EvCooper != null)
-                return EvCooper.Generation.ToString();
-            else if (FossilCooper != null)
-                return FossilCooper.Generation.ToString();
-            else if (HybridCooper != null)
-                return HybridCooper.Generation.ToString();
-            else
-                return string.Empty;
-        }
-
         public List<FullMiniCooper> SortByEv(List<FullMiniCooper> fullMiniCoopers)
         {
             List<FullMiniCooper> sortedFullMiniCoopers = new();
@@ -380,6 +398,7 @@ public class MiniCooper
                 if (fullCooper.GetEvCooper() != null)
                     sortedFullMiniCoopers.Add(fullCooper);
             }
+
             return sortedFullMiniCoopers;
         }
 
@@ -388,13 +407,14 @@ public class MiniCooper
             List<FullMiniCooper> sortedFullMiniCoopers = new();
             foreach (var fullCooper in fullMiniCoopers)
             {
-                if (fullCooper.GetFossilCooper() != null && (fullCooper.GetFossilCooper().FuelType == "Benzin" || fullCooper.GetFossilCooper().FuelType == "Petrol"))
+                if (fullCooper.GetFossilCooper() != null && (fullCooper.GetFossilCooper().FuelType == "Benzin" ||
+                                                             fullCooper.GetFossilCooper().FuelType == "Petrol"))
                     sortedFullMiniCoopers.Add(fullCooper);
             }
 
             return sortedFullMiniCoopers;
         }
-        
+
         public List<FullMiniCooper> SortByDiesel(List<FullMiniCooper> fullMiniCoopers)
         {
             List<FullMiniCooper> sortedFullMiniCoopers = new();
@@ -406,7 +426,7 @@ public class MiniCooper
 
             return sortedFullMiniCoopers;
         }
-        
+
         public List<FullMiniCooper> SortByFossil(List<FullMiniCooper> fullMiniCoopers)
         {
             List<FullMiniCooper> sortedFullMiniCoopers = new();
@@ -415,9 +435,10 @@ public class MiniCooper
                 if (fullCooper.GetFossilCooper() != null)
                     sortedFullMiniCoopers.Add(fullCooper);
             }
+
             return sortedFullMiniCoopers;
         }
-        
+
         public List<FullMiniCooper> SortByHybrid(List<FullMiniCooper> fullMiniCoopers)
         {
             List<FullMiniCooper> sortedFullMiniCoopers = new();
@@ -426,7 +447,16 @@ public class MiniCooper
                 if (fullCooper.GetHybridCooper() != null)
                     sortedFullMiniCoopers.Add(fullCooper);
             }
+
             return sortedFullMiniCoopers;
+        }
+
+        public void Clear()
+        {
+            Console.WriteLine("Clearing cars...");
+            EvCooper = null;
+            FossilCooper = null;
+            HybridCooper = null;
         }
     }
 

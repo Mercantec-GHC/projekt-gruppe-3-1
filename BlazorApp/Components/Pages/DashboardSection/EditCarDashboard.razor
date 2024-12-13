@@ -1,4 +1,5 @@
 ﻿@using BlazorApp.Service
+@using BlazorApp.Components.Pages.Forms
 @inject DBService DbService
 @inject UsersService.User user
 
@@ -6,26 +7,76 @@
 <InputText @bind-Value="carName"/>
 <button type="button" onclick="@GetCooper">Get Cooper</button>
 
-@if (fullMiniCooper == null)
+@if (fullCooper == null)
 {
     <p>Enter car.</p>
 }
 else
 {
-    <EditForm Model="@fullMiniCooper">
+    <EditForm Model="@baseCooper" OnValidSubmit="@HandleValidSubmit">
+        <label class="form-label">Model Name:</label>
+        <InputText @bind-Value="baseCooper.ModelName" class="form-control"/>
 
+        <label class="form-label">Generation:</label>
+        <InputNumber @bind-Value="baseCooper.Generation" class="form-control"/>
+
+        <label class="form-label">Model Type:</label>
+        <InputText @bind-Value="baseCooper.ModelType" class="form-control"/>
+
+        <label class="form-label">Color:</label>
+        <InputText @bind-Value="baseCooper.Color" class="form-control"/>
+
+        <label class="form-label">Price:</label>
+        <InputNumber @bind-Value="baseCooper.Price" class="form-control"/>
+
+        <label class="form-label">Mileage:</label>
+        <InputNumber @bind-Value="baseCooper.Mileage" class="form-control"/>
+
+        <label class="form-label">Max range:</label>
+        <InputNumber @bind-Value="baseCooper.MaxRange" class="form-control"/>
+
+        <label class="form-label">Weight:</label>
+        <InputNumber @bind-Value="baseCooper.Weight" class="form-control"/>
+
+        <label class="form-label">Fuel type:</label>
+        <InputText @bind-Value="baseCooper.FuelType" class="form-control"/>
+
+        <label class="form-label">Gear type:</label>
+        <InputText @bind-Value="baseCooper.GearType" class="form-control"/>
+
+        <label class="form-label">Yearly tax:</label>
+        <InputNumber @bind-Value="baseCooper.YearlyTax" class="form-control"/>
     </EditForm>
+
+    @*if (fullCooper.GetEvCooper() != null)
+    {
+        <EvForm/>
+    }
+    else if (fullCooper.GetFossilCooper() != null)
+    {
+        <FossilForm/>
+    }
+    else if (fullCooper.GetHybridCooper() != null)
+    {
+        <HybridForm/>
+    }*@
 }
 
 @code{
 
     string carName = "";
-    MiniCooper.FullMiniCooper? fullMiniCooper;
+    MiniCooper.FullMiniCooper? fullCooper;
+    MiniCooper.BaseMiniCooper baseCooper = new();
 
     private async Task GetCooper()
     {
-        fullMiniCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
-        fullMiniCooper.PrintAutomatically();
+        fullCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
+        await baseCooper.SetBaseMiniCooperModel(fullCooper.GetBaseCooper());
+        fullCooper.PrintAutomatically();
+    }
+
+    private async Task HandleValidSubmit()
+    {
     }
 
 }
