@@ -1,4 +1,4 @@
-﻿@* @page "/carproduct/{ModelName:var}/{carId:int}" *@
+﻿@page "/carproduct/{ModelName}/{carId:int}"
 @using BlazorApp.Service
 @inject DBService DbService
 @inject NavigationManager NavigationManager
@@ -19,7 +19,7 @@ else
                  class="w-100"
                  alt="HeaderImage">
         </div>
-        <div class="container-fluid" style="text-align: left;"></div>
+        <div class="container-fluid" style="text-align: left;">
             <h5>@fullMiniCooper.GetModelName()</h5>
             <p>@fullMiniCooper.GetModelType()</p>
             <p>@fullMiniCooper.GetGeneration()</p>
@@ -27,22 +27,20 @@ else
             <p>@fullMiniCooper.GetGearType()</p>
             <p>@fullMiniCooper.GetPrice().ToString(".kr")</p>
         </div>
+    </div>
 }
 
 @code {
     [Parameter]
-    public int carId { get; set; }
-    
-    public class FullMiniCooper
+    public string? ModelName { get; set; }
 
-    {
-        public string ModelName { get; set; }
-    }
+    [Parameter]
+    public int carId { get; set; }
 
     private MiniCooper.FullMiniCooper? fullMiniCooper;
 
     protected override async Task OnInitializedAsync()
     {
-        // fullMiniCooper = await GetFullMiniCooperById(carId);
+        fullMiniCooper = await DbService.GetFullMiniCooperById(carId);
     }
 }
