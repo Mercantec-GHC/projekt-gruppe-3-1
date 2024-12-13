@@ -1,4 +1,4 @@
-﻿@* @page "/carproduct/{ModelName:var}/{carId:int}" *@
+﻿@page "/carproduct/{ModelName:var}/{carId:int}"
 @using BlazorApp.Service
 @inject DBService DbService
 @inject NavigationManager NavigationManager
@@ -43,6 +43,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // fullMiniCooper = await GetFullMiniCooperById(carId);
+        fullMiniCooper = await DbService.GetFullMiniCooperById(carId);
     }
 }

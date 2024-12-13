@@ -70,7 +70,7 @@
                                 <div class="carousel-inner">
                                     <div
                                         class="carousel-item active"> @* Karrusel skal have en "active" klasse, ellers så bliver ikke vist. - Bootstrap *@
-                                        <a href="#">
+                                        <a href="/carproduct/@fullMiniCooper.GetModelType()/@fullMiniCooper.GetCarId()">
                                             <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()"
                                                  class="d-block w-100"
                                                  alt="HeaderImage">
@@ -80,7 +80,7 @@
                                     @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
                                     {
                                         <div class="carousel-item">
-                                            <a href="#">
+                                            <a href="/carproduct/@fullMiniCooper.GetModelType()/@fullMiniCooper.GetCarId()">
                                                 <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)"
                                                      class="d-block w-100" alt="sliderImage">
                                             </a>
