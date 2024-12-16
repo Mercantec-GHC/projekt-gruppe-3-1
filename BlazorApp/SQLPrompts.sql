@@ -398,4 +398,4 @@ SET a_car.hybrid_car = ROW(
 WHERE id = 2
   AND (a_car).hybrid_car IS NOT NULL;
 
-SELECT * FROM cars order by id;
+SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car FROM cars order by id;

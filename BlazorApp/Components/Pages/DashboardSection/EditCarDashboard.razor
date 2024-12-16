@@ -108,9 +108,9 @@ else
     MiniCooper.FullMiniCooper? fullCooper;
     MiniCooper.BaseMiniCooper baseCooper = new();
 
-    MiniCooper.EvMiniCooper evCooper = new();
-    MiniCooper.FossilMiniCooper fossilCooper = new();
-    MiniCooper.HybridMiniCooper hybridCooper = new();
+    MiniCooper.EvMiniCooper? evCooper = null;
+    MiniCooper.FossilMiniCooper? fossilCooper = null;
+    MiniCooper.HybridMiniCooper? hybridCooper = null;
 
     private async Task GetCooper()
     {
@@ -130,19 +130,24 @@ else
 
     private async Task UpdateCooper()
     {
+        Console.WriteLine("Updating cooper...");
         MiniCooper.FullMiniCooper editedFullCooper = new();
         if (evCooper != null)
         {
+            Console.WriteLine("Updating ev...");
             evCooper.SetBaseMiniCooperModel(baseCooper);
             editedFullCooper.SetMiniCooper(evCooper);
         }
         else if (fossilCooper != null)
         {
+            Console.WriteLine("Updating fossil...");
+
             fossilCooper.SetBaseMiniCooperModel(baseCooper);
             editedFullCooper.SetMiniCooper(fossilCooper);
         }
         else if (hybridCooper != null)
         {
+            Console.WriteLine("Updating hybrid...");
             hybridCooper.SetBaseMiniCooperModel(baseCooper);
             editedFullCooper.SetMiniCooper(hybridCooper);
         }
@@ -163,15 +168,15 @@ else
         fossilCooper = fullCooper.GetFossilCooper();
     }
 
+    private void SetHybridCooper()
+    {
+        hybridCooper = fullCooper.GetHybridCooper();
+    }
+
     private async Task DeleteCooper()
     {
         await DbService.DeleteCarByIdAsync(fullCooper.GetCarId());
     }
 
-
-    private void SetHybridCooper()
-    {
-        hybridCooper = fullCooper.GetHybridCooper();
-    }
 
 }

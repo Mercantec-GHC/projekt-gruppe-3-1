@@ -69,6 +69,19 @@ public class MiniCooper
         {
             return this;
         }
+
+        public void Clear()
+        {
+            ModelName = string.Empty;
+            Generation = 0;
+            ModelType = string.Empty;
+            Color = string.Empty;
+            Price = 0;
+            Mileage = 0;
+            MaxRange = 0;
+            Weight = 0;
+            FuelType = string.Empty;
+        }
     }
 
     public class EvMiniCooper : BaseMiniCooper
@@ -91,6 +104,13 @@ public class MiniCooper
         public float GetKmPrKwh()
         {
             return KmPrKwh;
+        }
+
+        public void Clear()
+        {
+            base.Clear();
+            ChargeCapacity = 0;
+            KmPrKwh = 0;
         }
     }
 

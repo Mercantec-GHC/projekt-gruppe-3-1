@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using BlazorApp.Service
 @using BlazorApp.Components.Pages.Forms
+@inject IJSRuntime JSRuntime
 @inject DBService DbService
 @inject MiniCooper.BaseMiniCooper BaseCooper
 @inject MiniCooper.EvMiniCooper EvCooper
@@ -32,37 +33,37 @@
 
 <EditForm Model="@BaseCooper" OnValidSubmit="@HandleValidSubmit">
     <label class="form-label">Model Name:</label>
-    <InputText @bind-Value="BaseCooper.ModelName" class="form-control" />
+    <InputText @bind-Value="BaseCooper.ModelName" class="form-control"/>
 
     <label class="form-label">Generation:</label>
-    <InputNumber @bind-Value="BaseCooper.Generation" class="form-control" />
+    <InputNumber @bind-Value="BaseCooper.Generation" class="form-control"/>
 
     <label class="form-label">Model Type:</label>
-    <InputText @bind-Value="BaseCooper.ModelType" class="form-control" />
+    <InputText @bind-Value="BaseCooper.ModelType" class="form-control"/>
 
     <label class="form-label">Color:</label>
-    <InputText @bind-Value="BaseCooper.Color" class="form-control" />
+    <InputText @bind-Value="BaseCooper.Color" class="form-control"/>
 
     <label class="form-label">Price:</label>
-    <InputNumber @bind-Value="BaseCooper.Price" class="form-control" />
+    <InputNumber @bind-Value="BaseCooper.Price" class="form-control"/>
 
     <label class="form-label">Mileage:</label>
-    <InputNumber @bind-Value="BaseCooper.Mileage" class="form-control" />
+    <InputNumber @bind-Value="BaseCooper.Mileage" class="form-control"/>
 
     <label class="form-label">Max range:</label>
-    <InputNumber @bind-Value="BaseCooper.MaxRange" class="form-control" />
+    <InputNumber @bind-Value="BaseCooper.MaxRange" class="form-control"/>
 
     <label class="form-label">Weight:</label>
-    <InputNumber @bind-Value="BaseCooper.Weight" class="form-control" />
+    <InputNumber @bind-Value="BaseCooper.Weight" class="form-control"/>
 
     <label class="form-label">Fuel type:</label>
-    <InputText @bind-Value="BaseCooper.FuelType" class="form-control" />
+    <InputText @bind-Value="BaseCooper.FuelType" class="form-control"/>
 
     <label class="form-label">Gear type:</label>
-    <InputText @bind-Value="BaseCooper.GearType" class="form-control" />
+    <InputText @bind-Value="BaseCooper.GearType" class="form-control"/>
 
     <label class="form-label">Yearly tax:</label>
-    <InputNumber @bind-Value="BaseCooper.YearlyTax" class="form-control" />
+    <InputNumber @bind-Value="BaseCooper.YearlyTax" class="form-control"/>
 
 
     @switch (form)
@@ -103,6 +104,61 @@
     <img src="data:image/png;base64,@image" alt="Ops..."/>
 }
 
+<!-- No form Modal -->
+<div class="modal fade" id="no-form-modal" tabindex="-1" aria-labelledby="noFormModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="noFormModal">No base for selected!</h1>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- No picture(s) Modal -->
+<div class="modal fade" id="no-picture-modal" tabindex="-1" aria-labelledby="noPictureModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="noPictureModal">You need at least 1 picture for your Cooper!</h1>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Successfully added cooper -->
+<div class="modal fade" id="successful-cooper" tabindex="-1" aria-labelledby="successfulCooper" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="successfulCooper">Cooper added!</h1>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showNoFormModal() {
+        const modalElement = document.getElementById("no-form-modal");
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
+    }
+
+    function showNoPictureModal() {
+        const modalElement = document.getElementById("no-picture-modal");
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
+    }
+
+    function showSuccessfulCooperModal() {
+        const modalInstance = new bootstrap.Modal(document.getElementById("successful-cooper"));
+        modalInstance.show();
+    }
+</script>
+
 @code {
     string form = "";
 
@@ -111,14 +167,14 @@
         if (form == "")
         {
             Console.WriteLine("No car base selected");
-            // Message saying that the user needs to pick an option.
+            await JSRuntime.InvokeVoidAsync("showNoFormModal");
             return;
         }
 
         if (loadedImages.Count == 0)
         {
             Console.WriteLine("No images are loaded");
-            // Message saying that the user needs at least 1 picture.
+            await JSRuntime.InvokeVoidAsync("showNoPictureModal");
             return;
         }
 
@@ -177,7 +233,9 @@
         }
 
         FullCooper.Clear();
+        BaseCooper.Clear();
         loadedImages = new();
+        await JSRuntime.InvokeVoidAsync("showSuccessfulCooperModal");
         StateHasChanged();
     }
 
