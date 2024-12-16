@@ -325,3 +325,77 @@ WHERE (a_car).electric_car.base_cooper.model_name = 'Mini Copstr';
 SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car
 FROM cars
 WHERE account_id = 1 AND (a_car).electric_car.base_cooper.model_name = 'name';
+
+UPDATE cars
+SET a_car.electric_car = ROW(
+    ROW(
+        'Mini Cooper SE', -- model_name
+        2024,            -- generation
+        'Hatchback',     -- model_type
+        'White',         -- color
+        35000,           -- price
+        1000,            -- km_driven
+        290,             -- max_range
+        1450,            -- weight
+        'Electric',      -- fuel_type
+        'Automatic',     -- geartype
+        200,             -- yearly_tax
+        ARRAY['base64img_new1', 'base64img_new2'] -- base64_images
+        )::mini_cooper,
+    50,                -- charge_capacity
+    8.5                -- km_pr_kwh
+    )::ev_mini_cooper
+WHERE id = <car_id>
+  AND (a_car).electric_car IS NOT NULL;
+
+UPDATE cars
+SET a_car.fossile_car = ROW(
+    ROW(
+        'Mini Cooper S', -- model_name
+        2024,            -- generation
+        'SUV',           -- model_type
+        'Blue',          -- color
+        28000,           -- price
+        1200,            -- km_driven
+        0,               -- max_range
+        1500,            -- weight
+        'Petrol',        -- fuel_type
+        'Manual',        -- geartype
+        220,             -- yearly_tax
+        ARRAY['base64fossil1', 'base64fossil2'] -- base64_images
+        )::mini_cooper,
+    55,                -- tank_capacity
+    15.5,              -- km_pr_liter
+    6                  -- gears
+    )::fossil_mini_cooper
+WHERE id = <car_id>
+  AND (a_car).fossile_car IS NOT NULL;
+
+UPDATE cars
+SET a_car.hybrid_car = ROW(
+    ROW(
+        'Mini Cooper Hybrid Deluxe', -- model_name
+        2025,                       -- generation
+        'Coupe',                    -- model_type
+        'Black',                    -- color
+        40000,                      -- price
+        800,                        -- km_driven
+        300,                        -- max_range
+        1600,                       -- weight
+        'Hybrid',                   -- fuel_type
+        'Automatic',                -- geartype
+        250,                        -- yearly_tax
+        ARRAY['base64hybrid1', 'base64hybrid2'] -- base64_images
+        )::mini_cooper,
+    'Petrol',                    -- fuel_type1
+    'Electric',                  -- fuel_type2
+    60,                          -- tank_capacity
+    35,                          -- charge_capacity
+    20.0,                        -- km_pr_liter
+    6.5,                         -- km_pr_kwh
+    7                            -- gears
+    )::hybrid_mini_cooper
+WHERE id = 2
+  AND (a_car).hybrid_car IS NOT NULL;
+
+SELECT * FROM cars order by id;

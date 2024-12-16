@@ -64,7 +64,7 @@ public class MiniCooper
             var base64Image = Convert.ToBase64String(imageBytes);
             Base64Images.Add(base64Image);
         }
-        
+
         public BaseMiniCooper GetBase()
         {
             return this;
@@ -82,6 +82,16 @@ public class MiniCooper
             Console.WriteLine($"Charge capacity: {ChargeCapacity}\n" +
                               $"Km. pr. kilowatt hour: {KmPrKwh}");
         }
+        
+        public int GetChargeCapacity()
+        {
+            return ChargeCapacity;
+        }
+
+        public float GetKmPrKwh()
+        {
+            return KmPrKwh;
+        }
     }
 
     public class FossilMiniCooper : BaseMiniCooper
@@ -96,6 +106,21 @@ public class MiniCooper
             Console.WriteLine($"Tank capacity: {TankCapacity}\n" +
                               $"Km. pr. liter: {KmPrLiter}\n" +
                               $"Gears: {Gears}");
+        }
+        
+        public int GetTankCapacity()
+        {
+            return TankCapacity;
+        }
+
+        public float GetKmPrLiter()
+        {
+            return KmPrLiter;
+        }
+
+        public int GetGears()
+        {
+            return Gears;
         }
     }
 
@@ -120,6 +145,41 @@ public class MiniCooper
                               $"Km. pr. kilowatt hour: {KmPrKwh}\n" +
                               $"Gears: {Gears}");
         }
+
+        public string GetFuelType1()
+        {
+            return FuelType1;
+        }
+        
+        public string GetFuelType2()
+        {
+            return FuelType2;
+        }
+
+        public float GetTankCapacity()
+        {
+            return TankCapacity;
+        }
+
+        public float GetChargeCapacity()
+        {
+            return ChargeCapacity;
+        }
+
+        public float GetKmPrLiter()
+        {
+            return KmPrLiter;
+        }
+
+        public float GetKmPrKwh()
+        {
+            return KmPrKwh;
+        }
+        
+        public int GetGears()
+        {
+            return Gears;
+        }
     }
 
     public class FullMiniCooper
@@ -136,6 +196,21 @@ public class MiniCooper
             UserId = userId;
         }
 
+        public string GetCooperTypeInUse()
+        {
+            if (EvCooper != null)
+                return "ev";
+            else if (FossilCooper != null)
+                return "fossil";
+            else if (HybridCooper != null)
+                return "hybrid";
+            else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get cooper type in use.");
+                return string.Empty;
+            }
+        }
+
         public List<string> GetImages()
         {
             if (EvCooper != null)
@@ -145,7 +220,10 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.Base64Images;
             else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get images.");
                 return new List<string>();
+            }
         }
 
         public string GetModelType()
@@ -157,7 +235,10 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.ModelType;
             else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get model type.");
                 return string.Empty;
+            }
         }
 
         public string GetFuelType()
@@ -169,7 +250,10 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.FuelType;
             else
-                return string.Empty;
+            {
+                Console.WriteLine("No car name has been assigned to this object. Can get fuel type.");
+                return String.Empty;
+            }
         }
 
         public string GetGearType()
@@ -181,7 +265,70 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.GearType;
             else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get gear type.");
                 return string.Empty;
+            }
+        }
+
+        public int GetMileage()
+        {
+            if (EvCooper != null)
+                return EvCooper.Mileage;
+            else if (FossilCooper != null)
+                return FossilCooper.Mileage;
+            else if (HybridCooper != null)
+                return HybridCooper.Mileage;
+            else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get mileage.");
+                return -1;
+            }
+        }
+        
+        public int GetMaxRange()
+        {
+            if (EvCooper != null)
+                return EvCooper.MaxRange;
+            else if (FossilCooper != null)
+                return FossilCooper.MaxRange;
+            else if (HybridCooper != null)
+                return HybridCooper.MaxRange;
+            else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get max range.");
+                return -1;
+            }
+        }
+        
+        public int GetWeight()
+        {
+            if (EvCooper != null)
+                return EvCooper.Weight;
+            else if (FossilCooper != null)
+                return FossilCooper.Weight;
+            else if (HybridCooper != null)
+                return HybridCooper.Weight;
+            else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get weight.");
+                return -1;
+            }
+        }
+
+        public decimal GetYearlyTax()
+        {
+            if (EvCooper != null)
+                return EvCooper.YearlyTax;
+            else if (FossilCooper != null)
+                return FossilCooper.YearlyTax;
+            else if (HybridCooper != null)
+                return HybridCooper.YearlyTax;
+            else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get yearly tax.");
+                return -1;
+            }
         }
 
         public int GetCarId()
@@ -203,7 +350,10 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.Base64Images[index];
             else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Can get image by index");
                 return string.Empty;
+            }
         }
 
         public string GetFirstImage()
@@ -215,7 +365,10 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.Base64Images[0];
             else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get first image.");
                 return string.Empty;
+            }
         }
 
         public string GetModelName()
@@ -228,7 +381,8 @@ public class MiniCooper
                 return HybridCooper.ModelName;
             else
             {
-                return "No car name has been assigned to this object.";
+                Console.WriteLine("No car name has been assigned to this object. Cant get generation. Cant get model name.");
+                return string.Empty;
             }
         }
 
@@ -242,7 +396,23 @@ public class MiniCooper
                 return HybridCooper.Price;
             else
             {
+                Console.WriteLine("No car name has been assigned to this object. Cant get price.");
                 return 0;
+            }
+        }
+        
+        public string GetColor()
+        {
+            if (EvCooper != null)
+                return EvCooper.Color;
+            else if (FossilCooper != null)
+                return FossilCooper.Color;
+            else if (HybridCooper != null)
+                return HybridCooper.Color;
+            else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get price.");
+                return "";
             }
         }
 
@@ -270,15 +440,18 @@ public class MiniCooper
             else if (HybridCooper != null)
                 return HybridCooper.Generation.ToString();
             else
+            {
+                Console.WriteLine("No car name has been assigned to this object. Cant get generation.");
                 return string.Empty;
+            }
         }
-        
+
         public void SetMiniCooper(EvMiniCooper evCooper)
         {
             if (ThereCanOnlyBeOne())
                 EvCooper = evCooper;
             else
-                Console.WriteLine("A car has already been assigned to this object.");
+                Console.WriteLine("A car has already been assigned to this object. Cant set electric cooper.");
         }
 
         public void SetMiniCooper(FossilMiniCooper fossilCooper)
@@ -286,7 +459,7 @@ public class MiniCooper
             if (ThereCanOnlyBeOne())
                 FossilCooper = fossilCooper;
             else
-                Console.WriteLine("A car has already been assigned to this object.");
+                Console.WriteLine("A car has already been assigned to this object. Cant set fossil cooper.");
         }
 
         public void SetMiniCooper(HybridMiniCooper hybridCooper)
@@ -294,9 +467,9 @@ public class MiniCooper
             if (ThereCanOnlyBeOne())
                 HybridCooper = hybridCooper;
             else
-                Console.WriteLine("A car has already been assigned to this object.");
+                Console.WriteLine("A car has already been assigned to this object. Cant set hybrid cooper.");
         }
-        
+
         public BaseMiniCooper? GetBaseCooper()
         {
             if (EvCooper != null)
@@ -313,7 +486,7 @@ public class MiniCooper
             }
             else
             {
-                Console.WriteLine("No car has been assigned to this object.");
+                Console.WriteLine("No car has been assigned to this object. Cant get base cooper.");
                 return null;
             }
         }
@@ -340,7 +513,7 @@ public class MiniCooper
 
             return true;
         }
-        
+
         public void PrintEv()
         {
             if (EvCooper == null)
@@ -367,6 +540,9 @@ public class MiniCooper
 
         public void PrintAutomatically()
         {
+            Console.WriteLine("Printing automatically...");
+            Console.WriteLine("Car ID: "+ CarId);
+            Console.WriteLine("User ID: "+UserId);
             if (EvCooper != null)
                 EvCooper.Print();
             else if (FossilCooper != null)
@@ -374,7 +550,7 @@ public class MiniCooper
             else if (HybridCooper != null)
                 HybridCooper.Print();
             else
-                Console.WriteLine("No car has been assigned to this object.");
+                Console.WriteLine("No car has been assigned to this object. Cant automatically print.");
         }
 
         public bool HasMultipleCars()

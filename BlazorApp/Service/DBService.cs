@@ -1,6 +1,3 @@
-using System.Data;
-using Npgsql.PostgresTypes;
-
 namespace BlazorApp.Service;
 
 //"Host=ep-restless-snow-a2okt6hh.eu-central-1.aws.neon.tech;Username=bilbasen_owner;Password=RIA6nJt1Xwgo;Database=bilbasen;sslmode=require;"
@@ -8,7 +5,7 @@ using Npgsql;
 
 public class DBService
 {
-    public static DBService Instance;
+    // public static DBService Instance;
 
     // Essentically our DefaultConnection in our appsettings.json.
     private readonly string _connectionString;
@@ -16,7 +13,7 @@ public class DBService
     public DBService(string connectionString)
     {
         _connectionString = connectionString;
-        Instance = this;
+        // Instance = this;
     }
 
     // We then made a NpgsqlConnection, open it and then returns it.
@@ -140,38 +137,41 @@ public class DBService
         {
             while (await reader.ReadAsync())
             {
-                var currentId = reader.GetInt32(0);
+                var currentCarId = reader.GetInt32(0);
 
                 if (!reader.IsDBNull(1))
                 {
-                    var tempFullCooper = await GetEvByIdAndName(currentId, carName);
+                    var tempFullCooper = await GetEvByIdAndName(currentCarId, carName);
                     if (tempFullCooper.GetEvCooper() == null)
                         Console.WriteLine("Ev not found...");
                     else
                     {
                         fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                        fullMiniCooper.SetIds(currentCarId, userId);
                         return fullMiniCooper;
                     }
                 }
                 else if (!reader.IsDBNull(2))
                 {
-                    var tempFullCooper = await GetFossilByIdAndName(currentId, carName);
+                    var tempFullCooper = await GetFossilByIdAndName(currentCarId, carName);
                     if (tempFullCooper.GetFossilCooper() == null)
                         Console.WriteLine("Fossil not found...");
                     else
                     {
                         fullMiniCooper.SetMiniCooper(tempFullCooper.GetFossilCooper());
+                        fullMiniCooper.SetIds(currentCarId, userId);
                         return fullMiniCooper;
                     }
                 }
                 else if (!reader.IsDBNull(3))
                 {
-                    var tempFullCooper = await GetHybridByIdAndName(currentId, carName);
+                    var tempFullCooper = await GetHybridByIdAndName(currentCarId, carName);
                     if (tempFullCooper.GetHybridCooper() == null)
                         Console.WriteLine("Hybrid not found...");
                     else
                     {
-                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetHybridCooper());
+                        fullMiniCooper.SetIds(currentCarId, userId);
                         return fullMiniCooper;
                     }
                 }
@@ -382,7 +382,7 @@ public class DBService
     /// <summary>
     /// Retrieves detailed information of an electric Mini Cooper by the given ID from the database.
     /// </summary>
-    /// <param name="id">
+    /// <param name="carId">
     /// An <see cref="int"/> representing the unique identifier of the electric Mini Cooper to be retrieved.
     /// </param>
     /// <returns>
@@ -396,7 +396,7 @@ public class DBService
     /// Note: The SQL query concatenates the car ID directly into the command string, which could lead to SQL Injection
     /// if the input is not correctly validated in a real-world scenario. It is advisable to use parameterized queries instead.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetEvByIdAsync(int id)
+    public async Task<MiniCooper.FullMiniCooper> GetEvByIdAsync(int carId)
     {
         Console.WriteLine("Getting ev by id...");
         MiniCooper.EvMiniCooper evCooper = new();
@@ -419,7 +419,7 @@ public class DBService
         var kmPrKwh = "(a_car).electric_car.km_pr_kwh";
 
         string query =
-            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {id};";
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {chargeCapacity}, {kmPrKwh} FROM cars WHERE id = {carId};";
         // Console.WriteLine("Query: " + query);
         try
         {
@@ -442,7 +442,7 @@ public class DBService
                 evCooper.YearlyTax = reader.GetDecimal(10);
                 evCooper.ChargeCapacity = reader.GetInt32(11);
                 evCooper.KmPrKwh = reader.GetFloat(12);
-                evCooper.Base64Images = await GetImagesByIdAndTypeAsync(id, "electric_car");
+                evCooper.Base64Images = await GetImagesByIdAndTypeAsync(carId, "electric_car");
             }
             else
             {
@@ -462,7 +462,7 @@ public class DBService
     /// <summary>
     /// Asynchronously retrieves detailed information for a fossil Mini Cooper car entry from the database based on the provided ID.
     /// </summary>
-    /// <param name="id">
+    /// <param name="carId">
     /// An <see cref="int"/> representing the unique identifier of the fossil Mini Cooper to be retrieved from the database.
     /// </param>
     /// <returns>
@@ -475,7 +475,7 @@ public class DBService
     /// to the fossil car's specifications. In case of an exception during the query execution, an error message is logged to the console.
     /// Note: Ensure that the ID parameter is validated to prevent SQL Injection vulnerabilities as the query is constructed using string concatenation.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAsync(int id)
+    public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAsync(int carId)
     {
         Console.WriteLine("Getting fossil by id...");
         MiniCooper.FossilMiniCooper fossilCooper = new();
@@ -499,7 +499,7 @@ public class DBService
         var gears = "(a_car).fossile_car.gears";
 
         string query =
-            $"SELECT {modelName}, {generation}, {modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {tankCapacity}, {kmPrLiter}, {gears} FROM cars WHERE id = {id};";
+            $"SELECT {modelName}, {generation}, {modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {tankCapacity}, {kmPrLiter}, {gears} FROM cars WHERE id = {carId};";
         // Console.WriteLine("Query: " + query);
         try
         {
@@ -523,7 +523,7 @@ public class DBService
                 fossilCooper.TankCapacity = reader.GetInt32(11);
                 fossilCooper.KmPrLiter = reader.GetFloat(12);
                 fossilCooper.Gears = reader.GetInt32(13);
-                fossilCooper.Base64Images = await GetImagesByIdAndTypeAsync(id, "fossile_car");
+                fossilCooper.Base64Images = await GetImagesByIdAndTypeAsync(carId, "fossile_car");
             }
             else
             {
@@ -543,7 +543,7 @@ public class DBService
     /// <summary>
     /// Retrieves a hybrid Mini Cooper from the database based on the provided ID.
     /// </summary>
-    /// <param name="id">
+    /// <param name="carId">
     /// An <see cref="int"/> representing the unique identifier of the hybrid Mini Cooper to be retrieved.
     /// </param>
     /// <returns>
@@ -554,7 +554,7 @@ public class DBService
     /// This method establishes a connection to the database, formulates a SQL query to fetch the hybrid car details, and constructs a
     /// <see cref="MiniCooper.FullMiniCooper"/> object from the retrieved data. If an exception occurs during database operations, it is logged.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAsync(int id)
+    public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAsync(int carId)
     {
         Console.WriteLine("Getting hybrid by id...");
         MiniCooper.HybridMiniCooper hybridCooper = new();
@@ -582,7 +582,7 @@ public class DBService
         var gears = "(a_car).hybrid_car.gears";
 
         string query =
-            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {fuelType1}, {fuelType2}, {tankCapacity}, {chargeCapacity}, {kmPrLiter}, {kmPrKwh}, {gears} FROM cars WHERE id = {id};";
+            $"SELECT {modelName}, {generation},{modelType}, {color}, {price}, {kmDriven}, {maxRange}, {weight}, {fuelType}, {gearType}, {yearlyTax}, {fuelType1}, {fuelType2}, {tankCapacity}, {chargeCapacity}, {kmPrLiter}, {kmPrKwh}, {gears} FROM cars WHERE id = {carId};";
         // Console.WriteLine("Query: " + query);
         try
         {
@@ -611,7 +611,7 @@ public class DBService
                 hybridCooper.KmPrLiter = reader.GetFloat(15);
                 hybridCooper.KmPrKwh = reader.GetFloat(16);
                 hybridCooper.Gears = reader.GetInt32(17);
-                hybridCooper.Base64Images = await GetImagesByIdAndTypeAsync(id, "hybrid_car");
+                hybridCooper.Base64Images = await GetImagesByIdAndTypeAsync(carId, "hybrid_car");
             }
             else
             {
@@ -737,13 +737,13 @@ public class DBService
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="carId"></param>
     /// <param name="cooperType"></param>
     /// <remarks>
     /// The "cooperType" parameter HAS to be either "electric_car", "fossile_car" or "hybrid_car".
     /// </remarks>
     /// <returns></returns>
-    private async Task<List<string>> GetImagesByIdAndTypeAsync(int id, string cooperType)
+    private async Task<List<string>> GetImagesByIdAndTypeAsync(int carId, string cooperType)
     {
         Console.WriteLine("Getting images by id...");
         List<string> base64Images = new();
@@ -754,7 +754,7 @@ public class DBService
             conn.Open();
 
             string query =
-                $"SELECT images FROM cars, unnest((a_car).{cooperType}.base_cooper.base64_images) AS images WHERE id = {id}";
+                $"SELECT images FROM cars, unnest((a_car).{cooperType}.base_cooper.base64_images) AS images WHERE id = {carId}";
 
             await using var cmd = new NpgsqlCommand(query, conn);
 
@@ -777,7 +777,7 @@ public class DBService
     /// <summary>
     /// Asynchronously retrieves a user from the database using their unique identifier.
     /// </summary>
-    /// <param name="id">
+    /// <param name="userId">
     /// An <see cref="int"/> representing the user's unique identifier in the database.
     /// </param>
     /// <returns>
@@ -787,7 +787,7 @@ public class DBService
     /// This method constructs and executes a SQL query to select user details from the 'users' table by the specified ID.
     /// The query uses direct string interpolation, which may be vulnerable to SQL Injection attacks. It is advisable to use parameterized queries to enhance security.
     /// </remarks>
-    public async Task<UsersService.User> GetUserByIdAsync(int id)
+    public async Task<UsersService.User> GetUserByIdAsync(int userId)
     {
         Console.WriteLine("Getting user by id...");
         UsersService.User user = new();
@@ -801,7 +801,7 @@ public class DBService
                        "(a_user).email," +
                        "(a_user).city," +
                        "(a_user).address " +
-                       $"FROM users WHERE id = {id}";
+                       $"FROM users WHERE id = {userId}";
 
         // string query = $"SELECT * FROM users WHERE id = {id}"; This wont work because we access a UDT.
 
@@ -1009,7 +1009,7 @@ public class DBService
         await ResetTableIdsAsync("cars");
     }
 
-    public async Task DELETEEVERYTHING(string tableName)
+    /*public async Task DELETEEVERYTHING(string tableName)
     {
         Console.WriteLine("!!!DELETING EVERTHING!!!");
         await using var conn = GetConnection();
@@ -1020,7 +1020,7 @@ public class DBService
         await RunAsyncQuery(cmd);
 
         await ResetTableIdsAsync(tableName);
-    }
+    }*/
 
     /// <summary>
     /// Resets the IDs of a specified table in a PostgreSQL database to start from 1, while preserving the order and 
@@ -1049,16 +1049,16 @@ public class DBService
     public async Task ResetTableIdsAsync(string tableName)
     {
         Console.WriteLine("Resetting table IDs...");
-        // Since we are using "using", we dont have to add a close statement at the end, because "using" does that.
+        // Since we are using "using", we don't have to add a close statement at the end, because "using" does that.
         await using var conn = new NpgsqlConnection(_connectionString);
         conn.Open();
 
-        string query = $"CREATE TEMP TABLE temp_{tableName} AS" +
-                       "SELECT *, ROW_NUMBER() OVER (ORDER BY id) as new_id" +
+        string query = $"CREATE TEMP TABLE temp_{tableName} AS " +
+                       "SELECT *, ROW_NUMBER() OVER (ORDER BY id) as new_id " +
                        $"FROM {tableName};" +
-                       $"UPDATE {tableName}" +
-                       $"SET id = temp_{tableName}.new_id" +
-                       $"FROM temp_{tableName}" +
+                       $"UPDATE {tableName} " +
+                       $"SET id = temp_{tableName}.new_id " +
+                       $"FROM temp_{tableName} " +
                        $"WHERE {tableName}.id = temp_{tableName}.id;" +
                        $"SELECT setval('{tableName}_id_seq', (SELECT MAX(id) FROM {tableName}));" +
                        $"DROP TABLE temp_{tableName};";
@@ -1243,9 +1243,81 @@ public class DBService
         return user;
     }
 
-    public async Task EditUser(UsersService.User user)
+    public async Task UpdateCooper(MiniCooper.FullMiniCooper fullCooper, int carId)
     {
-        Console.WriteLine("Editing user...");
+        Console.WriteLine("Updating cooper...");
+        var conn = GetConnection();
+
+        string query = "";
+        string baseCooperQuery = "ROW(" +
+                                 "ROW(" +
+                                 $"'{fullCooper.GetModelName()}'," +
+                                 $"{fullCooper.GetGeneration()}," +
+                                 $"'{fullCooper.GetModelType()}'," +
+                                 $"'{fullCooper.GetColor()}'," +
+                                 $"{fullCooper.GetPrice()}," +
+                                 $"{fullCooper.GetMileage()}," +
+                                 $"{fullCooper.GetMaxRange()}," +
+                                 $"{fullCooper.GetWeight()}," +
+                                 $"'{fullCooper.GetFuelType()}'," +
+                                 $"'{fullCooper.GetGearType()}'," +
+                                 $"{fullCooper.GetYearlyTax()}," +
+                                 $"ARRAY [{await ResolveImagesAsync(fullCooper.GetImages())}])::mini_cooper,";
+
+        string carType = fullCooper.GetCooperTypeInUse();
+        if (carType == "ev")
+        {
+            Console.WriteLine("Updating ev...");
+            query = "UPDATE cars " +
+                    "SET a_car.electric_car = " +
+                    baseCooperQuery +
+                    $"{fullCooper.GetEvCooper().GetChargeCapacity()}," +
+                    $"{fullCooper.GetEvCooper().GetKmPrKwh()})::ev_mini_cooper " +
+                    $"WHERE id = {carId};";
+            Console.WriteLine("Query: "+query);
+        }
+        else if (carType == "fossil")
+        {
+            Console.WriteLine("Updating fossil...");
+            query = "UPDATE cars " +
+                    "SET a_car.fossile_car = " +
+                    baseCooperQuery +
+                    $"{fullCooper.GetFossilCooper().GetTankCapacity()}," +
+                    $"{fullCooper.GetFossilCooper().GetKmPrLiter()}," +
+                    $"{fullCooper.GetFossilCooper().GetGears()})::fossil_mini_cooper " +
+                    $"WHERE id = {carId};";
+            Console.WriteLine("Query: "+query);
+        }
+        else if (carType == "hybrid")
+        {
+            Console.WriteLine("Updating hybrid...");
+            query = "UPDATE cars " +
+                    "SET a_car.hybrid_car = " +
+                    baseCooperQuery +
+                    $"'{fullCooper.GetHybridCooper().GetFuelType1()}'," +
+                    $"'{fullCooper.GetHybridCooper().GetFuelType2()}'," +
+                    $"{fullCooper.GetHybridCooper().GetTankCapacity()}," +
+                    $"{fullCooper.GetHybridCooper().GetChargeCapacity()}," +
+                    $"{fullCooper.GetHybridCooper().GetKmPrLiter()}," +
+                    $"{fullCooper.GetHybridCooper().GetKmPrKwh()}," +
+                    $"{fullCooper.GetHybridCooper().GetGears()})::hybrid_mini_cooper " +
+                    $"WHERE id = {carId};";
+            Console.WriteLine("Query: "+query);
+
+        }
+        else
+        {
+            Console.WriteLine("Unknown car type.");
+            return;
+        }
+        
+        var cmd = new NpgsqlCommand(query, conn);
+        await RunAsyncQuery(cmd);
+    }
+
+    public async Task UpdateUser(UsersService.User user)
+    {
+        Console.WriteLine("Updating user...");
         var conn = GetConnection();
         string query =
             $"UPDATE users SET a_user.name = '{user.Name}', a_user.password = '{user.Password}', a_user.email = '{user.Email}', a_user.mobile = {user.Mobile}, a_user.city = '{user.City}', a_user.address = '{user.Address}' WHERE id = {user.Id}";

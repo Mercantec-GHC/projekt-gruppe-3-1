@@ -1,5 +1,4 @@
 ﻿@using BlazorApp.Service
-@using BlazorApp.Components.Pages.Forms
 @inject DBService DbService
 @inject UsersService.User user
 
@@ -13,7 +12,7 @@
 }
 else
 {
-    <EditForm Model="@baseCooper" OnValidSubmit="@HandleValidSubmit">
+    <EditForm Model="@baseCooper" OnValidSubmit="@UpdateCooper">
         <label class="form-label">Model Name:</label>
         <InputText @bind-Value="baseCooper.ModelName" class="form-control"/>
 
@@ -47,19 +46,60 @@ else
         <label class="form-label">Yearly tax:</label>
         <InputNumber @bind-Value="baseCooper.YearlyTax" class="form-control"/>
     </EditForm>
-
-    @*if (fullCooper.GetEvCooper() != null)
+    @if (fullCooper.GetEvCooper() != null)
     {
-        <EvForm/>
+        SetEvCooper();
+        <EditForm Model="@evCooper">
+            <label class="form-label">Charge Capacity:</label>
+            <InputNumber @bind-Value="evCooper.ChargeCapacity" class="form-control"/>
+
+            <label class="form-label">Km. pr. kWh:</label>
+            <InputNumber @bind-Value="evCooper.KmPrKwh" class="form-control"/>
+        </EditForm>
     }
     else if (fullCooper.GetFossilCooper() != null)
     {
-        <FossilForm/>
+        SetFossilCooper();
+        <EditForm Model="@fossilCooper">
+            <label class="form-label">Tank Capacity:</label>
+            <InputNumber @bind-Value="fossilCooper.TankCapacity" class="form-control"/>
+
+            <label class="form-label">Km. pr. liter:</label>
+            <InputNumber @bind-Value="fossilCooper.KmPrLiter" class="form-control"/>
+
+            <label class="form-label">Gears (0 if auto):</label>
+            <InputNumber @bind-Value="fossilCooper.Gears" class="form-control"/>
+        </EditForm>
     }
     else if (fullCooper.GetHybridCooper() != null)
     {
-        <HybridForm/>
-    }*@
+        SetHybridCooper();
+        <EditForm Model="@hybridCooper">
+            <label class="form-label">Fuel Type 1:</label>
+            <InputText @bind-Value="hybridCooper.FuelType1" class="form-control"/>
+
+            <label class="form-label">Fuel Type 2:</label>
+            <InputText @bind-Value="hybridCooper.FuelType2" class="form-control"/>
+
+            <label class="form-label">Tank Capacity:</label>
+            <InputNumber @bind-Value="hybridCooper.TankCapacity" class="form-control"/>
+
+            <label class="form-label">Charge Capacity:</label>
+            <InputNumber @bind-Value="hybridCooper.ChargeCapacity" class="form-control"/>
+
+            <label class="form-label">Km. pr. liter:</label>
+            <InputNumber @bind-Value="hybridCooper.KmPrLiter" class="form-control"/>
+
+            <label class="form-label">Km. pr. kWh:</label>
+            <InputNumber @bind-Value="hybridCooper.KmPrKwh" class="form-control"/>
+
+            <label class="form-label">Gears (0 if auto):</label>
+            <InputNumber @bind-Value="hybridCooper.Gears" class="form-control"/>
+        </EditForm>
+    }
+
+    <button type="button" onclick="@UpdateCooper">Opdaterer Cooper</button>
+    <button type="button" onclick="@DeleteCooper" class="btn btn-danger">Slet Cooper</button>
 }
 
 @code{
@@ -68,15 +108,70 @@ else
     MiniCooper.FullMiniCooper? fullCooper;
     MiniCooper.BaseMiniCooper baseCooper = new();
 
+    MiniCooper.EvMiniCooper evCooper = new();
+    MiniCooper.FossilMiniCooper fossilCooper = new();
+    MiniCooper.HybridMiniCooper hybridCooper = new();
+
     private async Task GetCooper()
     {
-        fullCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
-        await baseCooper.SetBaseMiniCooperModel(fullCooper.GetBaseCooper());
-        fullCooper.PrintAutomatically();
+        try
+        {
+            fullCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
+            await baseCooper.SetBaseMiniCooperModel(fullCooper.GetBaseCooper());
+            fullCooper.PrintAutomatically();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting cooper to edit: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
+        }
     }
 
-    private async Task HandleValidSubmit()
+    private async Task UpdateCooper()
     {
+        MiniCooper.FullMiniCooper editedFullCooper = new();
+        if (evCooper != null)
+        {
+            evCooper.SetBaseMiniCooperModel(baseCooper);
+            editedFullCooper.SetMiniCooper(evCooper);
+        }
+        else if (fossilCooper != null)
+        {
+            fossilCooper.SetBaseMiniCooperModel(baseCooper);
+            editedFullCooper.SetMiniCooper(fossilCooper);
+        }
+        else if (hybridCooper != null)
+        {
+            hybridCooper.SetBaseMiniCooperModel(baseCooper);
+            editedFullCooper.SetMiniCooper(hybridCooper);
+        }
+
+        editedFullCooper.PrintAutomatically();
+        await DbService.UpdateCooper(editedFullCooper, fullCooper.GetCarId());
+        fullCooper.Clear();
+        editedFullCooper.Clear();
+    }
+
+    private void SetEvCooper()
+    {
+        evCooper = fullCooper.GetEvCooper();
+    }
+
+    private void SetFossilCooper()
+    {
+        fossilCooper = fullCooper.GetFossilCooper();
+    }
+
+    private async Task DeleteCooper()
+    {
+        await DbService.DeleteCarByIdAsync(fullCooper.GetCarId());
+    }
+
+
+    private void SetHybridCooper()
+    {
+        hybridCooper = fullCooper.GetHybridCooper();
     }
 
 }

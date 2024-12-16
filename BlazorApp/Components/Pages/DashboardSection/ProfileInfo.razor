@@ -124,37 +124,37 @@
         {
             user.Name = newName;
             user.Print();
-            await DbService.EditUser(user);
+            await DbService.UpdateUser(user);
         }
         else if (newPassword != string.Empty)
         {
             user.Password = newPassword;
             user.Print();
-            await DbService.EditUser(user);
+            await DbService.UpdateUser(user);
         }
         else if (newMobile != 0)
         {
             user.Mobile = newMobile;
             user.Print();
-            await DbService.EditUser(user);
+            await DbService.UpdateUser(user);
         }
         else if (newEmail != string.Empty)
         {
             user.Email = newEmail;
             user.Print();
-            await DbService.EditUser(user);
+            await DbService.UpdateUser(user);
         }
         else if (newCity != string.Empty)
         {
             user.City = newCity;
             user.Print();
-            await DbService.EditUser(user);
+            await DbService.UpdateUser(user);
         }
         else if (newAddress != string.Empty)
         {
             user.Address = newAddress;
             user.Print();
-            await DbService.EditUser(user);
+            await DbService.UpdateUser(user);
         }
         else
             Console.WriteLine("Every variable is empty.");
