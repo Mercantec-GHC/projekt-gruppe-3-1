@@ -2,10 +2,10 @@
 
 <EditForm Model="@EvCooperFormData">
     <label class="form-label">Battery charge:</label>
-    <InputNumber @bind-Value="EvCooperFormData.ChargeCapacity"/>
+    <InputNumber @bind-Value="EvCooperFormData.ChargeCapacity" class="form-control"/>
 
     <label class="form-label">Km. pr. kilowatt hour: </label>
-    <InputNumber @bind-Value="EvCooperFormData.KmPrKwh"/>
+    <InputNumber @bind-Value="EvCooperFormData.KmPrKwh" class="form-control"/>
 </EditForm>
 
 @code{

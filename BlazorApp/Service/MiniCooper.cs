@@ -81,6 +81,9 @@ public class MiniCooper
             MaxRange = 0;
             Weight = 0;
             FuelType = string.Empty;
+            GearType = string.Empty;
+            YearlyTax = 0;
+            Base64Images.Clear();
         }
     }
 

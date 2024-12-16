@@ -24,7 +24,7 @@ public class DBService
         return connection;
     }
 
-    public async Task<List<UsersService.User>> GetAllUsersAsync()
+    /*public async Task<List<UsersService.User>> GetAllUsersAsync()
     {
         Console.WriteLine("Getting all users...");
         List<UsersService.User> users = new();
@@ -60,7 +60,7 @@ public class DBService
         }
 
         return users;
-    }
+    }*/
 
     /// <summary>
     /// Retrieves a list of Mini Cooper car entries from the database and identifies their type as either electric, fossil, or hybrid.
@@ -122,6 +122,21 @@ public class DBService
         return fullMiniCoopers;
     }
 
+    /// <summary>
+    /// Retrieves a full Mini Cooper object based on the user's ID and the specified car name.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user who owns the car.</param>
+    /// <param name="carName">The specific name of the car to search for within the user's collection of Mini Coopers.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a <see cref="MiniCooper.FullMiniCooper"/> instance.
+    /// The instance will be populated based on whether the car type is electric, fossil, or hybrid.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database and executes a query to retrieve records for cars matching the given user ID.
+    /// Depending on the type of car (electric, fossil, or hybrid), respective helper methods such as <see cref="GetEvByIdAndName"/>,
+    /// <see cref="GetFossilByIdAndName"/>, or <see cref="GetHybridByIdAndName"/> are invoked to fetch detailed car data.
+    /// Console messages are logged during the process to indicate the status of the retrieval operation or if no car type is found.
+    /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperByUserIdAndName(int userId, string carName)
     {
         Console.WriteLine("Getting full mini cooper by user id and name...");
@@ -183,6 +198,19 @@ public class DBService
         return fullMiniCooper;
     }
 
+    /// <summary>
+    /// Retrieves data for an electric Mini Cooper based on its unique identifier and model name from the database.
+    /// </summary>
+    /// <param name="carId">The unique identifier of the car.</param>
+    /// <param name="carName">The model name of the car.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a <see cref="MiniCooper.FullMiniCooper"/> instance.
+    /// The instance encompasses detailed information about the electric Mini Cooper.
+    /// </returns>
+    /// <remarks>
+    /// This method constructs a database query using the specified car ID and model name to fetch the electric Mini Cooper's details.
+    /// It reads the query results, populates the instance of <see cref="MiniCooper.FullMiniCooper"/>, and handles errors by logging messages to the console.
+    /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetEvByIdAndName(int carId, string carName)
     {
         Console.WriteLine("Getting ev by name...");
@@ -245,6 +273,20 @@ public class DBService
         return fullCooper;
     }
 
+    /// <summary>
+    /// Retrieves a full Mini Cooper fossil car entry from the database based on the provided car ID and name.
+    /// </summary>
+    /// <param name="carId">The unique identifier of the fossil car in the database.</param>
+    /// <param name="carName">The name or model name of the fossil car to be retrieved.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a <see cref="MiniCooper.FullMiniCooper"/> object.
+    /// The object contains detailed information about the retrieved fossil car.
+    /// </returns>
+    /// <remarks>
+    /// The method establishes a database connection and executes a query to retrieve information about a specific fossil Mini Cooper car.
+    /// If the car is found, it extracts details such as model name, generation, type, fuel type, gear type, and various specifications.
+    /// If no car matches the criteria or an exception occurs, appropriate console messages are logged.
+    /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAndName(int carId, string carName)
     {
         Console.WriteLine("Getting fossil by name...");
@@ -307,6 +349,26 @@ public class DBService
         return fullCooper;
     }
 
+    /// <summary>
+    /// Retrieves a hybrid Mini Cooper car entry from the database based on the provided car ID and car name.
+    /// </summary>
+    /// <param name="carId">
+    /// The unique identifier of the car in the database.
+    /// </param>
+    /// <param name="carName">
+    /// The name of the car model to be retrieved.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a <see cref="MiniCooper.FullMiniCooper"/> instance.
+    /// The result contains detailed information about the hybrid Mini Cooper if found; otherwise, returns an empty instance.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database, executes an SQL query to retrieve detailed information about
+    /// the specified hybrid Mini Cooper, including base specifications and hybrid-specific attributes, such as fuel types,
+    /// tank capacity, and charge capacity.
+    /// If the car is not found in the database, logs are written to the console indicating the absence of results or any
+    /// encountered errors.
+    /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAndName(int carId, string carName)
     {
         Console.WriteLine("Getting hybrid by name...");
@@ -629,6 +691,22 @@ public class DBService
         return fullCooper;
     }
 
+    /// <summary>
+    /// Retrieves a list of full Mini Cooper entries associated with a specific user from the database.
+    /// </summary>
+    /// <param name="userId">
+    /// The unique identifier of the user for whom the Mini Cooper entries will be retrieved.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a list of <see cref="MiniCooper.FullMiniCooper"/> instances.
+    /// Each instance represents a Mini Cooper entry belonging to the specified user.
+    /// </returns>
+    /// <remarks>
+    /// This method connects to the database and retrieves car data linked to the given user ID. It processes each record to determine the type of car
+    /// (electric, fossil, or hybrid). For each car type, it invokes corresponding methods such as <see cref="GetEvByIdAsync"/>,
+    /// <see cref="GetFossilByIdAsync"/>, or <see cref="GetHybridByIdAsync"/> to get detailed information about the car.
+    /// The method logs messages indicating the types of cars being added and includes functionality to set user and car IDs for the resulting entries.
+    /// </remarks>
     public async Task<List<MiniCooper.FullMiniCooper>> GetFullMiniCoopersByUserId(int userId)
     {
         Console.WriteLine("Getting full mini coopers by user id...");
@@ -677,6 +755,24 @@ public class DBService
         return fullMiniCoopers;
     }
 
+    /// <summary>
+    /// Retrieves a full Mini Cooper instance identified by its unique car ID from the database.
+    /// </summary>
+    /// <param name="carId">
+    /// The unique identifier of the Mini Cooper car to be retrieved.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing a <see cref="MiniCooper.FullMiniCooper"/> instance.
+    /// The instance provides detailed information about a full Mini Cooper.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database to fetch the specified car's details.
+    /// Based on the type of the car (electric, fossil, or hybrid), respective methods such as <see cref="GetEvByIdAsync"/>,
+    /// <see cref="GetFossilByIdAsync"/>, or <see cref="GetHybridByIdAsync"/> are invoked to retrieve additional details.
+    /// The retrieved details include type-specific properties and relationships such as the associated user account.
+    /// If successful, the method returns a fully populated Mini Cooper object for further use.
+    /// Appropriate console messages are logged during the retrieval process.
+    /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperById(int carId)
     {
         Console.WriteLine("Getting full mini cooper by id...");
@@ -733,16 +829,24 @@ public class DBService
 
         return fullMiniCooper;
     }
-
+    
     /// <summary>
-    /// 
+    /// Retrieves a list of base64-encoded image strings for a specified Mini Cooper identified by its ID and type.
     /// </summary>
-    /// <param name="carId"></param>
-    /// <param name="cooperType"></param>
+    /// <param name="carId">
+    /// The unique identifier of the car in the database whose images are to be retrieved.
+    /// </param>
+    /// <param name="cooperType">
+    /// The type of the Mini Cooper, such as "electric_car" or "fossile_car", to specify which set of images to retrieve.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains a list of base64-encoded strings,
+    /// each representing an image associated with the specified Mini Cooper.
+    /// </returns>
     /// <remarks>
-    /// The "cooperType" parameter HAS to be either "electric_car", "fossile_car" or "hybrid_car".
+    /// The method queries the database using the provided car ID and type to retrieve images stored in a nested array.
+    /// In case of any errors during the database operation, an error message will be logged to the console.
     /// </remarks>
-    /// <returns></returns>
     private async Task<List<string>> GetImagesByIdAndTypeAsync(int carId, string cooperType)
     {
         Console.WriteLine("Getting images by id...");
@@ -1009,19 +1113,6 @@ public class DBService
         await ResetTableIdsAsync("cars");
     }
 
-    /*public async Task DELETEEVERYTHING(string tableName)
-    {
-        Console.WriteLine("!!!DELETING EVERTHING!!!");
-        await using var conn = GetConnection();
-
-        string query = "DELETE FROM cars;";
-        await using var cmd = new NpgsqlCommand(query, conn);
-
-        await RunAsyncQuery(cmd);
-
-        await ResetTableIdsAsync(tableName);
-    }*/
-
     /// <summary>
     /// Resets the IDs of a specified table in a PostgreSQL database to start from 1, while preserving the order and 
     /// updating the sequence associated with the table's ID.
@@ -1116,6 +1207,22 @@ public class DBService
         return resolvedImages;
     }
 
+    /// <summary>
+    /// Adds a new user to the database after validating the uniqueness of their email and mobile number.
+    /// </summary>
+    /// <param name="user">
+    /// The user instance containing details such as name, password, mobile number, email, city, and address.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation of adding a user to the database.
+    /// </returns>
+    /// <remarks>
+    /// This method validates the user by checking whether the provided email and mobile number are already in use.
+    /// If either is taken, the operation stops and appropriate messages are logged to the console.
+    /// If validation is successful, the method constructs an SQL query to insert the user details into the database
+    /// and executes the query asynchronously. In case of an error during database operation, it logs the error
+    /// message and stack trace, and rethrows the exception.
+    /// </remarks>
     public async Task AddUserAsync(UsersService.User user)
     {
         Console.WriteLine("Adding user...");
@@ -1150,7 +1257,22 @@ public class DBService
         }
     }
 
-    public async Task<bool> IsEmailTakenAsync(string email)
+    /// <summary>
+    /// Checks whether the given email address is already associated with an existing user in the database.
+    /// </summary>
+    /// <param name="email">
+    /// The email address to be verified for existence in the database.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains a boolean value:
+    /// true if the email is already taken, or false if the email is available.
+    /// </returns>
+    /// <remarks>
+    /// This method connects to the database and executes a query to check if the provided email exists in the users table.
+    /// If an email match is found, it returns true; otherwise, it returns false. Any exceptions that occur during the operation
+    /// are logged and rethrown to the caller for further handling.
+    /// </remarks>
+    private async Task<bool> IsEmailTakenAsync(string email)
     {
         Console.WriteLine("Checking if email is taken...");
         var conn = GetConnection();
@@ -1176,7 +1298,22 @@ public class DBService
         }
     }
 
-    public async Task<bool> IsMobileTakenAsync(int mobile)
+    /// <summary>
+    /// Checks if the specified mobile number is already assigned to an existing user in the database.
+    /// </summary>
+    /// <param name="mobile">
+    /// The mobile number to check for existence in the database.
+    /// </param>
+    /// <returns>
+    /// A task representing the asynchronous operation. The task result contains a boolean value indicating whether the mobile number is already taken.
+    /// Returns <c>true</c> if the mobile number exists in the database; otherwise, <c>false</c>.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a connection to the database and runs a SQL query to search for the specified mobile number in the users table.
+    /// If the mobile number is found, the method returns <c>true</c>, indicating that the number is already taken.
+    /// If any issue occurs while executing the query, an exception is logged and rethrown.
+    /// </remarks>
+    private async Task<bool> IsMobileTakenAsync(int mobile)
     {
         Console.WriteLine("Checking if mobile is taken...");
         var conn = GetConnection();
@@ -1202,6 +1339,20 @@ public class DBService
         }
     }
 
+    /// <summary>
+    /// Verifies a user's credentials and retrieves user information from the database if the credentials are valid.
+    /// </summary>
+    /// <param name="email">The user's email address provided for authentication.</param>
+    /// <param name="password">The user's password provided for authentication.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing an instance of <see cref="UsersService.User"/>.
+    /// If the user's credentials are valid, the returned instance contains the user's details; otherwise, it returns a default instance.
+    /// </returns>
+    /// <remarks>
+    /// This method connects to the PostgreSQL database and executes a query to find a user matching the provided email and password.
+    /// If a matching user is found, their details are populated into a new <see cref="UsersService.User"/> instance.
+    /// If no matching user is found or an error occurs during the database operation, the reason is logged to the console.
+    /// </remarks>
     public async Task<UsersService.User> LogUserOn(string email, string password)
     {
         Console.WriteLine("Logging user on...");
@@ -1243,12 +1394,33 @@ public class DBService
         return user;
     }
 
+    /// <summary>
+    /// Updates an existing Mini Cooper record in the database identified by its unique car ID.
+    /// </summary>
+    /// <param name="fullCooper">
+    /// An instance of <see cref="MiniCooper.FullMiniCooper"/> containing detailed information about the Mini Cooper to be updated.
+    /// </param>
+    /// <param name="carId">
+    /// The unique identifier of the Mini Cooper record in the database that needs to be updated.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation of updating the Mini Cooper record in the database.
+    /// </returns>
+    /// <remarks>
+    /// This method constructs and executes a database update query based on the type of Mini Cooper.
+    /// It processes the `fullCooper` object to extract relevant data and utilizes the car's type
+    /// (e.g., electric, fossil, or hybrid) to form a specialized query. Specialized attributes and
+    /// configurations for the given car type are handled within respective conditional blocks.
+    /// Additionally, the method connects to the database, logs progress messages to the console,
+    /// and processes image references asynchronously via <see cref="ResolveImagesAsync"/> where necessary. Note that this
+    /// method updates EVERY element in a <see cref="MiniCooper.FullMiniCooper"/>, on the database.
+    /// </remarks>
     public async Task UpdateCooper(MiniCooper.FullMiniCooper fullCooper, int carId)
     {
         Console.WriteLine("Updating cooper...");
         var conn = GetConnection();
 
-        string query = "";
+        string query;
         string baseCooperQuery = "ROW(" +
                                  "ROW(" +
                                  $"'{fullCooper.GetModelName()}'," +
@@ -1315,6 +1487,20 @@ public class DBService
         await RunAsyncQuery(cmd);
     }
 
+    /// <summary>
+    /// Updates an existing user record in the database with the provided user details.
+    /// </summary>
+    /// <param name="user">
+    /// An instance of <see cref="UsersService.User"/> containing updated user information such as name, password, email, mobile, city, and address.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation of updating the user record in the database.
+    /// </returns>
+    /// <remarks>
+    /// This method establishes a database connection and executes an update query using the provided user's information.
+    /// The method modifies the corresponding user record identified by the user's unique ID. Note that this method technically
+    /// updates every single element of a <see cref="UsersService.User"/>, so make sure that the other elements are not null/0.
+    /// </remarks>
     public async Task UpdateUser(UsersService.User user)
     {
         Console.WriteLine("Updating user...");

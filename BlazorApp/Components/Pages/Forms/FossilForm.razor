@@ -2,13 +2,13 @@
 
 <EditForm Model="FossilCooperFormData">
     <label class="form-label">Tank Capacity:</label>
-    <InputNumber @bind-Value="FossilCooperFormData.TankCapacity"/>
+    <InputNumber @bind-Value="FossilCooperFormData.TankCapacity" class="form-control"/>
 
     <label class="form-label">Km. pr. liter:</label>
-    <InputNumber @bind-Value="FossilCooperFormData.KmPrLiter"/>
+    <InputNumber @bind-Value="FossilCooperFormData.KmPrLiter" class="form-control"/>
 
     <label class="form-label">Gears (0 if automatic):</label>
-    <InputNumber @bind-Value="FossilCooperFormData.Gears"/>
+    <InputNumber @bind-Value="FossilCooperFormData.Gears" class="form-control"/>
 </EditForm>
 
 @code{
