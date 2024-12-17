@@ -7,8 +7,10 @@
 <PageTitle>Mini Basen 2</PageTitle>
 
 <div id="home_page">
-    <div class="mb-3" style="width: 18rem; display: inline-block; align-content: center;">
-        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Mini Cooper Example...">
+    <div class="d-flex justify-content-center align-items-center my-4">
+
+        <input @bind="_searchString" placeholder="Søg efter modelnavn eller type" />
+        <button @onclick="FilterMiniCoopers">Søg</button>
     </div>
 
     <div class="container">
@@ -17,7 +19,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/ev.jpg" class="card-img" alt="category pic..." onclick="@SortByEv"/>
+                        <img src="images/ev.jpg" class="card-img" alt="category pic..." onclick="@SortByEv" />
                     </a>
                 </div>
             </div>
@@ -25,7 +27,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin"/>
+                        <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin" />
                     </a>
                 </div>
             </div>
@@ -33,7 +35,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel"/>
+                        <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel" />
                     </a>
                 </div>
             </div>
@@ -41,7 +43,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid"/>
+                        <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid" />
                     </a>
                 </div>
             </div>
@@ -69,8 +71,8 @@
 
                             <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
                                 <div class="carousel-inner">
-                                    <div
-                                        class="carousel-item active"> @* Karrusel skal have en "active" klasse, ellers så bliver ikke vist. - Bootstrap *@
+                                    <div class="carousel-item active">
+                                        @* Karrusel skal have en "active" klasse, ellers så bliver ikke vist. - Bootstrap *@
                                         <a href="/carproduct/@fullMiniCooper.GetModelType()/@fullMiniCooper.GetCarId()">
                                             <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()"
                                                  class="d-block w-100"
@@ -80,7 +82,7 @@
                                     @* Siden vi skal have et "header" element, så starter vi ved 1, i stedet for 0. *@
                                     @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
                                     {
-                                        <div class="carousel-item"> 
+                                        <div class="carousel-item">
                                             <a href="/carproduct/@fullMiniCooper.GetModelType()/@fullMiniCooper.GetCarId()">
                                                 <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)"
                                                      class="d-block w-100" alt="sliderImage">
@@ -121,9 +123,21 @@
 </div>
 
 @code {
+    private string? _searchString;
 
-    // sortedFullMiniCoopers are the cars that are actually shows. We use a separate list, so that it is easier to sort
-    // by specefic categories.
+    private void FilterMiniCoopers()
+    {
+        // Filtrerer listen baseret på søgetermen
+        if (!string.IsNullOrWhiteSpace(_searchString))
+        {
+            sortedFullMiniCoopers = sortedFullMiniCoopers
+                .Where(mc => mc.GetModelName().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+                             mc.GetModelType().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+
+
     List<MiniCooper.FullMiniCooper> sortedFullMiniCoopers = new();
 
     // Vi bruger OnAfterRenderAsync i stedet for OnInitializedAsync, for at få fat i vores Mini Coopere.
@@ -131,13 +145,14 @@
     // gang til når denne side faktisk bliver kaldt (tror jeg).
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender || fullMiniCoopers.FullMiniCoopers.Count == 0)
+        if (firstRender)
         {
             Console.WriteLine("Count: " + fullMiniCoopers.FullMiniCoopers.Count);
             if (fullMiniCoopers.FullMiniCoopers.Count == 0)
             {
                 try
                 {
+                    Console.WriteLine("Getting all mini coopers...");
                     fullMiniCoopers.FullMiniCoopers = await DbService.GetAllMiniCoopersAsync();
                     sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
                 }
