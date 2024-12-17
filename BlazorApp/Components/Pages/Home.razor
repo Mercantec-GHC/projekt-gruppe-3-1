@@ -9,8 +9,8 @@
 <div id="home_page">
     <div class="d-flex justify-content-center align-items-center my-4">
 
-        <input @bind="_searchString" placeholder="Søg efter modelnavn eller type" />
-        <button @onclick="FilterMiniCoopers">Søg</button>
+        <input @bind="_searchString" placeholder="Søg efter modelnavn eller type"/>
+        <button @onclick="FilterMiniCoopers" class="btn btn-primary">Søg</button>
     </div>
 
     <div class="container">
@@ -19,7 +19,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/ev.jpg" class="card-img" alt="category pic..." onclick="@SortByEv" />
+                        <img src="images/ev.jpg" class="card-img" alt="category pic..." onclick="@SortByEv"/>
                     </a>
                 </div>
             </div>
@@ -27,7 +27,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin" />
+                        <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin"/>
                     </a>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel" />
+                        <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel"/>
                     </a>
                 </div>
             </div>
@@ -43,7 +43,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid" />
+                        <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid"/>
                     </a>
                 </div>
             </div>
@@ -54,10 +54,6 @@
     <div class="container">
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
-            @*@if (sortedFullMiniCoopers.Count == 0 && sortedFullMiniCoopers.Count == fullMiniCoopers.FullMiniCoopers.Count)
-            {
-                <p>Refresh to get the latest cars</p>
-            }*@
             @if (sortedFullMiniCoopers.Count == 0)
             {
                 <p>Loading...</p>
@@ -130,10 +126,14 @@
         // Filtrerer listen baseret på søgetermen
         if (!string.IsNullOrWhiteSpace(_searchString))
         {
-            sortedFullMiniCoopers = sortedFullMiniCoopers
+            sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers
                 .Where(mc => mc.GetModelName().Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
                              mc.GetModelType().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
+        }
+        else
+        {
+            sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
         }
     }
 
@@ -212,9 +212,11 @@
         var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
         sortedFullMiniCoopers = fullMiniCooperCaller.SortByHybrid(fullMiniCoopers.FullMiniCoopers);
     }
+
     private new void NavigateToProductPage(string modelName, int carId)
     {
         Console.WriteLine("Navigating to product page...");
         NavigationManager.NavigateTo($"/carproduct/{modelName}/{carId}");
     }
+
 }
