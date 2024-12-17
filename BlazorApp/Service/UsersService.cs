@@ -6,10 +6,7 @@ public class UsersService
 {
     public class User
     {
-        public int Id
-        {
-            get; set;
-        }
+        public int Id { get; set; }
 
         // Validering af felter
         [Required(ErrorMessage = "Fulde navn er påkrævet")]
@@ -22,10 +19,7 @@ public class UsersService
 
         [Required(ErrorMessage = "Mobilnummer er påkrævet")]
         [Range(10000000, 99999999, ErrorMessage = "Mobilnummer skal være et gyldigt 8-cifret nummer")]
-        public int Mobile
-        {
-            get; set;
-        }
+        public int Mobile { get; set; }
 
         [Required(ErrorMessage = "E-mail er påkrævet")]
         [EmailAddress(ErrorMessage = "Ugyldig e-mail adresse")]

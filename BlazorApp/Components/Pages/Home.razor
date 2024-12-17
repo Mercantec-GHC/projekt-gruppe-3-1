@@ -122,6 +122,8 @@
 
 @code {
 
+    // sortedFullMiniCoopers are the cars that are actually shows. We use a separate list, so that it is easier to sort
+    // by specefic categories.
     List<MiniCooper.FullMiniCooper> sortedFullMiniCoopers = new();
 
     // Vi bruger OnAfterRenderAsync i stedet for OnInitializedAsync, for at få fat i vores Mini Coopere.
@@ -129,14 +131,13 @@
     // gang til når denne side faktisk bliver kaldt (tror jeg).
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender || fullMiniCoopers.FullMiniCoopers.Count == 0)
         {
             Console.WriteLine("Count: " + fullMiniCoopers.FullMiniCoopers.Count);
             if (fullMiniCoopers.FullMiniCoopers.Count == 0)
             {
                 try
                 {
-                    Console.WriteLine("Getting all mini coopers...");
                     fullMiniCoopers.FullMiniCoopers = await DbService.GetAllMiniCoopersAsync();
                     sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
                 }

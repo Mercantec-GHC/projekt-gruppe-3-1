@@ -7,7 +7,7 @@ public class DBService
 {
     // public static DBService Instance;
 
-    // Essentically our DefaultConnection in our appsettings.json.
+    // Essentially our DefaultConnection in our appsettings.json.
     private readonly string _connectionString;
 
     public DBService(string connectionString)
@@ -17,7 +17,7 @@ public class DBService
     }
 
     // We then made a NpgsqlConnection, open it and then returns it.
-    public NpgsqlConnection GetConnection()
+    private NpgsqlConnection GetConnection()
     {
         NpgsqlConnection connection = new(_connectionString);
         connection.Open();
@@ -85,7 +85,8 @@ public class DBService
             "SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars;";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await using (var reader = await cmd.ExecuteReaderAsync())
+        await using var reader = await cmd.ExecuteReaderAsync();
+        try
         {
             while (await reader.ReadAsync())
             {
@@ -118,6 +119,12 @@ public class DBService
                 }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting all mini coopers: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
+        }
 
         return fullMiniCoopers;
     }
@@ -148,7 +155,8 @@ public class DBService
             $"SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car FROM cars WHERE account_id = {userId};";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await using (var reader = await cmd.ExecuteReaderAsync())
+        await using var reader = await cmd.ExecuteReaderAsync();
+        try
         {
             while (await reader.ReadAsync())
             {
@@ -194,6 +202,12 @@ public class DBService
                     Console.WriteLine("No car has been assigned to this object.");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting full mini coopers by user id and name: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
+        }
 
         return fullMiniCooper;
     }
@@ -211,7 +225,7 @@ public class DBService
     /// This method constructs a database query using the specified car ID and model name to fetch the electric Mini Cooper's details.
     /// It reads the query results, populates the instance of <see cref="MiniCooper.FullMiniCooper"/>, and handles errors by logging messages to the console.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetEvByIdAndName(int carId, string carName)
+    private async Task<MiniCooper.FullMiniCooper> GetEvByIdAndName(int carId, string carName)
     {
         Console.WriteLine("Getting ev by name...");
         MiniCooper.EvMiniCooper evCooper = new();
@@ -287,7 +301,7 @@ public class DBService
     /// If the car is found, it extracts details such as model name, generation, type, fuel type, gear type, and various specifications.
     /// If no car matches the criteria or an exception occurs, appropriate console messages are logged.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAndName(int carId, string carName)
+    private async Task<MiniCooper.FullMiniCooper> GetFossilByIdAndName(int carId, string carName)
     {
         Console.WriteLine("Getting fossil by name...");
         MiniCooper.FossilMiniCooper fossilCooper = new();
@@ -369,7 +383,7 @@ public class DBService
     /// If the car is not found in the database, logs are written to the console indicating the absence of results or any
     /// encountered errors.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAndName(int carId, string carName)
+    private async Task<MiniCooper.FullMiniCooper> GetHybridByIdAndName(int carId, string carName)
     {
         Console.WriteLine("Getting hybrid by name...");
         MiniCooper.HybridMiniCooper hybridCooper = new();
@@ -514,6 +528,7 @@ public class DBService
         catch (Exception e)
         {
             Console.WriteLine("Error getting ev by id: " + e.Message);
+            Console.WriteLine("StackTrace: " + e.StackTrace);
         }
 
         MiniCooper.FullMiniCooper fullCooper = new();
@@ -537,7 +552,7 @@ public class DBService
     /// to the fossil car's specifications. In case of an exception during the query execution, an error message is logged to the console.
     /// Note: Ensure that the ID parameter is validated to prevent SQL Injection vulnerabilities as the query is constructed using string concatenation.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetFossilByIdAsync(int carId)
+    private async Task<MiniCooper.FullMiniCooper> GetFossilByIdAsync(int carId)
     {
         Console.WriteLine("Getting fossil by id...");
         MiniCooper.FossilMiniCooper fossilCooper = new();
@@ -595,6 +610,7 @@ public class DBService
         catch (Exception e)
         {
             Console.WriteLine("Error getting fossil by id: " + e.Message);
+            Console.WriteLine("StackTrace: " + e.StackTrace);
         }
 
         MiniCooper.FullMiniCooper fullCooper = new();
@@ -616,7 +632,7 @@ public class DBService
     /// This method establishes a connection to the database, formulates a SQL query to fetch the hybrid car details, and constructs a
     /// <see cref="MiniCooper.FullMiniCooper"/> object from the retrieved data. If an exception occurs during database operations, it is logged.
     /// </remarks>
-    public async Task<MiniCooper.FullMiniCooper> GetHybridByIdAsync(int carId)
+    private async Task<MiniCooper.FullMiniCooper> GetHybridByIdAsync(int carId)
     {
         Console.WriteLine("Getting hybrid by id...");
         MiniCooper.HybridMiniCooper hybridCooper = new();
@@ -718,37 +734,45 @@ public class DBService
             $"SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car FROM cars WHERE account_id = {userId}";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await using (var reader = await cmd.ExecuteReaderAsync())
+        await using var reader = await cmd.ExecuteReaderAsync();
+        try
         {
-            while (await reader.ReadAsync())
-            {
-                var currentId = reader.GetInt32(0);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting full mini coopers by user id: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
+        }
 
-                if (!reader.IsDBNull(1))
-                {
-                    Console.WriteLine("Ev added!");
-                    var tempFullCooper = await GetEvByIdAsync(currentId);
-                    tempFullCooper.SetIds(currentId, userId);
-                    fullMiniCoopers.Add(tempFullCooper);
-                }
-                else if (!reader.IsDBNull(2))
-                {
-                    Console.WriteLine("Fossil added!");
-                    var tempFullCooper = await GetFossilByIdAsync(currentId);
-                    tempFullCooper.SetIds(currentId, userId);
-                    fullMiniCoopers.Add(tempFullCooper);
-                }
-                else if (!reader.IsDBNull(3))
-                {
-                    Console.WriteLine("Hybrid added!");
-                    var tempFullCooper = await GetHybridByIdAsync(currentId);
-                    tempFullCooper.SetIds(currentId, userId);
-                    fullMiniCoopers.Add(tempFullCooper);
-                }
-                else
-                {
-                    Console.WriteLine("No car has been assigned to this object.");
-                }
+        while (await reader.ReadAsync())
+        {
+            var currentId = reader.GetInt32(0);
+
+            if (!reader.IsDBNull(1))
+            {
+                Console.WriteLine("Ev added!");
+                var tempFullCooper = await GetEvByIdAsync(currentId);
+                tempFullCooper.SetIds(currentId, userId);
+                fullMiniCoopers.Add(tempFullCooper);
+            }
+            else if (!reader.IsDBNull(2))
+            {
+                Console.WriteLine("Fossil added!");
+                var tempFullCooper = await GetFossilByIdAsync(currentId);
+                tempFullCooper.SetIds(currentId, userId);
+                fullMiniCoopers.Add(tempFullCooper);
+            }
+            else if (!reader.IsDBNull(3))
+            {
+                Console.WriteLine("Hybrid added!");
+                var tempFullCooper = await GetHybridByIdAsync(currentId);
+                tempFullCooper.SetIds(currentId, userId);
+                fullMiniCoopers.Add(tempFullCooper);
+            }
+            else
+            {
+                Console.WriteLine("No car has been assigned to this object.");
             }
         }
 
@@ -784,52 +808,50 @@ public class DBService
             $"SELECT (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car, account_id FROM cars WHERE id = {carId}";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await using (var reader = await cmd.ExecuteReaderAsync())
+        await using var reader = await cmd.ExecuteReaderAsync();
+        try
         {
-            try
+            if (await reader.ReadAsync())
             {
-                if (await reader.ReadAsync())
-                {
-                    var userId = reader.GetInt32(3);
+                var userId = reader.GetInt32(3);
 
-                    if (!reader.IsDBNull(0))
-                    {
-                        Console.WriteLine("Ev added!");
-                        var tempFullCooper = await GetEvByIdAsync(carId);
-                        tempFullCooper.SetIds(carId, userId);
-                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
-                    }
-                    else if (!reader.IsDBNull(1))
-                    {
-                        Console.WriteLine("Fossil added!");
-                        var tempFullCooper = await GetFossilByIdAsync(carId);
-                        tempFullCooper.SetIds(carId, userId);
-                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetFossilCooper());
-                    }
-                    else if (!reader.IsDBNull(2))
-                    {
-                        Console.WriteLine("Hybrid added!");
-                        var tempFullCooper = await GetHybridByIdAsync(carId);
-                        tempFullCooper.SetIds(carId, userId);
-                        fullMiniCooper.SetMiniCooper(tempFullCooper.GetHybridCooper());
-                    }
-                    else
-                    {
-                        Console.WriteLine("No car has been assigned to this object.");
-                    }
+                if (!reader.IsDBNull(0))
+                {
+                    Console.WriteLine("Ev added!");
+                    var tempFullCooper = await GetEvByIdAsync(carId);
+                    tempFullCooper.SetIds(carId, userId);
+                    fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                }
+                else if (!reader.IsDBNull(1))
+                {
+                    Console.WriteLine("Fossil added!");
+                    var tempFullCooper = await GetFossilByIdAsync(carId);
+                    tempFullCooper.SetIds(carId, userId);
+                    fullMiniCooper.SetMiniCooper(tempFullCooper.GetFossilCooper());
+                }
+                else if (!reader.IsDBNull(2))
+                {
+                    Console.WriteLine("Hybrid added!");
+                    var tempFullCooper = await GetHybridByIdAsync(carId);
+                    tempFullCooper.SetIds(carId, userId);
+                    fullMiniCooper.SetMiniCooper(tempFullCooper.GetHybridCooper());
+                }
+                else
+                {
+                    Console.WriteLine("No car has been assigned to this object.");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error getting Full Mini Cooper by Id: " + ex.Message);
-                Console.WriteLine("StackTrace: " + ex.Message);
-                throw;
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting Full Mini Cooper by Id: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.Message);
+            throw;
         }
 
         return fullMiniCooper;
     }
-    
+
     /// <summary>
     /// Retrieves a list of base64-encoded image strings for a specified Mini Cooper identified by its ID and type.
     /// </summary>
@@ -862,12 +884,10 @@ public class DBService
 
             await using var cmd = new NpgsqlCommand(query, conn);
 
-            await using (var reader = await cmd.ExecuteReaderAsync())
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
-                while (await reader.ReadAsync())
-                {
-                    base64Images.Add(reader.GetString(0));
-                }
+                base64Images.Add(reader.GetString(0));
             }
         }
         catch (Exception e)
@@ -907,7 +927,7 @@ public class DBService
                        "(a_user).address " +
                        $"FROM users WHERE id = {userId}";
 
-        // string query = $"SELECT * FROM users WHERE id = {id}"; This wont work because we access a UDT.
+        // string query = $"SELECT * FROM users WHERE id = {id}"; This won't work because we access a UDT.
 
         var cmd = new NpgsqlCommand(query, conn);
 
@@ -1114,7 +1134,7 @@ public class DBService
     }
 
     /// <summary>
-    /// Resets the IDs of a specified table in a PostgreSQL database to start from 1, while preserving the order and 
+    /// Resets the IDs of a specified table in a PostgresSQL database to start from 1, while preserving the order and 
     /// updating the sequence associated with the table's ID.
     /// </summary>
     /// <param name="tableName">
@@ -1137,7 +1157,7 @@ public class DBService
     /// await ResetTableIdsAsync("my_table");
     /// </code>
     /// </example>
-    public async Task ResetTableIdsAsync(string tableName)
+    private async Task ResetTableIdsAsync(string tableName)
     {
         Console.WriteLine("Resetting table IDs...");
         // Since we are using "using", we don't have to add a close statement at the end, because "using" does that.
@@ -1349,7 +1369,7 @@ public class DBService
     /// If the user's credentials are valid, the returned instance contains the user's details; otherwise, it returns a default instance.
     /// </returns>
     /// <remarks>
-    /// This method connects to the PostgreSQL database and executes a query to find a user matching the provided email and password.
+    /// This method connects to the PostgresSQL database and executes a query to find a user matching the provided email and password.
     /// If a matching user is found, their details are populated into a new <see cref="UsersService.User"/> instance.
     /// If no matching user is found or an error occurs during the database operation, the reason is logged to the console.
     /// </remarks>
@@ -1446,7 +1466,7 @@ public class DBService
                     $"{fullCooper.GetEvCooper().GetChargeCapacity()}," +
                     $"{fullCooper.GetEvCooper().GetKmPrKwh()})::ev_mini_cooper " +
                     $"WHERE id = {carId};";
-            Console.WriteLine("Query: "+query);
+            Console.WriteLine("Query: " + query);
         }
         else if (carType == "fossil")
         {
@@ -1458,7 +1478,7 @@ public class DBService
                     $"{fullCooper.GetFossilCooper().GetKmPrLiter()}," +
                     $"{fullCooper.GetFossilCooper().GetGears()})::fossil_mini_cooper " +
                     $"WHERE id = {carId};";
-            Console.WriteLine("Query: "+query);
+            Console.WriteLine("Query: " + query);
         }
         else if (carType == "hybrid")
         {
@@ -1474,17 +1494,25 @@ public class DBService
                     $"{fullCooper.GetHybridCooper().GetKmPrKwh()}," +
                     $"{fullCooper.GetHybridCooper().GetGears()})::hybrid_mini_cooper " +
                     $"WHERE id = {carId};";
-            Console.WriteLine("Query: "+query);
-
+            Console.WriteLine("Query: " + query);
         }
         else
         {
             Console.WriteLine("Unknown car type.");
             return;
         }
-        
+
         var cmd = new NpgsqlCommand(query, conn);
-        await RunAsyncQuery(cmd);
+        try
+        {
+            await RunAsyncQuery(cmd);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error updating cooper: " + ex.Message);
+            Console.WriteLine("StackTrace: " + ex.StackTrace);
+            throw;
+        }
     }
 
     /// <summary>

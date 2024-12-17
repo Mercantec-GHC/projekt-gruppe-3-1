@@ -39,6 +39,11 @@ public class MiniCooper
             else
                 Console.WriteLine("No image ID's added");
         }
+        
+        public BaseMiniCooper GetBase()
+        {
+            return this;
+        }
 
         public async Task SetBaseMiniCooperModel(BaseMiniCooper model)
         {
@@ -65,10 +70,7 @@ public class MiniCooper
             Base64Images.Add(base64Image);
         }
 
-        public BaseMiniCooper GetBase()
-        {
-            return this;
-        }
+
 
         public void Clear()
         {
@@ -213,10 +215,27 @@ public class MiniCooper
         private FossilMiniCooper? FossilCooper { get; set; }
         private HybridMiniCooper? HybridCooper { get; set; }
 
-        public void SetIds(int carId, int userId)
+        
+        
+        public BaseMiniCooper? GetBaseCooper()
         {
-            CarId = carId;
-            UserId = userId;
+            if (EvCooper != null)
+            {
+                return EvCooper.GetBase();
+            }
+            else if (FossilCooper != null)
+            {
+                return FossilCooper.GetBase();
+            }
+            else if (HybridCooper != null)
+            {
+                return HybridCooper.GetBase();
+            }
+            else
+            {
+                Console.WriteLine("No car has been assigned to this object. Cant get base cooper.");
+                return null;
+            }
         }
 
         public string GetCooperTypeInUse()
@@ -492,29 +511,20 @@ public class MiniCooper
             else
                 Console.WriteLine("A car has already been assigned to this object. Cant set hybrid cooper.");
         }
-
-        public BaseMiniCooper? GetBaseCooper()
+        
+        public void SetIds(int carId, int userId)
         {
-            if (EvCooper != null)
-            {
-                return EvCooper.GetBase();
-            }
-            else if (FossilCooper != null)
-            {
-                return FossilCooper.GetBase();
-            }
-            else if (HybridCooper != null)
-            {
-                return HybridCooper.GetBase();
-            }
-            else
-            {
-                Console.WriteLine("No car has been assigned to this object. Cant get base cooper.");
-                return null;
-            }
+            CarId = carId;
+            UserId = userId;
         }
 
-        public bool ThereCanOnlyBeOne()
+        /// Determines if no Mini Cooper type has been assigned to the FullMiniCooper object.
+        /// Checks if there are existing assignments of EvMiniCooper, FossilMiniCooper, or HybridMiniCooper.
+        /// If none of the three types are assigned, it returns true; otherwise, false.
+        /// <returns>
+        /// True if no Mini Cooper type has been assigned; otherwise, false.
+        /// </returns>
+        private bool ThereCanOnlyBeOne()
         {
             if (EvCooper != null)
             {
@@ -561,6 +571,9 @@ public class MiniCooper
                 HybridCooper?.Print();
         }
 
+        /// Automatically prints the details of the FullMiniCooper object, including car ID and user ID,
+        /// and invokes the Print method for the assigned Mini Cooper type, if available.
+        /// If no Mini Cooper type is assigned, outputs a default message indicating no car is present for printing.
         public void PrintAutomatically()
         {
             Console.WriteLine("Printing automatically...");
@@ -576,18 +589,7 @@ public class MiniCooper
                 Console.WriteLine("No car has been assigned to this object. Cant automatically print.");
         }
 
-        public bool HasMultipleCars()
-        {
-            int carCount = 0;
-            if (EvCooper != null)
-                carCount++;
-            if (FossilCooper != null)
-                carCount++;
-            if (HybridCooper != null)
-                carCount++;
 
-            return carCount != 1;
-        }
 
         public List<FullMiniCooper> SortByEv(List<FullMiniCooper> fullMiniCoopers)
         {
@@ -656,6 +658,25 @@ public class MiniCooper
             EvCooper = null;
             FossilCooper = null;
             HybridCooper = null;
+        }
+        
+        /// Determines if multiple types of Mini Cooper have been assigned to the FullMiniCooper object.
+        /// Checks if more than one type among EvCooper, FossilCooper, or HybridCooper is assigned.
+        /// Returns true if more than one type exists; otherwise, false.
+        /// <returns>
+        /// True if multiple Mini Cooper types are assigned; otherwise, false.
+        /// </returns>
+        public bool HasMultipleCars()
+        {
+            int carCount = 0;
+            if (EvCooper != null)
+                carCount++;
+            if (FossilCooper != null)
+                carCount++;
+            if (HybridCooper != null)
+                carCount++;
+
+            return carCount != 1;
         }
     }
 
