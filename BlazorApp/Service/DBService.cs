@@ -799,6 +799,7 @@ public class DBService
     /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperById(int carId)
     {
+        Console.WriteLine("CardID:"+carId);
         Console.WriteLine("Getting full mini cooper by id...");
         MiniCooper.FullMiniCooper fullMiniCooper = new();
 
@@ -814,27 +815,28 @@ public class DBService
             if (await reader.ReadAsync())
             {
                 var userId = reader.GetInt32(3);
+                Console.WriteLine("UserId in get full mini coopers by id: "+userId);
 
                 if (!reader.IsDBNull(0))
                 {
                     Console.WriteLine("Ev added!");
                     var tempFullCooper = await GetEvByIdAsync(carId);
-                    tempFullCooper.SetIds(carId, userId);
                     fullMiniCooper.SetMiniCooper(tempFullCooper.GetEvCooper());
+                    fullMiniCooper.SetIds(carId, userId);
                 }
                 else if (!reader.IsDBNull(1))
                 {
                     Console.WriteLine("Fossil added!");
                     var tempFullCooper = await GetFossilByIdAsync(carId);
-                    tempFullCooper.SetIds(carId, userId);
                     fullMiniCooper.SetMiniCooper(tempFullCooper.GetFossilCooper());
+                    fullMiniCooper.SetIds(carId, userId);
                 }
                 else if (!reader.IsDBNull(2))
                 {
                     Console.WriteLine("Hybrid added!");
                     var tempFullCooper = await GetHybridByIdAsync(carId);
-                    tempFullCooper.SetIds(carId, userId);
                     fullMiniCooper.SetMiniCooper(tempFullCooper.GetHybridCooper());
+                    fullMiniCooper.SetIds(carId, userId);
                 }
                 else
                 {
