@@ -1,0 +1,172 @@
+﻿@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam object{
+    BackgroundColor Cyan
+}
+
+skinparam class{
+    BackgroundColor LightGreen
+}
+
+class BaseMiniCooper <<(C,Plum)>> {
+    ModelName string
+    Generation INT
+    ModelType string
+    Color string
+    Price INT
+    KmDriven INT
+    MaxRange INT
+    Weight INT
+    FuelType string
+    GearType string
+    YearlyTax INT
+    Base64Images string[]
+    +PrintBaseMiniCooper()
+    +GetBase() BaseMiniCooper
+    +SetBaseMiniCooper(BaseMiniCooper baseCooper) : Task
+    +AddImage(IBrowserFile image) : Task
+    +ClearBaseCooper()
+}
+
+class User <<(C,Plum)>>{
+    Id int
+    Name string
+    Password string
+    Mobile int
+    Email string
+    City string
+    Address string
+    +SetUser(User)
+    +Clear()
+    +Print()
+}
+
+class EvMiniCooper <<(C,Plum)>>{
+    charge_capacity INT
+    km_pr_kwh FLOAT
+    +Print()
+    +GetChargeCapacity() : int
+    +GetKmPrKwh() : float
+    +ClearEvCooper()
+}
+
+class FossilMiniCooper <<(C,Plum)>>{
+    tank_capacity INT
+    km_pr_liter FLOAT
+    gears INT
+    +Print()
+    +GetTankCapacity() : int
+    +GetKmPrLiter() : float
+    +GetGears() : int
+}
+
+class HybridMiniCooper <<(C,Plum)>>{
+    FuelType1 string
+    FuelType2 string
+    TankCapacity INT
+    ChargeCapacity INT
+    KmPrLiter FLOAT
+    KmPrKwh FLOAT
+    Gears INT
+    +Print()
+    +GetFuelType1() : string
+    +GetFuelType2() : string
+    +GetTankCapacity() : float
+    +GetChargeCapacity() : float
+    +GetKmPrLiter() : float
+    +GetKmPrKwh() : float
+    +GetGears() : int
+}
+
+class FullMiniCooper <<(C,Plum)>>{
+    CarId int
+    UserId int
+    EvCooper FossilMiniCooper? 
+    FossilCooper EvMiniCooper?
+    HybridCooper HybridMiniCooper?
+    +GetCarId() : int
+    +GetUserId() : int
+    +GetBaseCooper() : BaseMiniCooper?
+    +GetCooperTypeInUse() : string
+    +GetImages() : List<string>
+    +GetModelType() : string
+    +GetFuelType() : string
+    +GetGearType() : string
+    +GetMileage() : string
+    +GetMaxRange() : int
+    +GetWeight() : int
+    +GetYearlyTax() : decimal
+    +GetImageByIndex() : string
+    +GetFirstImage() : string
+    +GetModelName() : string
+    +GetPrice() : decimal
+    +GetColor() : string
+    +GetEvCooper() : EvMiniCooper?
+    +GetFossilCooper() : FossilMiniCooper?
+    +GetHybridCooper() : HybridMiniCooper?
+    +GetGeneration() : string
+    +SetMiniCooper(EvMiniCooper evCooper) 
+    +SetMiniCooper(FossilMiniCooper fossilCooper)
+    +SetMiniCooper(HybridMiniCopper hybridCooper)
+    +SetIds(int userId, int carId)
+    +PrintEv()
+    +PrintFossil()
+    +PrintHybrid()
+    +PrintAutomatically()
+    +SortByEv(List<FullMiniCooper> fullCoopers) : List<FullMiniCooper>
+    +SortByBenzin(List<FullMiniCooper> fullCoopers) : List<FullMiniCooper>
+    +SortByDiesel(List<FullMiniCooper> fullCoopers) : List<FullMiniCooper>
+    +SortByHybrid(List<FullMiniCooper> fullCoopers) : List<FullMiniCooper>
+    +Clear()
+    +HasMultipleCars() : bool
+    -ThereCanOnlyBeOne() : bool
+}
+
+class FullMiniCoopersState{
+    FullMiniCoopers List<FullMiniCooper>
+}
+
+class DBService{
+    -_connectionString string
+    +DBService(string connectionString)
+    +GetAllMiniCoopersAsync() : List<FullMiniCooper>
+    +GetFullMiniCoopersByUserIdAndName(int userId, string carName) : FullMiniCooper
+    +GetEvByIdAsync(int carId) : FullMiniCooper
+    +GetFullMiniCoopersByUserId(int userId) : List<FullMiniCooper>
+    +GetFullMiniCooperById(int carId) : FullMiniCooper
+    +GetUserByIdAsync(int userId) : User
+    +AddEvToDbAsync(EvMiniCooper evCooper, int)
+    +AddFossilToDbAsync(FossilMiniCooper fossilCooper, int)
+    +AddHybridToDbAsync(HybridMiniCopper hybridCooper, int)
+    +DeleteCarByIdAsync(int carId)
+    +AddUserAsync(User user)
+    +LogUserOn(string email, string password)
+    +UpdateCooper(FullMiniCooper fullCooper, int carId)
+    +UpdateUser(User user)
+    -GetEvByCarIdAndCarName(int carId, string carName) : FullMiniCooper
+    -GetFossilCarByIdAndCarName(int carId, string) : FullMiniCooper
+    -GetHybridByCarIdAndCarName(int carId, string) : FullMiniCooper
+    -GetFossilByCarIdAsync(int carId) : FullMiniCooper
+    -GetHybridByCarIdAsync(int carId) : FullMiniCooper
+    -GetImagesByCarIdAndTypeAsync(int carId, string) : List<string>
+    -ResetTableIdsAsync(string tableName)
+    -RunAsyncQuery(NpgsqlCommand command) : int
+    -ResolveImagesAsync(List<string> base64Images) : string
+    -IsEmailTakenAsync(string email)
+    -IsMobileTakenAsync(int phoneNumber)
+    -GetConnection()
+}
+
+FullMiniCooper --> EvMiniCooper
+FullMiniCooper --> FossilMiniCooper
+FullMiniCooper --> HybridMiniCooper
+FullMiniCooper::UserId --> User::Id
+
+FossilMiniCooper --|> BaseMiniCooper
+EvMiniCooper --|> BaseMiniCooper
+HybridMiniCooper --|> BaseMiniCooper
+
+
+
+@enduml

@@ -140,8 +140,8 @@ public class DBService
     /// </returns>
     /// <remarks>
     /// This method establishes a connection to the database and executes a query to retrieve records for cars matching the given user ID.
-    /// Depending on the type of car (electric, fossil, or hybrid), respective helper methods such as <see cref="GetEvByIdAndName"/>,
-    /// <see cref="GetFossilByIdAndName"/>, or <see cref="GetHybridByIdAndName"/> are invoked to fetch detailed car data.
+    /// Depending on the type of car (electric, fossil, or hybrid), respective helper methods such as <see cref="GetEvByCarIdAndCarName"/>,
+    /// <see cref="GetFossilByCarIdAndCarName"/>, or <see cref="GetHybridByIdAndCarName"/> are invoked to fetch detailed car data.
     /// Console messages are logged during the process to indicate the status of the retrieval operation or if no car type is found.
     /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperByUserIdAndName(int userId, string carName)
@@ -164,7 +164,7 @@ public class DBService
 
                 if (!reader.IsDBNull(1))
                 {
-                    var tempFullCooper = await GetEvByIdAndName(currentCarId, carName);
+                    var tempFullCooper = await GetEvByCarIdAndCarName(currentCarId, carName);
                     if (tempFullCooper.GetEvCooper() == null)
                         Console.WriteLine("Ev not found...");
                     else
@@ -176,7 +176,7 @@ public class DBService
                 }
                 else if (!reader.IsDBNull(2))
                 {
-                    var tempFullCooper = await GetFossilByIdAndName(currentCarId, carName);
+                    var tempFullCooper = await GetFossilByCarIdAndCarName(currentCarId, carName);
                     if (tempFullCooper.GetFossilCooper() == null)
                         Console.WriteLine("Fossil not found...");
                     else
@@ -188,7 +188,7 @@ public class DBService
                 }
                 else if (!reader.IsDBNull(3))
                 {
-                    var tempFullCooper = await GetHybridByIdAndName(currentCarId, carName);
+                    var tempFullCooper = await GetHybridByIdAndCarName(currentCarId, carName);
                     if (tempFullCooper.GetHybridCooper() == null)
                         Console.WriteLine("Hybrid not found...");
                     else
@@ -225,7 +225,7 @@ public class DBService
     /// This method constructs a database query using the specified car ID and model name to fetch the electric Mini Cooper's details.
     /// It reads the query results, populates the instance of <see cref="MiniCooper.FullMiniCooper"/>, and handles errors by logging messages to the console.
     /// </remarks>
-    private async Task<MiniCooper.FullMiniCooper> GetEvByIdAndName(int carId, string carName)
+    private async Task<MiniCooper.FullMiniCooper> GetEvByCarIdAndCarName(int carId, string carName)
     {
         Console.WriteLine("Getting ev by name...");
         MiniCooper.EvMiniCooper evCooper = new();
@@ -301,7 +301,7 @@ public class DBService
     /// If the car is found, it extracts details such as model name, generation, type, fuel type, gear type, and various specifications.
     /// If no car matches the criteria or an exception occurs, appropriate console messages are logged.
     /// </remarks>
-    private async Task<MiniCooper.FullMiniCooper> GetFossilByIdAndName(int carId, string carName)
+    private async Task<MiniCooper.FullMiniCooper> GetFossilByCarIdAndCarName(int carId, string carName)
     {
         Console.WriteLine("Getting fossil by name...");
         MiniCooper.FossilMiniCooper fossilCooper = new();
@@ -383,7 +383,7 @@ public class DBService
     /// If the car is not found in the database, logs are written to the console indicating the absence of results or any
     /// encountered errors.
     /// </remarks>
-    private async Task<MiniCooper.FullMiniCooper> GetHybridByIdAndName(int carId, string carName)
+    private async Task<MiniCooper.FullMiniCooper> GetHybridByIdAndCarName(int carId, string carName)
     {
         Console.WriteLine("Getting hybrid by name...");
         MiniCooper.HybridMiniCooper hybridCooper = new();

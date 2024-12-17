@@ -117,7 +117,7 @@ else
         try
         {
             fullCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
-            await baseCooper.SetBaseMiniCooperModel(fullCooper.GetBaseCooper());
+            await baseCooper.SetBaseMiniCooper(fullCooper.GetBaseCooper());
             fullCooper.PrintAutomatically();
         }
         catch (Exception ex)
@@ -135,20 +135,20 @@ else
         if (evCooper != null)
         {
             Console.WriteLine("Updating ev...");
-            evCooper.SetBaseMiniCooperModel(baseCooper);
+            evCooper.SetBaseMiniCooper(baseCooper);
             editedFullCooper.SetMiniCooper(evCooper);
         }
         else if (fossilCooper != null)
         {
             Console.WriteLine("Updating fossil...");
 
-            fossilCooper.SetBaseMiniCooperModel(baseCooper);
+            fossilCooper.SetBaseMiniCooper(baseCooper);
             editedFullCooper.SetMiniCooper(fossilCooper);
         }
         else if (hybridCooper != null)
         {
             Console.WriteLine("Updating hybrid...");
-            hybridCooper.SetBaseMiniCooperModel(baseCooper);
+            hybridCooper.SetBaseMiniCooper(baseCooper);
             editedFullCooper.SetMiniCooper(hybridCooper);
         }
 

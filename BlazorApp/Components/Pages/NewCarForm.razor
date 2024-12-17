@@ -124,7 +124,7 @@
         Console.WriteLine("Handling valid submit...");
         if (form == "ev")
         {
-            await EvCooper.SetBaseMiniCooperModel(BaseCooper);
+            await EvCooper.SetBaseMiniCooper(BaseCooper);
             FullCooper.SetMiniCooper(EvCooper);
             FullCooper.PrintEv();
 
@@ -144,7 +144,7 @@
         }
         else if (form == "fossil")
         {
-            await FossilCooper.SetBaseMiniCooperModel(BaseCooper);
+            await FossilCooper.SetBaseMiniCooper(BaseCooper);
             FullCooper.SetMiniCooper(FossilCooper);
             FullCooper.PrintFossil();
             
@@ -158,7 +158,7 @@
         }
         else if (form == "hybrid")
         {
-            await HybridCooper.SetBaseMiniCooperModel(BaseCooper);
+            await HybridCooper.SetBaseMiniCooper(BaseCooper);
             FullCooper.SetMiniCooper(HybridCooper);
             FullCooper.PrintHybrid();
             

@@ -9,7 +9,7 @@ skinparam class{
     BackgroundColor LightGreen
 }
 
-class mini_cooper <<(C,Plum)>> {
+class BaseMiniCooper <<(C,Plum)>> {
     model_name TEXT
     generation INT
     model_type TEXT
@@ -33,21 +33,21 @@ class account <<(C,Plum)>>{
     address TEXT
 }
 
-class ev_mini_cooper <<(C,Plum)>>{
-    base_cooper mini_cooper
+class EvMiniCooper <<(C,Plum)>>{
+    base_cooper BaseMiniCooper
     charge_capacity INT
     km_pr_kwh FLOAT
 }
 
-class fossil_mini_cooper <<(C,Plum)>>{
-    base_cooper mini_cooper
+class FossilMiniCooper <<(C,Plum)>>{
+    base_cooper BaseMiniCooper
     tank_capacity INT
     km_pr_liter FLOAT
     gears INT
 }
 
-class hybrid_mini_cooper <<(C,Plum)>>{
-    base_cooper mini_cooper
+class HybridMiniCooper <<(C,Plum)>>{
+    base_cooper BaseMiniCooper
     fuel_type1 TEXT
     fuel_type2 TEXT
     tank_capacity INT
@@ -57,10 +57,10 @@ class hybrid_mini_cooper <<(C,Plum)>>{
     gears INT
 }
 
-class Car <<(C,Plum)>>{
-    fossil_mini_cooper?
-    ev_mini_cooper?
-    hybrid_mini_cooper?
+class FullMiniCooper <<(C,Plum)>>{
+    FossilMiniCooper?
+    EvMiniCooper?
+    HybridMiniCooper?
 }
 
 object users {
@@ -71,22 +71,22 @@ object users {
 
 object Cars {
     id SERIAL PRIMARY KEY
-    car Car
+    car FullMiniCooper
     account_id INT
     CONSTRAINT FK_account_id FOREIGN KEY (account_id) REFERENCES users (id)
 }
 
-Car --|> fossil_mini_cooper
-Car --|> ev_mini_cooper
-Car --|> hybrid_mini_cooper
+FullMiniCooper --|> FossilMiniCooper
+FullMiniCooper --|> EvMiniCooper
+FullMiniCooper --|> HybridMiniCooper
 
 users::id -> Cars::id
 
-Car --> Cars
+FullMiniCooper --> Cars
 
-fossil_mini_cooper --|> mini_cooper
-ev_mini_cooper --|> mini_cooper
-hybrid_mini_cooper --|> mini_cooper
+FossilMiniCooper --|> BaseMiniCooper
+EvMiniCooper --|> BaseMiniCooper
+HybridMiniCooper --|> BaseMiniCooper
 
 account -> users::a_user
 

@@ -45,7 +45,7 @@ public class MiniCooper
             return this;
         }
 
-        public async Task SetBaseMiniCooperModel(BaseMiniCooper model)
+        public async Task SetBaseMiniCooper(BaseMiniCooper model)
         {
             ModelName = model.ModelName;
             Generation = model.Generation;
@@ -72,7 +72,7 @@ public class MiniCooper
 
 
 
-        public void Clear()
+        public void ClearBaseCooper()
         {
             ModelName = string.Empty;
             Generation = 0;
@@ -111,9 +111,9 @@ public class MiniCooper
             return KmPrKwh;
         }
 
-        public void Clear()
+        public void ClearEvCooper()
         {
-            base.Clear();
+            ClearBaseCooper();
             ChargeCapacity = 0;
             KmPrKwh = 0;
         }
@@ -214,8 +214,6 @@ public class MiniCooper
         private EvMiniCooper? EvCooper { get; set; }
         private FossilMiniCooper? FossilCooper { get; set; }
         private HybridMiniCooper? HybridCooper { get; set; }
-
-        
         
         public BaseMiniCooper? GetBaseCooper()
         {
