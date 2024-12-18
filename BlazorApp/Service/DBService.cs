@@ -1169,13 +1169,13 @@ public class DBService
 
         string query = $"CREATE TEMP TABLE temp_{tableName} AS " +
                        "SELECT *, ROW_NUMBER() OVER (ORDER BY id) as new_id " +
-                       $"FROM {tableName};" +
+                       $"FROM {tableName};" + // Creates temperary table.
                        $"UPDATE {tableName} " +
                        $"SET id = temp_{tableName}.new_id " +
                        $"FROM temp_{tableName} " +
-                       $"WHERE {tableName}.id = temp_{tableName}.id;" +
-                       $"SELECT setval('{tableName}_id_seq', (SELECT MAX(id) FROM {tableName}));" +
-                       $"DROP TABLE temp_{tableName};";
+                       $"WHERE {tableName}.id = temp_{tableName}.id;" + // Updates the original table.
+                       $"SELECT setval('{tableName}_id_seq', (SELECT MAX(id) FROM {tableName}));" + // Resets the table ID to be the next ID in order.
+                       $"DROP TABLE temp_{tableName};"; // Finally, drops the temporary table.
         await using var cmd = new NpgsqlCommand(query, conn);
 
         await RunAsyncQuery(cmd);
