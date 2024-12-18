@@ -208,5 +208,28 @@ img {
 #product_page .carousel-control-prev,
 #home_page .carousel-control-next,
 #home_page .carousel-control-prev {
-    background-color: #939393;
-}
+   background-color: #ffffff;
+   background-color: #ffffff;
+   width: 100%; /* Gør kontrolknapperne til at spænde over hele bredden */
+   height: 100%; /* Gør kontrolknapperne til at spænde over hele højden */
+   top: 0; /* Juster kontrolknapperne til toppen */
+   bottom: 0; /* Juster kontrolknapperne til bunden */
+   display: flex; /* Brug flexbox til at centrere ikonerne */
+   align-items: center; /* Centrér ikonerne lodret */
+   justify-content: center; /* Centrér ikonerne vandret */
+   opacity: 0.5; /* Juster opaciteten for bedre synlighed */
+   }
+   
+   #product_page .carousel-control-prev {
+   left: 0; /* Juster forrige knap til venstre */
+   }
+   
+   #product_page .carousel-control-next {
+   right: 0; /* Juster næste knap til højre */
+   }
+   
+   #product_page .carousel-control-prev-icon,
+   #product_page .carousel-control-next-icon {
+   width: 30px; /* Juster størrelsen på ikonerne */
+   height: 30px; /* Juster størrelsen på ikonerne */
+   }
