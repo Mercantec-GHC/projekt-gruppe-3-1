@@ -22,24 +22,25 @@
                                 <button type="button"
                                         class="@GetButtonClasses("dashboard")"
                                         onclick="@(() => HandleSection("dashboard"))">
-                                    Dashboard
+                                            Dashboard
                                 </button>
 
                                 <button type="button"
                                         class="@GetButtonClasses("profile-info")"
                                         onclick="@(() => HandleSection("profile-info"))">
-                                    Profil oplysninger
+                                            Profil oplysninger
                                 </button>
 
                                 <button type="button"
                                         class="@GetButtonClasses("create-mini-cooper")"
                                         onclick="@(() => HandleSection("create-mini-cooper"))">
-                                    Opret Mini Cooper
+                                            Opret Mini Cooper
                                 </button>
 
-                                <button type="button" onclick="@(() => HandleSection("edit-cooper"))"
-                                        class="bg-body-secondary list-group-item list-group-item-action">Redigerer Mini
-                                    Cooper
+                                <button type="button"
+                                        class="@GetButtonClasses("edit-cooper")"
+                                        onclick="@(() => HandleSection("edit-cooper"))">
+                                            Redigerer Mini Cooper
                                 </button>
                             </div>
                         </div>

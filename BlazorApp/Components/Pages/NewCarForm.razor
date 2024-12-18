@@ -30,7 +30,7 @@
 </div>
 
 <EditForm Model="@BaseCooper" OnValidSubmit="@HandleValidSubmit">
-    <label class="form-label">Model Name:</label>
+    <label class="form-label">Model Navn:</label>
     <InputText @bind-Value="BaseCooper.ModelName"/>
 
     <label class="form-label">Generation:</label>
@@ -39,28 +39,28 @@
     <label class="form-label">Model Type:</label>
     <InputText @bind-Value="BaseCooper.ModelType"/>
 
-    <label class="form-label">Color:</label>
+    <label class="form-label">Farve:</label>
     <InputText @bind-Value="BaseCooper.Color"/>
 
-    <label class="form-label">Price:</label>
+    <label class="form-label">Pris:</label>
     <InputNumber @bind-Value="BaseCooper.Price"/>
 
-    <label class="form-label">Mileage:</label>
+    <label class="form-label">Kilometertal:</label>
     <InputNumber @bind-Value="BaseCooper.Mileage"/>
 
-    <label class="form-label">Max range:</label>
+    <label class="form-label">Max rækkevidde:</label>
     <InputNumber @bind-Value="BaseCooper.MaxRange"/>
 
-    <label class="form-label">Weight:</label>
+    <label class="form-label">Vægt:</label>
     <InputNumber @bind-Value="BaseCooper.Weight"/>
 
-    <label class="form-label">Fuel type:</label>
+    <label class="form-label">Brændstoftype:</label>
     <InputText @bind-Value="BaseCooper.FuelType"/>
 
     <label class="form-label">Gear type:</label>
     <InputText @bind-Value="BaseCooper.GearType"/>
 
-    <label class="form-label">Yearly tax:</label>
+    <label class="form-label">Årlig skat:</label>
     <InputNumber @bind-Value="BaseCooper.YearlyTax"/>
     
     @switch (form)
@@ -79,7 +79,7 @@
             break;
     }
 
-    <button type="submit">Submit Car</button>
+    <button type="submit">Tilføj Bil</button>
 </EditForm>
 
 <InputFile OnChange="HandleImages" multiple/>
