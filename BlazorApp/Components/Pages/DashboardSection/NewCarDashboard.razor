@@ -15,7 +15,7 @@
 <div class="dropdown">
     <a class="btn btn-secondary custom-layout dropdown-toggle btn-lg" href="#" role="button" data-bs-toggle="dropdown"
        aria-expanded="false">
-        Vehicle Options
+        Vælg Bilens Brændstoftype
     </a>
 
     <ul class="dropdown-menu">
@@ -32,7 +32,7 @@
 </div>
 
 <EditForm Model="@BaseCooper" OnValidSubmit="@HandleValidSubmit">
-    <label class="form-label">Model Name:</label>
+    <label class="form-label">Model Navn:</label>
     <InputText @bind-Value="BaseCooper.ModelName" class="form-control"/>
 
     <label class="form-label">Generation:</label>
@@ -41,28 +41,28 @@
     <label class="form-label">Model Type:</label>
     <InputText @bind-Value="BaseCooper.ModelType" class="form-control"/>
 
-    <label class="form-label">Color:</label>
+    <label class="form-label">Farve:</label>
     <InputText @bind-Value="BaseCooper.Color" class="form-control"/>
 
-    <label class="form-label">Price:</label>
+    <label class="form-label">Pris:</label>
     <InputNumber @bind-Value="BaseCooper.Price" class="form-control"/>
 
-    <label class="form-label">Mileage:</label>
+    <label class="form-label">Kilometertal:</label>
     <InputNumber @bind-Value="BaseCooper.Mileage" class="form-control"/>
 
-    <label class="form-label">Max range:</label>
+    <label class="form-label">Max rækkevidde:</label>
     <InputNumber @bind-Value="BaseCooper.MaxRange" class="form-control"/>
 
-    <label class="form-label">Weight:</label>
+    <label class="form-label">Vægt:</label>
     <InputNumber @bind-Value="BaseCooper.Weight" class="form-control"/>
 
-    <label class="form-label">Fuel type:</label>
+    <label class="form-label">Brændstoftype:</label>
     <InputText @bind-Value="BaseCooper.FuelType" class="form-control"/>
 
     <label class="form-label">Gear type:</label>
     <InputText @bind-Value="BaseCooper.GearType" class="form-control"/>
 
-    <label class="form-label">Yearly tax:</label>
+    <label class="form-label">Årlig skat:</label>
     <InputNumber @bind-Value="BaseCooper.YearlyTax" class="form-control"/>
 
 
@@ -78,11 +78,11 @@
             <HybridForm HybridCooperFormData="@HybridCooper"/>
             break;
         default:
-            <p>Select Vehicle Type</p>
+            <p>Vælg Bilens Brændstoftype</p>
             break;
     }
 
-    <button type="submit" class="btn btn-primary">Submit Car</button>
+    <button type="submit" class="btn btn-primary">Tilføj Bil</button>
 </EditForm>
 
 <InputFile OnChange="HandleImages" multiple class="btn btn-secondary"/>

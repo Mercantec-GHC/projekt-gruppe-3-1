@@ -2,18 +2,17 @@
 @inject DBService DbService
 @inject UsersService.User user
 
-<label>Enter car to edit</label>
+<label>Indtast bil som skal ændres</label>
 <InputText @bind-Value="carName"/>
-<button type="button" onclick="@GetCooper">Get Cooper</button>
+<button type="button" onclick="@GetCooper">Hent Cooper</button>
 
 @if (fullCooper == null)
 {
-    <p>Enter car.</p>
 }
 else
 {
     <EditForm Model="@baseCooper" OnValidSubmit="@UpdateCooper">
-        <label class="form-label">Model Name:</label>
+        <label class="form-label">Model Navn:</label>
         <InputText @bind-Value="baseCooper.ModelName" class="form-control"/>
 
         <label class="form-label">Generation:</label>
@@ -22,28 +21,28 @@ else
         <label class="form-label">Model Type:</label>
         <InputText @bind-Value="baseCooper.ModelType" class="form-control"/>
 
-        <label class="form-label">Color:</label>
+        <label class="form-label">Farve:</label>
         <InputText @bind-Value="baseCooper.Color" class="form-control"/>
 
-        <label class="form-label">Price:</label>
+        <label class="form-label">Pris:</label>
         <InputNumber @bind-Value="baseCooper.Price" class="form-control"/>
 
-        <label class="form-label">Mileage:</label>
+        <label class="form-label">Kilometertal:</label>
         <InputNumber @bind-Value="baseCooper.Mileage" class="form-control"/>
 
-        <label class="form-label">Max range:</label>
+        <label class="form-label">Max rækkevidde:</label>
         <InputNumber @bind-Value="baseCooper.MaxRange" class="form-control"/>
 
-        <label class="form-label">Weight:</label>
+        <label class="form-label">Vægt:</label>
         <InputNumber @bind-Value="baseCooper.Weight" class="form-control"/>
 
-        <label class="form-label">Fuel type:</label>
+        <label class="form-label">Brændstoftype:</label>
         <InputText @bind-Value="baseCooper.FuelType" class="form-control"/>
 
         <label class="form-label">Gear type:</label>
         <InputText @bind-Value="baseCooper.GearType" class="form-control"/>
 
-        <label class="form-label">Yearly tax:</label>
+        <label class="form-label">Årlig skat:</label>
         <InputNumber @bind-Value="baseCooper.YearlyTax" class="form-control"/>
     </EditForm>
     @if (fullCooper.GetEvCooper() != null)

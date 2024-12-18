@@ -21,38 +21,38 @@
             <div class="dropdown">
                 <a class="btn btn-secondary custom-layout dropdown-toggle btn-lg" href="#" role="button"
                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Change an option
+                    Ændre en oplysning
                 </a>
 
                 <ul class="dropdown-menu">
                     <li>
                         <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("name"))">
-                            Change Name
+                            Ændre Navn
                         </button>
                     </li>
                     <li>
                         <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("password"))">
-                            Change Password
+                            Ændre Kodeord
                         </button>
                     </li>
                     <li>
                         <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("mobile"))">
-                            Change Mobile
+                            Ændre Mobilnummer
                         </button>
                     </li>
                     <li>
                         <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("email"))">
-                            Change Email
+                            Ændre E-mail
                         </button>
                     </li>
                     <li>
                         <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("city"))">
-                            Change City
+                            Ændre By
                         </button>
                     </li>
                     <li>
                         <button class="dropdown-item" type="button" onclick="@(() => ChangeUserInfoOption("address"))">
-                            Change Address
+                            Ændre Adresse
                         </button>
                     </li>
                 </ul>
@@ -62,32 +62,32 @@
                     case "name":
                         <label>New name:</label>
                         <InputText @bind-Value="newName" class="form-control" />
-                        <button type="button" onclick="@ChangeUserInfo">Change Name</button>
+                        <button type="button" onclick="@ChangeUserInfo">Ændre Navn</button>
                         break;
                     case "password":
                         <label>New password:</label>
                         <InputText @bind-Value="newPassword" class="form-control" />
-                        <button type="button" onclick="@ChangeUserInfo">Change password</button>
+                        <button type="button" onclick="@ChangeUserInfo">Ændre Kodeord</button>
                         break;
                     case "mobile":
                         <label>New mobile:</label>
                         <InputNumber @bind-Value="newMobile" class="form-control" />
-                        <button type="button" onclick="@ChangeUserInfo">Change mobil</button>
+                        <button type="button" onclick="@ChangeUserInfo">Ændre Mobilnummer</button>
                         break;
                     case "email":
                         <label>New email:</label>
                         <InputText @bind-Value="newEmail" class="form-control" />
-                        <button type="button" onclick="@ChangeUserInfo">Change email</button>
+                        <button type="button" onclick="@ChangeUserInfo">Ændre E-mail</button>
                         break;
                     case "city":
                         <label>New city:</label>
                         <InputText @bind-Value="newCity" class="form-control" />
-                        <button type="button" onclick="@ChangeUserInfo">Change city</button>
+                        <button type="button" onclick="@ChangeUserInfo">Ændre By</button>
                         break;
                     case "address":
                         <label>New address:</label>
                         <InputText @bind-Value="newAddress" class="form-control" />
-                        <button type="button" onclick="@ChangeUserInfo">Change address</button>
+                        <button type="button" onclick="@ChangeUserInfo">Ændre Adresse</button>
                         break;
                 }
             </div>
