@@ -735,9 +735,39 @@ public class DBService
             $"SELECT id, (a_car).electric_car, (a_car).fossile_car, (a_car).hybrid_car FROM cars WHERE account_id = {userId}";
         await using var cmd = new NpgsqlCommand(query, conn);
 
-        await using var reader = await cmd.ExecuteReaderAsync();
         try
         {
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var currentId = reader.GetInt32(0);
+
+                if (!reader.IsDBNull(1))
+                {
+                    Console.WriteLine("Ev added!");
+                    var tempFullCooper = await GetEvByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, userId);
+                    fullMiniCoopers.Add(tempFullCooper);
+                }
+                else if (!reader.IsDBNull(2))
+                {
+                    Console.WriteLine("Fossil added!");
+                    var tempFullCooper = await GetFossilByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, userId);
+                    fullMiniCoopers.Add(tempFullCooper);
+                }
+                else if (!reader.IsDBNull(3))
+                {
+                    Console.WriteLine("Hybrid added!");
+                    var tempFullCooper = await GetHybridByIdAsync(currentId);
+                    tempFullCooper.SetIds(currentId, userId);
+                    fullMiniCoopers.Add(tempFullCooper);
+                }
+                else
+                {
+                    Console.WriteLine("No car has been assigned to this object.");
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -746,36 +776,6 @@ public class DBService
             throw;
         }
 
-        while (await reader.ReadAsync())
-        {
-            var currentId = reader.GetInt32(0);
-
-            if (!reader.IsDBNull(1))
-            {
-                Console.WriteLine("Ev added!");
-                var tempFullCooper = await GetEvByIdAsync(currentId);
-                tempFullCooper.SetIds(currentId, userId);
-                fullMiniCoopers.Add(tempFullCooper);
-            }
-            else if (!reader.IsDBNull(2))
-            {
-                Console.WriteLine("Fossil added!");
-                var tempFullCooper = await GetFossilByIdAsync(currentId);
-                tempFullCooper.SetIds(currentId, userId);
-                fullMiniCoopers.Add(tempFullCooper);
-            }
-            else if (!reader.IsDBNull(3))
-            {
-                Console.WriteLine("Hybrid added!");
-                var tempFullCooper = await GetHybridByIdAsync(currentId);
-                tempFullCooper.SetIds(currentId, userId);
-                fullMiniCoopers.Add(tempFullCooper);
-            }
-            else
-            {
-                Console.WriteLine("No car has been assigned to this object.");
-            }
-        }
 
         return fullMiniCoopers;
     }
@@ -800,7 +800,7 @@ public class DBService
     /// </remarks>
     public async Task<MiniCooper.FullMiniCooper> GetFullMiniCooperById(int carId)
     {
-        Console.WriteLine("CardID:"+carId);
+        Console.WriteLine("CardID:" + carId);
         Console.WriteLine("Getting full mini cooper by id...");
         MiniCooper.FullMiniCooper fullMiniCooper = new();
 
@@ -816,7 +816,7 @@ public class DBService
             if (await reader.ReadAsync())
             {
                 var userId = reader.GetInt32(3);
-                Console.WriteLine("UserId in get full mini coopers by id: "+userId);
+                Console.WriteLine("UserId in get full mini coopers by id: " + userId);
 
                 if (!reader.IsDBNull(0))
                 {
