@@ -26,12 +26,10 @@
                         <th>Årlig<span>&nbsp;</span>skat</th>
                     </tr>
                 </thead>
-                <!-- Tabelindhold -->
                 <tbody>
                     @foreach (var fullMiniCooper in userFullMiniCoopers)
                     {
                         <tr>
-                            <!-- Slider til billeder -->
                             <td>
                                 <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
                                     <div class="carousel-inner">
@@ -63,7 +61,6 @@
                                     </button>
                                 </div>
                             </td>
-                            <!-- Data-celler -->
                             <td>@fullMiniCooper.GetModelName()</td>
                             <td>@fullMiniCooper.GetModelType()</td>
                             <td>@fullMiniCooper.GetGeneration()</td>
