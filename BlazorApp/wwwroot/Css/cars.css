@@ -194,19 +194,41 @@ img {
     object-fit: contain; /* Holder billedets aspektforhold */
 }
 
+#product_page .slide img {
+    height: 450px !important;
+}
+
 
 #product_page .card-body,
 #home_page .card-body {
     background-color: #e5e7eb;
 }
+
 #product_page .carousel-item,
 #home_page .carousel-item {
     background-color: #ffffff;
 }
 
-#product_page .carousel-control-next,
-#product_page .carousel-control-prev,
 #home_page .carousel-control-next,
 #home_page .carousel-control-prev {
     background-color: #939393;
+}
+
+/* Styling til venstre knap (previous) */
+.custom-prev-icon {
+    font-size: 2rem; /* Juster størrelsen */
+    color: black; /* Farve til venstre ikon */
+}
+
+/* Styling til højre knap (next) */
+.custom-next-icon {
+    font-size: 2rem; /* Juster størrelsen */
+    color: black; /* Farve til højre ikon */
+}
+
+
+
+#product_page .carousel-control-next,
+#product_page .carousel-control-prev {
+    background-color: #ecececc9;
 }

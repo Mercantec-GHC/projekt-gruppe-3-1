@@ -3,58 +3,90 @@
 @inject DBService DbService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Product Page</PageTitle>
+<PageTitle>Product Side</PageTitle>
 
-<div id="product_page">
-    <h3>Bil Detaljer</h3>
+<div id="product_page" style="width: 80%; margin: 0 auto; padding-top: 15px">
 
-    @if (fullMiniCooper == null)
-    {
-        <p>Loading...</p>
-    }
-    else
-    {
-        <div class="container-fluid">
-            <div>
-                <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()"
-                     class="w-100"
-                     alt="HeaderImage">
-            </div>
-            <div class="container-fluid" style="text-align: left;">
-                <h5>@fullMiniCooper.GetModelName()</h5>
+@if (fullMiniCooper == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="container-fluid" style="width: 80%; margin: 0 auto;">
+        <div class="card mb-5" >
+            <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a href="/carproduct/@fullMiniCooper.GetModelType()/@fullMiniCooper.GetCarId()">
+                            <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()" class="d-block w-100"
+                                alt="HeaderImage">
+                        </a>
+                    </div>
+                    @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
+                    {
+                        <div class="carousel-item">
+                            <a href="/carproduct/@fullMiniCooper.GetModelType()/@fullMiniCooper.GetCarId()">
+                                <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)" class="d-block w-100"
+                                    alt="sliderImage">
+                            </a>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#@fullMiniCooper.GetCarId()" data-bs-slide="prev">
+                    <i class="material-icons custom-prev-icon">arrow_back_ios</i>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#@fullMiniCooper.GetCarId()" data-bs-slide="next">
+                    <i class="material-icons custom-next-icon">arrow_forward_ios</i>
+                    <span class="visually-hidden">Next</span>
+                </button>
+
+
+
+                        </div>
+        <div class="card mt-2">
+            <div class="card-body" style="text-align: start;">
+                <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
                 <p>@fullMiniCooper.GetModelType()</p>
                 <p>@fullMiniCooper.GetGeneration()</p>
                 <p>@fullMiniCooper.GetFuelType()</p>
                 <p>@fullMiniCooper.GetGearType()</p>
                 <p>@fullMiniCooper.GetPrice().ToString(".kr")</p>
             </div>
-            <div>
-                @if (user != null)
-                {
-                    @user.Name
-                    @user.Email
-                    @user.Address
-                }
+        </div>
+        <div class="card mt-2">
+                    <div class="card-body" style="text-align: start;">
+                        <h5 class="card-title">Sælgers oplysninger</h5>
+                        <p>@user?.Name</p>
+                        <p>@user?.Email</p>
+                        <p>@user?.Address</p>
+                </div>
             </div>
         </div>
-    }
+    </div>
+}
 </div>
 
 @code {
-    [Parameter] public string? ModelName { get; set; }
+     [Parameter] public string? ModelName { get; set; }
 
-    [Parameter] public int carId { get; set; }
-
-    UsersService.User user;
-
-    private MiniCooper.FullMiniCooper? fullMiniCooper;
+    [Parameter] public int carId { get; set; } 
+       private MiniCooper.FullMiniCooper? fullMiniCooper;
+    private UsersService.User? user;
 
     protected override async Task OnInitializedAsync()
     {
         fullMiniCooper = await DbService.GetFullMiniCooperById(carId);
-        Console.WriteLine(fullMiniCooper.GetUserId());
-        user = await DbService.GetUserByIdAsync(fullMiniCooper.GetUserId());
-        user.Print();
+        if (fullMiniCooper != null)
+        {
+            user = await DbService.GetUserByIdAsync(fullMiniCooper.GetUserId());
+        }
     }
 
+    private bool IsValidBase64(string base64String)
+    {
+        Span<byte> buffer = new Span<byte>(new byte[base64String.Length]);
+        return Convert.TryFromBase64String(base64String, buffer, out _);
+    }
 }
