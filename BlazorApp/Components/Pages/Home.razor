@@ -19,7 +19,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/ev.jpg" class="card-img" alt="category pic..." onclick="@SortByEv"/>
+                        <img src="images/ev.jpg" class="card-img" alt="category pic..." onclick="@SortByEv" />
                     </a>
                 </div>
             </div>
@@ -27,7 +27,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin"/>
+                        <img src="images/benzin.webp" class="card-img" alt="category pic..." onclick="@SortByBenzin" />
                     </a>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel"/>
+                        <img src="images/diesel.jpg" class="card-img" alt="category pic..." onclick="@SortByDiesel" />
                     </a>
                 </div>
             </div>
@@ -43,7 +43,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="">
-                        <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid"/>
+                        <img src="images/hybrid.jpg" class="card-img" alt="category pic..." onclick="@SortByHybrid" />
                     </a>
                 </div>
             </div>
@@ -185,33 +185,79 @@
     {
         Console.WriteLine("Sorting by Ev...");
 
-        var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
-        sortedFullMiniCoopers = fullMiniCooperCaller.SortByEv(fullMiniCoopers.FullMiniCoopers);
+        if (isFiltered)
+        {
+            sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
+            isFiltered = false;
+        }
+        else
+        {
+            var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
+            sortedFullMiniCoopers = fullMiniCooperCaller.SortByEv(fullMiniCoopers.FullMiniCoopers);
+            isFiltered = true;
+        }
     }
+
+
+
+    private bool isFiltered = false;
 
     private void SortByBenzin()
     {
         Console.WriteLine("Sorting by Benzin...");
 
-        var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
-        sortedFullMiniCoopers = fullMiniCooperCaller.SortByBenzin(fullMiniCoopers.FullMiniCoopers);
+        if (isFiltered)
+        {
+            // Nulstil til hele listen
+            sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
+            isFiltered = false;
+        }
+        else
+        {
+            var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
+            sortedFullMiniCoopers = fullMiniCooperCaller.SortByBenzin(fullMiniCoopers.FullMiniCoopers);
+            isFiltered = true;
+        }
     }
+
+
 
     private void SortByDiesel()
     {
         Console.WriteLine("Sorting by Diesel...");
 
-        var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
-        sortedFullMiniCoopers = fullMiniCooperCaller.SortByDiesel(fullMiniCoopers.FullMiniCoopers);
+        if (isFiltered)
+        {
+            sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
+            isFiltered = false;
+        }
+        else
+        {
+            var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
+            sortedFullMiniCoopers = fullMiniCooperCaller.SortByDiesel(fullMiniCoopers.FullMiniCoopers);
+            isFiltered = true;
+        }
     }
+
+
 
     private void SortByHybrid()
     {
         Console.WriteLine("Sorting by Hybrid...");
 
-        var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
-        sortedFullMiniCoopers = fullMiniCooperCaller.SortByHybrid(fullMiniCoopers.FullMiniCoopers);
+        if (isFiltered)
+        {
+            sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
+            isFiltered = false;
+        }
+        else
+        {
+            var fullMiniCooperCaller = new MiniCooper.FullMiniCooper();
+            sortedFullMiniCoopers = fullMiniCooperCaller.SortByHybrid(fullMiniCoopers.FullMiniCoopers);
+            isFiltered = true;
+        }
     }
+
 
     private new void NavigateToProductPage(string modelName, int carId)
     {

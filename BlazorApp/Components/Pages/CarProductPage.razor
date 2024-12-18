@@ -5,7 +5,7 @@
 
 <PageTitle>Product Side</PageTitle>
 
-<div id="product_page"style="width: 80%; margin: 0 auto; padding-top: 15px"></div>
+<div id="product_page" style="width: 80%; margin: 0 auto; padding-top: 15px">
 
 @if (fullMiniCooper == null)
 {
@@ -33,18 +33,19 @@ else
                         </div>
                     }
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#@fullMiniCooper.GetCarId()"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <button class="carousel-control-prev" type="button" data-bs-target="#@fullMiniCooper.GetCarId()" data-bs-slide="prev">
+                    <i class="material-icons custom-prev-icon">arrow_back_ios</i>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#@fullMiniCooper.GetCarId()"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <button class="carousel-control-next" type="button" data-bs-target="#@fullMiniCooper.GetCarId()" data-bs-slide="next">
+                    <i class="material-icons custom-next-icon">arrow_forward_ios</i>
                     <span class="visually-hidden">Next</span>
                 </button>
+
+
+
                         </div>
-        <div class="card mb-2">
+        <div class="card mt-2">
             <div class="card-body" style="text-align: start;">
                 <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
                 <p>@fullMiniCooper.GetModelType()</p>
@@ -54,16 +55,18 @@ else
                 <p>@fullMiniCooper.GetPrice().ToString(".kr")</p>
             </div>
         </div>
-        <div class="card mb-2">
-            <div class="card-body" style="text-align: start;">
-                <p>@user?.Name</p>
-                <p>@user?.Email</p>
-                <p>@user?.Address</p>
-            </div>
+        <div class="card mt-2">
+                    <div class="card-body" style="text-align: start;">
+                        <h5 class="card-title">Sælgers oplysninger</h5>
+                        <p>@user?.Name</p>
+                        <p>@user?.Email</p>
+                        <p>@user?.Address</p>
+                </div>
             </div>
         </div>
     </div>
 }
+</div>
 
 @code {
      [Parameter] public string? ModelName { get; set; }
