@@ -12,6 +12,9 @@
 @inject UsersService.User user
 @* Remember to add scoped versions of these in the Program.cs *@
 
+
+<h5 class="card-title fw-bold">Opret Mini Cooper</h5>
+<p class="card-text">Her kan du oprette en Mini Cooper</p>
 <div class="dropdown">
     <a class="btn btn-secondary custom-layout dropdown-toggle btn-lg" href="#" role="button" data-bs-toggle="dropdown"
        aria-expanded="false">
@@ -32,37 +35,37 @@
 </div>
 
 <EditForm Model="@BaseCooper" OnValidSubmit="@HandleValidSubmit">
-    <label class="form-label">Model Navn:</label>
+    <label class="form-label fw-bold">Model Navn:</label>
     <InputText @bind-Value="BaseCooper.ModelName" class="form-control"/>
 
-    <label class="form-label">Generation:</label>
+    <label class="form-label fw-bold">Generation:</label>
     <InputNumber @bind-Value="BaseCooper.Generation" class="form-control"/>
 
-    <label class="form-label">Model Type:</label>
+    <label class="form-label fw-bold">Model Type:</label>
     <InputText @bind-Value="BaseCooper.ModelType" class="form-control"/>
 
-    <label class="form-label">Farve:</label>
+    <label class="form-label fw-bold">Farve:</label>
     <InputText @bind-Value="BaseCooper.Color" class="form-control"/>
 
-    <label class="form-label">Pris:</label>
+    <label class="form-label fw-bold">Pris:</label>
     <InputNumber @bind-Value="BaseCooper.Price" class="form-control"/>
 
-    <label class="form-label">Kilometertal:</label>
+    <label class="form-label fw-bold">Kilometertal:</label>
     <InputNumber @bind-Value="BaseCooper.Mileage" class="form-control"/>
 
-    <label class="form-label">Max rækkevidde:</label>
+    <label class="form-label fw-bold">Max rækkevidde:</label>
     <InputNumber @bind-Value="BaseCooper.MaxRange" class="form-control"/>
 
-    <label class="form-label">Vægt:</label>
+    <label class="form-label fw-bold">Vægt:</label>
     <InputNumber @bind-Value="BaseCooper.Weight" class="form-control"/>
 
-    <label class="form-label">Brændstoftype:</label>
+    <label class="form-label fw-bold">Brændstoftype:</label>
     <InputText @bind-Value="BaseCooper.FuelType" class="form-control"/>
 
-    <label class="form-label">Gear type:</label>
+    <label class="form-label fw-bold">Gear type:</label>
     <InputText @bind-Value="BaseCooper.GearType" class="form-control"/>
 
-    <label class="form-label">Årlig skat:</label>
+    <label class="form-label fw-bold">Årlig skat:</label>
     <InputNumber @bind-Value="BaseCooper.YearlyTax" class="form-control"/>
 
 

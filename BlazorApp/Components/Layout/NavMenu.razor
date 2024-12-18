@@ -171,14 +171,14 @@
                 @if (loadRegisterForm)
                 {
                     <p>Har du allerede en profil?
-                        <a href="" @onclick="@LoadLoginForm">Log ind</a>
+                        <span class="text-primary login_link" @onclick="@LoadLoginForm">Log ind</span>
                     </p>
                 }
                 else
                 {
                     <p>
                         Har du ikke en profil?
-                        <a href="" @onclick="@LoadRegisterForm">Tilmeld</a>
+                        <span class="text-primary register_link" @onclick="@LoadRegisterForm">Tilmeld</span>
                     </p>
                 }
             </div>

@@ -45,24 +45,43 @@ else
 
 
                         </div>
-        <div class="card mt-2">
-            <div class="card-body" style="text-align: start;">
-                <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
-                <p>@fullMiniCooper.GetModelType()</p>
-                <p>@fullMiniCooper.GetGeneration()</p>
-                <p>@fullMiniCooper.GetFuelType()</p>
-                <p>@fullMiniCooper.GetGearType()</p>
-                <p>@fullMiniCooper.GetPrice().ToString(".kr")</p>
-            </div>
-        </div>
-        <div class="card mt-2">
-                    <div class="card-body" style="text-align: start;">
-                        <h5 class="card-title">Sælgers oplysninger</h5>
-                        <p>@user?.Name</p>
-                        <p>@user?.Email</p>
-                        <p>@user?.Address</p>
+
+                <div class="container text-center card mt-2">
+                    <div class="row align-items-start card-body" style="text-align: start;">
+                        <div class="col">
+                                    <h5 class="card-title fw-bold">@fullMiniCooper.GetModelName()</h5>
+                                    <p><span class="fw-bold">Modeltype:</span><br>&emsp;@fullMiniCooper.GetModelType()</p>
+                                    <p><span class="fw-bold">Generation: </span><br>&emsp;@fullMiniCooper.GetGeneration()</p>
+                                    <p><span class="fw-bold">Drivmiddel:</span><br>&emsp;@fullMiniCooper.GetFuelType()</p>
+                                    <p><span class="fw-bold">Geartype:</span><br>&emsp;@fullMiniCooper.GetGearType()</p>
+                                    <p><span class="fw-bold">Pris:</span><br>&emsp;@fullMiniCooper.GetPrice().ToString(". kr")</p>
+                                </div>
+                        <div class="col">
+                            <br>
+                            <p><span class="fw-bold">Farve:</span><br>&emsp;@fullMiniCooper.GetColor()</p>
+                            <p><span class="fw-bold">Kilometertal: </span><br>&emsp;@fullMiniCooper.GetMileage()</p>
+                            <p><span class="fw-bold">Max rækkevidde:</span><br>&emsp;@fullMiniCooper.GetMaxRange()</p>
+                            <p><span class="fw-bold">Vægt:</span><br>&emsp;@fullMiniCooper.GetWeight()</p>
+                            <p><span class="fw-bold">Årlig skat:</span><br>&emsp;@fullMiniCooper.GetYearlyTax().ToString(". kr")</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="container text-center card mt-2">
+                    <div class="row align-items-start card-body" style="text-align: start;">
+                        <div class="col">
+                                    <h5 class="card-title fw-bold">Sælgers oplysninger</h5>
+                                    <p><span class="fw-bold">Navn:</span><br>&emsp;@user?.Name</p>
+                                    <p><span class="fw-bold">E-mail:</span><br>&emsp;@user?.Email</p>
+                                    <p><span class="fw-bold">Adresse:</span><br>&emsp;@user?.Address</p>
+                                    <p><span class="fw-bold">By:</span><br>&emsp;@user?.City</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
         </div>
     </div>
 }

@@ -7,60 +7,80 @@
     <div class="card-body">
         <h5 class="card-title">Biler liste</h5>
         <p class="card-text">Her kan du se alle data for dine oprettede salgsannoncer</p>
-        <div class="tab-content" id="v-pills-tabContent">
-            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
-                 aria-labelledby="v-pills-home-tab" tabindex="0">
-
-                <div class="container">
-                    <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-1">
-                        @foreach (var fullMiniCooper in userFullMiniCoopers)
-                        {
-                            <div class="col" style="padding: 10px">
-                                <div class="card h-100">
-                                    <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
-                                        <div class="carousel-inner">
-                                            <div class="carousel-item active">
-                                                <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()"
-                                                     class="card-img" alt="HeaderImage">
-                                            </div>
-                                            @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
-                                            {
-                                                <div class="carousel-item">
-                                                    <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)"
-                                                         class="card-img" alt="sliderImage">
-                                                </div>
-                                            }
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table">
+                <thead>
+                    <tr>
+                        <th>Billeder</th>
+                        <th>Model<span>&nbsp;</span>Navn</th>
+                        <th>Modeltype</th>
+                        <th>Generation</th>
+                        <th>Drivmiddel</th>
+                        <th>Geartype</th>
+                        <th>Pris</th>
+                        <th>Farve</th>
+                        <th>Kilometertal</th>
+                        <th>Max<span>&nbsp;</span>rækkevidde</th>
+                        <th>Vægt</th>
+                        <th>Årlig<span>&nbsp;</span>skat</th>
+                    </tr>
+                </thead>
+                <!-- Tabelindhold -->
+                <tbody>
+                    @foreach (var fullMiniCooper in userFullMiniCoopers)
+                    {
+                        <tr>
+                            <!-- Slider til billeder -->
+                            <td>
+                                <div id="@fullMiniCooper.GetCarId()" class="carousel slide">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active">
+                                            <img src="data:image/png;base64,@fullMiniCooper.GetFirstImage()"
+                                                 class="card-img" alt="HeaderImage">
                                         </div>
-                                        <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#@fullMiniCooper.GetCarId()"
-                                                data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon"
-                                                  aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button"
-                                                data-bs-target="#@fullMiniCooper.GetCarId()"
-                                                data-bs-slide="next">
-                                            <span class="carousel-control-next-icon"
-                                                  aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
+                                        @for (int i = 1; i < fullMiniCooper.GetImages().Count; i++)
+                                        {
+                                            <div class="carousel-item">
+                                                <img src="data:image/png;base64,@fullMiniCooper.GetImageByIndex(i)"
+                                                     class="card-img" alt="sliderImage">
+                                            </div>
+                                        }
                                     </div>
-
-                                    <div class="card-body">
-                                        <h5 class="card-title">@fullMiniCooper.GetModelName()</h5>
-                                        <p class="card-text">@fullMiniCooper.GetModelType()</p>
-                                        <p class="card-text">@fullMiniCooper.GetPrice().ToString(" .kr")</p>
-                                        <p class="card-text">@fullMiniCooper.GetFuelType()</p>
-                                        <p class="card-text">@fullMiniCooper.GetGearType()</p>
-                                    </div>
+                                    <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#@fullMiniCooper.GetCarId()"
+                                            data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"
+                                              aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                            data-bs-target="#@fullMiniCooper.GetCarId()"
+                                            data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"
+                                              aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
                                 </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
+                            </td>
+                            <!-- Data-celler -->
+                            <td>@fullMiniCooper.GetModelName()</td>
+                            <td>@fullMiniCooper.GetModelType()</td>
+                            <td>@fullMiniCooper.GetGeneration()</td>
+                            <td>@fullMiniCooper.GetFuelType()</td>
+                            <td>@fullMiniCooper.GetGearType()</td>
+                            <td>@fullMiniCooper.GetPrice().ToString(". kr")</td>
+                            <td>@fullMiniCooper.GetColor()</td>
+                            <td>@fullMiniCooper.GetMileage()</td>
+                            <td>@fullMiniCooper.GetMaxRange()</td>
+                            <td>@fullMiniCooper.GetWeight()</td>
+                            <td>@fullMiniCooper.GetYearlyTax().ToString(". kr")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+    </div>
     </div>
 </div>
 

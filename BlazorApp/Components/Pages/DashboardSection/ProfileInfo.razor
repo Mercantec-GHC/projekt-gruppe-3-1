@@ -5,17 +5,17 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Profil Info</h5>
+        <h5 class="card-title fw-bold">Profil Info</h5>
         <p class="card-text">Her kan du ændre dine personlige oplysninger</p>
         <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                  aria-labelledby="v-pills-home-tab" tabindex="0">
-                <p>@user.Name</p>
-                <p>@user.Password</p>
-                <p>@user.Mobile</p>
-                <p>@user.Email</p>
-                <p>@user.City</p>
-                <p>@user.Address</p>
+                <p><span class="fw-bold">Navn:</span><br>&emsp;@user?.Name</p>
+                <p><span class="fw-bold">Kodeord:</span><br>&emsp;@user?.Password</p>
+                <p><span class="fw-bold">Mobilnummer:</span><br>&emsp;@user?.Mobile</p>
+                <p><span class="fw-bold">E-mail:</span><br>&emsp;@user?.Email</p>
+                <p><span class="fw-bold">Adresse:</span><br>&emsp;@user?.Address</p>
+                <p><span class="fw-bold">By:</span><br>&emsp;@user?.City</p>
             </div>
 
             <div class="dropdown">

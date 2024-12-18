@@ -214,21 +214,22 @@ img {
     background-color: #939393;
 }
 
-/* Styling til venstre knap (previous) */
-.custom-prev-icon {
-    font-size: 2rem; /* Juster størrelsen */
-    color: black; /* Farve til venstre ikon */
-}
-
-/* Styling til højre knap (next) */
-.custom-next-icon {
-    font-size: 2rem; /* Juster størrelsen */
-    color: black; /* Farve til højre ikon */
-}
-
-
-
 #product_page .carousel-control-next,
 #product_page .carousel-control-prev {
     background-color: #ecececc9;
+}
+
+.custom-prev-icon {
+    font-size: 2rem; 
+    color: black; 
+}
+
+.custom-next-icon {
+    font-size: 2rem;
+    color: black; 
+}
+
+.login_link:hover,
+.register_link:hover {
+    cursor: pointer;
 }

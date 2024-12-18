@@ -2,6 +2,8 @@
 @inject DBService DbService
 @inject UsersService.User user
 
+<h5 class="card-title fw-bold">Redigerer Mini Cooper</h5>
+<p class="card-text">Her kan du ændre dine Mini Coopers oplysninger</p>
 <label>Indtast bil som skal ændres</label>
 <InputText @bind-Value="carName"/>
 <button type="button" onclick="@GetCooper">Hent Cooper</button>
@@ -12,47 +14,47 @@
 else
 {
     <EditForm Model="@baseCooper" OnValidSubmit="@UpdateCooper">
-        <label class="form-label">Model Navn:</label>
+        <label class="form-label fw-bold">Model Navn:</label>
         <InputText @bind-Value="baseCooper.ModelName" class="form-control"/>
 
-        <label class="form-label">Generation:</label>
+        <label class="form-label fw-bold">Generation:</label>
         <InputNumber @bind-Value="baseCooper.Generation" class="form-control"/>
 
-        <label class="form-label">Model Type:</label>
+        <label class="form-label fw-bold">Model Type:</label>
         <InputText @bind-Value="baseCooper.ModelType" class="form-control"/>
 
-        <label class="form-label">Farve:</label>
+        <label class="form-label fw-bold">Farve:</label>
         <InputText @bind-Value="baseCooper.Color" class="form-control"/>
 
-        <label class="form-label">Pris:</label>
+        <label class="form-label fw-bold">Pris:</label>
         <InputNumber @bind-Value="baseCooper.Price" class="form-control"/>
 
-        <label class="form-label">Kilometertal:</label>
+        <label class="form-label fw-bold">Kilometertal:</label>
         <InputNumber @bind-Value="baseCooper.Mileage" class="form-control"/>
 
-        <label class="form-label">Max rækkevidde:</label>
+        <label class="form-label fw-bold">Max rækkevidde:</label>
         <InputNumber @bind-Value="baseCooper.MaxRange" class="form-control"/>
 
-        <label class="form-label">Vægt:</label>
+        <label class="form-label fw-bold">Vægt:</label>
         <InputNumber @bind-Value="baseCooper.Weight" class="form-control"/>
 
-        <label class="form-label">Brændstoftype:</label>
+        <label class="form-label fw-bold">Brændstoftype:</label>
         <InputText @bind-Value="baseCooper.FuelType" class="form-control"/>
 
-        <label class="form-label">Gear type:</label>
+        <label class="form-label fw-bold">Gear type:</label>
         <InputText @bind-Value="baseCooper.GearType" class="form-control"/>
 
-        <label class="form-label">Årlig skat:</label>
+        <label class="form-label fw-bold">Årlig skat:</label>
         <InputNumber @bind-Value="baseCooper.YearlyTax" class="form-control"/>
     </EditForm>
     @if (fullCooper.GetEvCooper() != null)
     {
         SetEvCooper();
         <EditForm Model="@evCooper">
-            <label class="form-label">Charge Capacity:</label>
+            <label class="form-label fw-bold">Charge Capacity:</label>
             <InputNumber @bind-Value="evCooper.ChargeCapacity" class="form-control"/>
 
-            <label class="form-label">Km. pr. kWh:</label>
+            <label class="form-label fw-bold">Km. pr. kWh:</label>
             <InputNumber @bind-Value="evCooper.KmPrKwh" class="form-control"/>
         </EditForm>
     }
@@ -60,13 +62,13 @@ else
     {
         SetFossilCooper();
         <EditForm Model="@fossilCooper">
-            <label class="form-label">Tank Capacity:</label>
+            <label class="form-label fw-bold">Tank Capacity:</label>
             <InputNumber @bind-Value="fossilCooper.TankCapacity" class="form-control"/>
 
-            <label class="form-label">Km. pr. liter:</label>
+            <label class="form-label fw-bold">Km. pr. liter:</label>
             <InputNumber @bind-Value="fossilCooper.KmPrLiter" class="form-control"/>
 
-            <label class="form-label">Gears (0 if auto):</label>
+            <label class="form-label fw-bold">Gears (0 if auto):</label>
             <InputNumber @bind-Value="fossilCooper.Gears" class="form-control"/>
         </EditForm>
     }
@@ -74,25 +76,25 @@ else
     {
         SetHybridCooper();
         <EditForm Model="@hybridCooper">
-            <label class="form-label">Fuel Type 1:</label>
+            <label class="form-label fw-bold">Fuel Type 1:</label>
             <InputText @bind-Value="hybridCooper.FuelType1" class="form-control"/>
 
-            <label class="form-label">Fuel Type 2:</label>
+            <label class="form-label fw-bold">Fuel Type 2:</label>
             <InputText @bind-Value="hybridCooper.FuelType2" class="form-control"/>
 
-            <label class="form-label">Tank Capacity:</label>
+            <label class="form-label fw-bold">Tank Capacity:</label>
             <InputNumber @bind-Value="hybridCooper.TankCapacity" class="form-control"/>
 
-            <label class="form-label">Charge Capacity:</label>
+            <label class="form-label fw-bold">Charge Capacity:</label>
             <InputNumber @bind-Value="hybridCooper.ChargeCapacity" class="form-control"/>
 
-            <label class="form-label">Km. pr. liter:</label>
+            <label class="form-label fw-bold">Km. pr. liter:</label>
             <InputNumber @bind-Value="hybridCooper.KmPrLiter" class="form-control"/>
 
-            <label class="form-label">Km. pr. kWh:</label>
+            <label class="form-label fw-bold">Km. pr. kWh:</label>
             <InputNumber @bind-Value="hybridCooper.KmPrKwh" class="form-control"/>
 
-            <label class="form-label">Gears (0 if auto):</label>
+            <label class="form-label fw-bold">Gears (0 if auto):</label>
             <InputNumber @bind-Value="hybridCooper.Gears" class="form-control"/>
         </EditForm>
     }
