@@ -209,6 +209,7 @@ public class DBService
             throw;
         }
 
+        fullMiniCooper = null;
         return fullMiniCooper;
     }
 

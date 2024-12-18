@@ -10,18 +10,19 @@ skinparam class{
 }
 
 class BaseMiniCooper <<(C,Plum)>> {
-    ModelName string
-    Generation INT
-    ModelType string
-    Color string
-    Price INT
-    KmDriven INT
-    MaxRange INT
-    Weight INT
-    FuelType string
-    GearType string
-    YearlyTax INT
-    Base64Images string[]
+    +ModelName string
+    +Generation INT
+    +ModelType string
+    +Color string
+    +Price INT
+    +KmDriven INT
+    +MaxRange INT
+    +Weight INT
+    +FuelType string
+    +GearType string
+    +YearlyTax INT
+    +Base64Images string[]
+    
     +PrintBaseMiniCooper()
     +GetBase() BaseMiniCooper
     +SetBaseMiniCooper(BaseMiniCooper baseCooper) : Task
@@ -30,21 +31,23 @@ class BaseMiniCooper <<(C,Plum)>> {
 }
 
 class User <<(C,Plum)>>{
-    Id int
-    Name string
-    Password string
-    Mobile int
-    Email string
-    City string
-    Address string
+    -Id int
+    +Name string
+    +Password string
+    +Mobile int
+    +Email string
+    +City string
+    +Address string
+    
     +SetUser(User)
     +Clear()
     +Print()
 }
 
 class EvMiniCooper <<(C,Plum)>>{
-    charge_capacity INT
-    km_pr_kwh FLOAT
+    +charge_capacity INT
+    +km_pr_kwh FLOAT
+    
     +Print()
     +GetChargeCapacity() : int
     +GetKmPrKwh() : float
@@ -52,9 +55,10 @@ class EvMiniCooper <<(C,Plum)>>{
 }
 
 class FossilMiniCooper <<(C,Plum)>>{
-    tank_capacity INT
-    km_pr_liter FLOAT
-    gears INT
+    +tank_capacity INT
+    +km_pr_liter FLOAT
+    +gears INT
+    
     +Print()
     +GetTankCapacity() : int
     +GetKmPrLiter() : float
@@ -62,13 +66,14 @@ class FossilMiniCooper <<(C,Plum)>>{
 }
 
 class HybridMiniCooper <<(C,Plum)>>{
-    FuelType1 string
-    FuelType2 string
-    TankCapacity INT
-    ChargeCapacity INT
-    KmPrLiter FLOAT
-    KmPrKwh FLOAT
-    Gears INT
+    +FuelType1 string
+    +FuelType2 string
+    +TankCapacity INT
+    +ChargeCapacity INT
+    +KmPrLiter FLOAT
+    +KmPrKwh FLOAT
+    +Gears INT
+    
     +Print()
     +GetFuelType1() : string
     +GetFuelType2() : string
@@ -80,11 +85,12 @@ class HybridMiniCooper <<(C,Plum)>>{
 }
 
 class FullMiniCooper <<(C,Plum)>>{
-    CarId int
-    UserId int
-    EvCooper FossilMiniCooper? 
-    FossilCooper EvMiniCooper?
-    HybridCooper HybridMiniCooper?
+    -CarId int
+    -UserId int
+    -EvCooper FossilMiniCooper? 
+    -FossilCooper EvMiniCooper?
+    -HybridCooper HybridMiniCooper?
+    
     +GetCarId() : int
     +GetUserId() : int
     +GetBaseCooper() : BaseMiniCooper?
@@ -123,12 +129,13 @@ class FullMiniCooper <<(C,Plum)>>{
     -ThereCanOnlyBeOne() : bool
 }
 
-class FullMiniCoopersState{
-    FullMiniCoopers List<FullMiniCooper>
+class FullMiniCoopersState <<C,plum>>{
+    +FullMiniCoopers List<FullMiniCooper>
 }
 
-class DBService{
+class DBService <<C,plum>>{
     -_connectionString string
+    
     +DBService(string connectionString)
     +GetAllMiniCoopersAsync() : List<FullMiniCooper>
     +GetFullMiniCoopersByUserIdAndName(int userId, string carName) : FullMiniCooper
@@ -158,10 +165,13 @@ class DBService{
     -GetConnection()
 }
 
-FullMiniCooper --> EvMiniCooper
-FullMiniCooper --> FossilMiniCooper
-FullMiniCooper --> HybridMiniCooper
-FullMiniCooper::UserId --> User::Id
+FullMiniCooper --o "1? " EvMiniCooper
+FullMiniCooper --o "1? " FossilMiniCooper
+FullMiniCooper --o "1? " HybridMiniCooper
+FullMiniCooper::UserId "0..*" --> "1  " User::Id
+'Aggregate association, since these objects can exist without FullMiniCooper and are not inherited.
+'Oneway-Association, where FullMiniCooper can be tied to only 1 User, while a User can be associated to multiple FullMiniCoopers.
+'It is only oneway, because FullMiniCooper has a reference to a user, while the User itself does not have a reference to a FullMiniCooper.
 
 FossilMiniCooper --|> BaseMiniCooper
 EvMiniCooper --|> BaseMiniCooper

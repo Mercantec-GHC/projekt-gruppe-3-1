@@ -84,7 +84,7 @@ users::id -> Cars::id
 
 FullMiniCooper --> Cars
 
-FossilMiniCooper --|> BaseMiniCooper
+FossilMiniCooper --|> BaseMiniCooper 
 EvMiniCooper --|> BaseMiniCooper
 HybridMiniCooper --|> BaseMiniCooper
 

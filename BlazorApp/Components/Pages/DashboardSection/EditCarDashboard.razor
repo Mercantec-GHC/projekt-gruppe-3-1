@@ -117,6 +117,12 @@ else
         try
         {
             fullCooper = await DbService.GetFullMiniCooperByUserIdAndName(user.Id, carName);
+            // Hvis fullCooper er null, kunne bilen ikke blive fundet.
+            if (fullCooper == null)
+            {
+                Console.WriteLine("FullCooper is null, sorry.");
+                return;
+            }
             await baseCooper.SetBaseMiniCooper(fullCooper.GetBaseCooper());
             fullCooper.PrintAutomatically();
         }

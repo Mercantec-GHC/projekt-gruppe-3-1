@@ -152,7 +152,6 @@
             {
                 try
                 {
-                    Console.WriteLine("Getting all mini coopers...");
                     fullMiniCoopers.FullMiniCoopers = await DbService.GetAllMiniCoopersAsync();
                     sortedFullMiniCoopers = fullMiniCoopers.FullMiniCoopers;
                 }
